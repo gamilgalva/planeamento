@@ -3,79 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v4.0 | Pro Production</title>
+    <title>Gamil Hub v4.1 | Elite Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
-        :root { --gamil-blue: #002D5A; }
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        .bg-gamil { background-color: var(--gamil-blue); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         
-        /* GRID LONGITUDINAL REFINADO */
+        :root { --gamil-blue: #002D5A; }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f1f5f9; /* Fundo suave para destacar os cards */
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden; 
+        }
+        
+        .bg-gamil { background-color: var(--gamil-blue); }
+
+        /* BOXES LONGITUDINAIS MODERNAS */
         .pedido-card { 
             display: grid; 
-            grid-template-columns: 8px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 1.5fr 100px;
+            grid-template-columns: 6px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 1.5fr 100px;
             align-items: center; gap: 12px;
-            @apply bg-white border border-slate-200 rounded-2xl mb-3 py-3 shadow-sm hover:shadow-md transition-all relative overflow-hidden;
+            @apply bg-white rounded-[1.25rem] mb-4 py-4 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] border border-white transition-all duration-300;
         }
 
+        .pedido-card:hover {
+            @apply shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] -translate-y-0.5 border-slate-200;
+        }
+
+        /* CABEÇALHO ELEGANTE */
         .header-row { 
             display: grid; 
-            grid-template-columns: 8px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 1.5fr 100px;
+            grid-template-columns: 6px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 1.5fr 100px;
             gap: 12px;
-            @apply px-0 py-4 mb-4 rounded-2xl bg-slate-200/60 border border-slate-300 text-[9px] font-black uppercase text-blue-900 tracking-widest sticky top-0 z-20;
+            @apply px-0 py-4 mb-4 rounded-2xl bg-white/50 backdrop-blur-md border border-slate-200/60 text-[10px] font-extrabold uppercase text-slate-500 tracking-[0.1em] sticky top-0 z-20;
         }
 
-        .status-bar { width: 8px; height: 50px; border-radius: 0 6px 6px 0; }
+        .status-bar { width: 6px; height: 100%; position: absolute; left: 0; top: 0; bottom: 0; border-radius: 20px 0 0 20px; }
         .main-content { overflow-y: auto; flex: 1; padding: 30px 40px; }
+        
+        /* BADGES */
+        .badge-service { @apply px-2 py-0.5 rounded-md text-[9px] font-black tracking-tight; }
+        .badge-local { @apply bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-[9px] font-extrabold uppercase border border-blue-100; }
+        
         .admin-view, .auth-element { display: none; }
         
-        .input-gamil { @apply w-full bg-white border border-slate-200 rounded-lg p-2 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-2 focus:ring-blue-500; }
-        .label-gamil { @apply block text-[10px] font-black uppercase text-slate-400 mb-1; }
+        .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-500/10 transition-all; }
+        .label-gamil { @apply block text-[10px] font-black uppercase text-slate-400 mb-1.5 ml-1 tracking-wider; }
 
         @media print {
             aside, header, button, .no-print { display: none !important; }
             body { background: white !important; display: block !important; overflow: visible !important; }
             .main-content { padding: 0 !important; overflow: visible !important; }
-            .header-row { display: grid !important; background: #eee !important; color: black !important; border: 1px solid #000 !important; margin-bottom: 10px !important; }
-            .pedido-card { display: grid !important; border: 1px solid #ccc !important; break-inside: avoid; margin-bottom: 5px; grid-template-columns: 5px 80px 1.5fr 80px 60px 80px 80px 80px 80px 120px 1fr 0px !important; }
+            .header-row { display: grid !important; background: #f8fafc !important; color: #000 !important; border-bottom: 2px solid #000 !important; margin-bottom: 10px !important; }
+            .pedido-card { display: grid !important; border: 1px solid #e2e8f0 !important; break-inside: avoid; margin-bottom: 8px; grid-template-columns: 5px 80px 1.5fr 80px 60px 80px 80px 80px 80px 120px 1fr 0px !important; }
             .admin-view { display: block !important; }
         }
     </style>
 </head>
 <body class="md:flex-row flex flex-col">
 
-    <aside class="w-full md:w-64 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
-        <div class="p-8 border-b border-white/10 text-center">
-            <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3" onerror="this.style.display='none'">
-            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Hub v4.0</h1>
+    <aside class="w-full md:w-64 bg-gamil text-white flex flex-col shrink-0 shadow-[10px_0_30px_rgba(0,0,0,0.1)] z-30 md:h-screen no-print">
+        <div class="p-8 border-b border-white/5 text-center bg-black/10">
+            <img src="logo-gamil.png" alt="Gamil" class="w-36 mx-auto mb-4 drop-shadow-lg" onerror="this.style.display='none'">
+            <h1 class="text-[10px] font-black tracking-[0.4em] uppercase text-blue-300/80">Hub V4.1</h1>
         </div>
-        <nav class="p-4 flex-1 space-y-3">
-            <div id="user-info" class="p-4 bg-white/5 rounded-2xl border border-white/10 text-center mb-4">
-                <p id="nome-logado" class="text-xs font-black uppercase italic">Visitante</p>
-                <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2">Sair</button>
+        <nav class="p-5 flex-1 space-y-4">
+            <div id="user-info" class="p-5 bg-gradient-to-br from-white/10 to-transparent rounded-[1.5rem] border border-white/10 text-center shadow-inner">
+                <p id="nome-logado" class="text-sm font-extrabold uppercase italic text-white tracking-tight">Visitante</p>
+                <button onclick="logout()" class="text-[9px] text-red-400 font-black uppercase underline mt-3 tracking-widest hover:text-red-300 transition">Encerrar Sessão</button>
             </div>
-            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all">
-                <i class="fas fa-plus"></i> <span>Novo Pedido</span>
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-500 hover:bg-blue-400 rounded-2xl flex items-center justify-center space-x-3 text-xs font-black uppercase shadow-xl transition-all transform active:scale-95">
+                <i class="fas fa-plus-circle text-lg"></i> <span>Novo Registo</span>
             </button>
-            <button onclick="window.print()" class="w-full p-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase">
-                <i class="fas fa-print"></i> <span>Imprimir</span>
-            </button>
-            <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-xs font-bold">
-                <i class="fas fa-users"></i> <span>Base de Clientes</span>
-            </button>
+            <div class="space-y-1">
+                <button onclick="window.print()" class="w-full p-3 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-[10px] font-bold uppercase transition">
+                    <i class="fas fa-print text-blue-400"></i> <span>Imprimir Lista</span>
+                </button>
+                <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-[10px] font-bold transition">
+                    <i class="fas fa-address-book text-blue-500"></i> <span>Base de Clientes</span>
+                </button>
+            </div>
         </nav>
+        <div class="p-6 opacity-30 text-[7px] text-center uppercase font-bold tracking-[0.3em]">Hamilton Junior Dev</div>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0">
-        <header class="h-16 bg-white border-b px-10 flex justify-between items-center shadow-sm">
-            <h2 class="text-sm font-black text-slate-800 uppercase italic tracking-widest">Controlo de Produção Gamil</h2>
-            <div class="text-[10px] font-black text-blue-600 uppercase"> Hamilton Junior Dev </div>
+        <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-10 flex justify-between items-center no-print relative z-10">
+            <div>
+                <h2 class="text-lg font-black text-slate-800 uppercase italic tracking-tighter">Planeamento de Produção</h2>
+                <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest">Controlo Industrial Galvânico</p>
+            </div>
+            <div id="status-live" class="flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-full border border-blue-100">
+                <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                <span class="text-[10px] font-black text-blue-700 uppercase tracking-tighter italic text-xs">Live Cloud</span>
+            </div>
         </header>
 
         <div class="main-content">
-            <div class="header-row no-print">
+            <div class="header-row no-print pl-2">
                 <div></div>
                 <div class="pl-2">Ref / Pedido</div>
                 <div>Cliente Gamil</div>
@@ -86,93 +112,99 @@
                 <div class="admin-view text-center">Entrega</div>
                 <div class="admin-view text-center">Local</div>
                 <div class="text-center">Progresso / Log</div>
-                <div class="admin-view pl-2">Observações</div>
-                <div class="text-right pr-6">Ações</div>
+                <div class="admin-view pl-2">Observações Eduardo</div>
+                <div class="text-right pr-8">Ações</div>
             </div>
-            <div id="container-pedidos"></div>
+            
+            <div id="container-pedidos">
+                </div>
         </div>
     </main>
 
-    <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-md p-8 shadow-2xl">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h3 class="text-sm font-black text-slate-800 uppercase italic">Histórico de Comentários</h3>
-                <button onclick="fecharModal()" class="text-2xl">&times;</button>
+    <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-lg z-[60] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-10 shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-5">
+                <h3 class="text-sm font-black text-slate-800 uppercase italic">Histórico de Produção</h3>
+                <button onclick="fecharModal()" class="text-2xl text-slate-300 hover:text-red-500 transition">&times;</button>
             </div>
-            <div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
-            <button onclick="fecharModal()" class="w-full mt-6 bg-slate-100 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest">Fechar</button>
+            <div id="logs-content" class="space-y-4 max-h-[50vh] overflow-y-auto pr-3"></div>
+            <button onclick="fecharModal()" class="w-full mt-8 bg-slate-50 py-4 rounded-2xl text-[10px] font-black uppercase text-slate-400 tracking-widest hover:bg-slate-100 transition">Fechar Visualização</button>
         </div>
     </div>
 
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
-            <div class="p-6 bg-slate-100 border-b flex justify-between items-center">
-                <h3 class="font-black uppercase text-xs italic">Gestão de Clientes</h3>
-                <button onclick="fecharModal()" class="text-2xl">&times;</button>
+    <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/40 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-10 shadow-2xl border-b-[10px] border-blue-600">
+            <h3 id="prog-nome" class="text-sm font-black text-slate-800 uppercase mb-8 text-center italic leading-tight"></h3>
+            <input type="hidden" id="prog-id">
+            <div class="space-y-6 text-center">
+                <div>
+                    <label class="label-gamil">Conclusão: <span id="prog-perc-val" class="text-blue-600 font-black text-2xl ml-2">0%</span></label>
+                    <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value + '%'">
+                </div>
+                <div><label class="label-gamil">Comentário / Nota do Turno</label><textarea id="prog-obs" class="input-gamil h-28" placeholder="Ex: A aguardar banho..."></textarea></div>
+                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-5 rounded-[1.5rem] font-black uppercase shadow-xl hover:bg-blue-700 transition-all active:scale-95">Confirmar Reporte</button>
             </div>
-            <div class="p-6 border-b auth-element">
-                <form id="form-cliente" class="space-y-3">
-                    <input id="c-cod" required type="text" class="input-gamil" placeholder="CÓDIGO">
-                    <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME EMPRESA">
-                    <button type="submit" class="w-full bg-gamil text-white py-3 rounded-xl font-black uppercase text-[10px]">Adicionar Cliente</button>
-                </form>
+        </div>
+    </div>
+
+    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[3rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col">
+            <div class="p-8 bg-gamil text-white flex justify-between items-center">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black opacity-50 uppercase tracking-widest">Sistema Gamil</span>
+                    <h3 id="modal-titulo" class="font-black uppercase italic text-sm">Gerir Registo de Produção</h3>
+                </div>
+                <button onclick="fecharModal()" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-red-500 transition-all">&times;</button>
             </div>
-            <div id="lista-clientes-db" class="flex-1 overflow-y-auto p-6 space-y-2 bg-slate-50"></div>
+            <form id="form-pedido" class="p-10 grid grid-cols-2 gap-5 overflow-y-auto max-h-[80vh]">
+                <input type="hidden" id="p-id">
+                <div class="col-span-2"><label class="label-gamil">Cliente Autorizado</label><select id="p-cliente" required class="input-gamil"></select></div>
+                <div><label class="label-gamil">Nº do Pedido</label><input id="p-pedido" required type="text" class="input-gamil"></div>
+                <div><label class="label-gamil">Nível de Urgência</label><select id="p-prio" class="input-gamil"><option value="baixa">BAIXA (Verde)</option><option value="media">MÉDIA (Amarelo)</option><option value="alta">ALTA (Vermelho)</option></select></div>
+                <div><label class="label-gamil">Peso Real (Kg)</label><input id="p-peso" required type="number" step="0.01" class="input-gamil"></div>
+                <div><label class="label-gamil">Entrada Material</label><input id="p-entrada" type="date" class="input-gamil"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="label-gamil">Pesar?</label><select id="p-pesar" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
+                    <div><label class="label-gamil">Furos?</label><select id="p-furos" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
+                </div>
+                <div class="admin-view col-span-2 grid grid-cols-2 gap-5 border-t border-slate-100 pt-6 mt-2">
+                    <div><label class="label-gamil text-blue-600 font-extrabold">Planeamento Montagem</label><input id="p-montagem" type="date" class="input-gamil border-blue-100 bg-blue-50/30"></div>
+                    <div><label class="label-gamil text-orange-600 font-extrabold">Previsão Entrega</label><input id="p-saida" type="date" class="input-gamil border-orange-100 bg-orange-50/30"></div>
+                    <div class="col-span-2"><label class="label-gamil text-blue-600 font-extrabold">Localização Exata</label><input id="p-local" type="text" class="input-gamil border-blue-100 bg-blue-50/30" placeholder="Ex: RACK A-12"></div>
+                    <div class="col-span-2"><label class="label-gamil text-blue-600 font-extrabold">Notas de Expedição (Eduardo)</label><textarea id="p-obs-edu" class="input-gamil h-24 border-blue-100 bg-blue-50/30" placeholder="Instruções para o carregamento..."></textarea></div>
+                </div>
+                <button type="submit" class="col-span-2 bg-blue-600 text-white py-5 rounded-[1.5rem] font-extrabold uppercase shadow-2xl hover:bg-blue-700 transition-all mt-6 active:scale-95">Guardar no Banco de Dados</button>
+            </form>
         </div>
     </div>
 
     <div id="modal-login" class="fixed inset-0 bg-gamil z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-10 text-center shadow-2xl">
-            <h3 class="text-xl font-black text-slate-800 uppercase italic mb-8">Login Gamil</h3>
-            <select id="login-user" class="input-gamil mb-4 h-12 text-center font-bold">
+        <div class="bg-white rounded-[3rem] w-full max-w-sm p-12 text-center shadow-2xl border-t-[12px] border-blue-500">
+            <img src="logo-gamil.png" class="w-36 mx-auto mb-10">
+            <select id="login-user" class="input-gamil mb-4 h-14 text-center font-bold text-sm">
                 <option value="Visitante">Consulta</option>
                 <option value="Sofia">Sofia</option>
-                <option value="Eduardo Pereira">Eduardo Pereira</option>
+                <option value="Eduardo Pereira">Eduardo</option>
                 <option value="José Pedro">José Pedro</option>
                 <option value="José Castro">José Castro</option>
                 <option value="Luís Silva">Luís Silva</option>
                 <option value="Paulo Abreu">Paulo Abreu</option>
             </select>
-            <input type="password" id="login-pass" placeholder="SENHA" class="input-gamil mb-6 h-12 text-center">
-            <button onclick="tentarLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-xl hover:bg-blue-700">Entrar</button>
+            <input type="password" id="login-pass" placeholder="PASSWORD" class="input-gamil mb-8 h-14 text-center text-sm tracking-[0.5em]">
+            <button onclick="tentarLogin()" class="w-full bg-[#002D5A] text-white py-5 rounded-2xl font-black uppercase shadow-xl hover:bg-black transition-all">Aceder</button>
         </div>
     </div>
 
-    <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-sm p-8 shadow-2xl">
-            <h3 id="prog-nome" class="text-sm font-black text-slate-800 uppercase mb-6 text-center italic border-b pb-4"></h3>
-            <input type="hidden" id="prog-id">
-            <div class="space-y-4 text-center">
-                <div><label class="label-gamil">Percentagem: <span id="prog-perc-val" class="text-blue-600 font-black text-xl">0</span>%</label>
-                <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full accent-blue-600" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
-                <div><label class="label-gamil">Comentário / Ocorrência</label><textarea id="prog-obs" class="input-gamil h-24" placeholder="Escreva aqui..."></textarea></div>
-                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden">
-            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Gestão do Pedido</span><button onclick="fecharModal()" class="text-2xl">&times;</button></div>
-            <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[85vh] overflow-y-auto">
-                <input type="hidden" id="p-id">
-                <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
-                <div><label class="label-gamil">Nº Pedido</label><input id="p-pedido" required type="text" class="input-gamil"></div>
-                <div><label class="label-gamil">Prioridade</label><select id="p-prio" class="input-gamil"><option value="baixa">BAIXA</option><option value="media">MÉDIA</option><option value="alta">ALTA</option></select></div>
-                <div><label class="label-gamil">Peso (Kg)</label><input id="p-peso" required type="number" step="0.01" class="input-gamil"></div>
-                <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" type="date" class="input-gamil"></div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div><label class="label-gamil">Pesar?</label><select id="p-pesar" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
-                    <div><label class="label-gamil">Furos?</label><select id="p-furos" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
-                </div>
-                <div class="admin-view col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2">
-                    <div><label class="label-gamil text-blue-600 font-bold">Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
-                    <div><label class="label-gamil text-blue-600 font-bold">Entrega</label><input id="p-saida" type="date" class="input-gamil"></div>
-                    <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Localização</label><input id="p-local" type="text" class="input-gamil"></div>
-                    <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Observações Eduardo</label><textarea id="p-obs-edu" class="input-gamil h-20"></textarea></div>
-                </div>
-                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg mt-4">Guardar</button>
+    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-10 shadow-2xl flex flex-col h-[70vh]">
+            <h3 class="font-black uppercase italic mb-8 text-slate-800">Registo de Clientes</h3>
+            <form id="form-cliente" class="mb-8 space-y-4">
+                <input id="c-cod" required type="text" class="input-gamil" placeholder="CÓDIGO">
+                <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME EMPRESA">
+                <button type="submit" class="w-full bg-gamil text-white py-4 rounded-2xl font-black text-[10px] uppercase shadow-lg">Adicionar</button>
             </form>
+            <div id="lista-clientes-db" class="flex-1 overflow-y-auto space-y-2 italic text-[10px] font-extrabold text-slate-400 uppercase tracking-tighter"></div>
+            <button onclick="fecharModal()" class="w-full mt-4 text-[9px] font-black uppercase text-slate-300">Fechar</button>
         </div>
     </div>
 
@@ -229,7 +261,7 @@
             snap.forEach(d => {
                 const c = d.data();
                 if(select) select.innerHTML += `<option value="${c.codigo} | ${c.nome}">${c.codigo} - ${c.nome}</option>`;
-                if(listaDB) listaDB.innerHTML += `<div class="p-2 border-b text-[10px] font-bold uppercase">● ${c.codigo} - ${c.nome}</div>`;
+                if(listaDB) listaDB.innerHTML += `<div class="p-3 bg-slate-50 rounded-xl border border-slate-100">● ${c.codigo} - ${c.nome}</div>`;
             });
         });
 
@@ -282,40 +314,42 @@
                 const p = docSnap.data();
                 const id = docSnap.id;
                 const perc = p.progresso || 0;
-                const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
-                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Ver histórico';
+                const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-500' : 'bg-green-500';
+                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Sem reporte';
 
                 const div = document.createElement('div');
                 div.className = "pedido-card";
                 div.innerHTML = `
                     <div class="status-bar ${color}"></div>
-                    <div class="text-blue-600 font-black italic text-xs pl-2">#${p.pedido}</div>
-                    <div class="text-xs font-black uppercase text-slate-800 truncate">${p.cliente}</div>
+                    <div class="text-blue-600 font-extrabold italic text-xs pl-3">#${p.pedido}</div>
+                    <div class="text-[11px] font-extrabold uppercase text-slate-700 truncate pr-2">${p.cliente}</div>
                     <div class="text-center text-[10px] font-bold text-slate-400 italic">${p.entrada}</div>
-                    <div class="text-center text-xs font-black text-slate-600">${p.peso}kg</div>
-                    <div class="text-center text-[9px] font-black">
-                        <span class="${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">PESAR</span> | 
-                        <span class="${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">FUROS</span>
+                    <div class="text-center text-[11px] font-black text-slate-600 tracking-tighter">${p.peso} KG</div>
+                    <div class="text-center flex justify-center gap-1">
+                        <span class="badge-service ${p.pesar === 'SIM' ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-slate-50 text-slate-300'}">PES</span>
+                        <span class="badge-service ${p.furos === 'SIM' ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-slate-50 text-slate-300'}">FUR</span>
                     </div>
                     
-                    <div class="admin-view text-center text-[10px] font-black text-blue-800">${p.montagem || '--'}</div>
+                    <div class="admin-view text-center text-[10px] font-black text-blue-900/80">${p.montagem || '--'}</div>
                     <div class="admin-view text-center text-[10px] font-black text-orange-600">${p.saida || '--'}</div>
-                    <div class="admin-view text-center"><span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-[9px] font-black uppercase">${p.local || '--'}</span></div>
+                    <div class="admin-view text-center"><span class="badge-local">${p.local || '--'}</span></div>
 
-                    <div class="px-2 cursor-pointer" onclick='verLogs(${JSON.stringify(p.historico)})'>
+                    <div class="px-3 cursor-pointer" onclick='verLogs(${JSON.stringify(p.historico)})'>
                         <div class="flex items-center space-x-2">
-                            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full ${perc === 100 ? 'bg-green-500' : 'bg-blue-600'}" style="width: ${perc}%"></div></div>
-                            <span class="text-[9px] font-black">${perc}%</span>
+                            <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                                <div class="h-full ${perc === 100 ? 'bg-green-500' : 'bg-blue-600'} transition-all duration-700" style="width: ${perc}%"></div>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-800">${perc}%</span>
                         </div>
-                        <div class="text-[7px] font-bold text-slate-400 truncate mt-1 italic hover:text-blue-600">${lastLog}</div>
+                        <div class="text-[7px] font-bold text-slate-400 truncate mt-1.5 italic hover:text-blue-600 transition-colors">● ${lastLog}</div>
                     </div>
 
-                    <div class="admin-view text-[9px] font-bold text-slate-500 italic uppercase truncate border-l pl-2">${p.obs_edu || '---'}</div>
+                    <div class="admin-view text-[9px] font-bold text-slate-400 italic uppercase truncate border-l border-slate-100 pl-3 pr-2">${p.obs_edu || '---'}</div>
                     
-                    <div class="text-right pr-6 flex justify-end space-x-2 no-print">
-                        <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:text-green-700"><i class="fas fa-check-circle text-lg"></i></button>
-                        ${isAdmin ? `<button onclick="editarPedido('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:text-orange-600"><i class="fas fa-pencil-alt text-lg"></i></button>` : ''}
-                        ${viewAdmin ? `<button onclick="apagar('${id}')" class="text-slate-200 hover:text-red-500"><i class="fas fa-trash-alt text-xs"></i></button>` : ''}
+                    <div class="text-right pr-8 flex justify-end space-x-2 no-print">
+                        <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="w-8 h-8 flex items-center justify-center bg-green-50 text-green-500 rounded-lg hover:bg-green-500 hover:text-white transition-all"><i class="fas fa-check-circle"></i></button>
+                        ${isAdmin ? `<button onclick="editarPedido('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="w-8 h-8 flex items-center justify-center bg-orange-50 text-orange-500 rounded-lg hover:bg-orange-500 hover:text-white transition-all"><i class="fas fa-pencil-alt text-xs"></i></button>` : ''}
+                        ${viewAdmin ? `<button onclick="apagar('${id}')" class="w-8 h-8 flex items-center justify-center bg-red-50 text-red-300 rounded-lg hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-trash-alt text-xs"></i></button>` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -325,7 +359,7 @@
 
         window.verLogs = (logs) => {
             const content = document.getElementById('logs-content');
-            content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[10px] font-bold text-slate-600">● ${l}</div>`).join('') : '<p class="text-xs italic text-slate-400 text-center">Sem comentários.</p>';
+            content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-[1rem] border border-slate-100 text-[10px] font-bold text-slate-600 leading-relaxed shadow-sm"> ${l}</div>`).join('') : '<p class="text-xs italic text-slate-400 text-center">Nenhum comentário disponível.</p>';
             document.getElementById('modal-logs').classList.remove('hidden');
         };
 
@@ -350,7 +384,7 @@
             document.getElementById('prog-id').value = id;
             document.getElementById('prog-nome').innerText = nome;
             document.getElementById('prog-range').value = perc;
-            document.getElementById('prog-perc-val').innerText = perc;
+            document.getElementById('prog-perc-val').innerText = perc + "%";
             document.getElementById('prog-obs').value = "";
             document.getElementById('modal-progresso').classList.remove('hidden');
         };
