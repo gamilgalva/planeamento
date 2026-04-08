@@ -3,143 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub | Industrial Intelligence</title>
+    <title>Gamil Hub v2.1 | Produção Real-Time</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
         .bg-gamil { background-color: #002D5A; }
-        .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all uppercase text-sm; }
-        .label-gamil { @apply block text-[10px] font-black uppercase text-slate-500 mb-1.5 ml-1 tracking-wider; }
-        
-        /* Cores de Prioridade Reais */
-        .prioridade-alta { border-left: 8px solid #ef4444 !important; }
-        .prioridade-media { border-left: 8px solid #f59e0b !important; }
-        .prioridade-baixa { border-left: 8px solid #10b981 !important; }
-
-        .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none uppercase text-sm; }
+        .label-gamil { @apply block text-[10px] font-black uppercase text-slate-500 mb-1 ml-1; }
+        .progress-bar { transition: width 0.5s ease-in-out; }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body class="flex flex-col md:flex-row h-screen overflow-hidden">
 
-    <aside class="w-72 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-20">
-        <div class="p-8 border-b border-white/5 text-center">
-            <h1 class="text-3xl font-black italic tracking-tighter uppercase">Gamil</h1>
-            <p class="text-[9px] text-blue-300 font-bold uppercase tracking-[0.3em] mt-1 italic">Industrial Intelligence</p>
+    <aside class="w-full md:w-72 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-20">
+        <div class="p-8 border-b border-white/5 text-center relative">
+            <div class="text-xs font-black text-blue-400 absolute top-2 right-4">v2.1</div>
+            <div class="mb-4 flex justify-center">
+                <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center text-gamil font-black text-2xl shadow-inner">G</div>
+            </div>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase">Gamil Hub</h1>
+            <p class="text-[9px] text-blue-300 font-bold uppercase tracking-widest mt-1">Production Flow</p>
         </div>
-        <nav class="p-4 flex-1 space-y-2 mt-4">
-            <div class="w-full flex items-center space-x-4 p-4 bg-white/10 border-l-4 border-blue-400 rounded-xl font-bold">
-                <i class="fas fa-layer-group text-blue-400"></i> <span>Planeamento</span>
+        
+        <nav class="p-4 flex-1 space-y-2 overflow-y-auto">
+            <div class="p-4 bg-white/10 border-l-4 border-blue-400 rounded-xl font-bold flex items-center space-x-3">
+                <i class="fas fa-industry text-blue-400"></i>
+                <span>Pedidos Ativos</span>
+            </div>
+            <div class="pt-6 px-2">
+                <p class="text-[10px] font-black text-slate-500 uppercase mb-3">Chefes em Serviço</p>
+                <div id="lista-chefes" class="space-y-2 text-xs font-bold text-slate-400">
+                    <div class="flex items-center space-x-2"><div class="w-2 h-2 bg-green-500 rounded-full"></div> <span>Equipa Manhã</span></div>
+                    <div class="flex items-center space-x-2"><div class="w-2 h-2 bg-blue-500 rounded-full"></div> <span>Equipa Noite</span></div>
+                </div>
             </div>
         </nav>
-        <div class="p-6 border-t border-white/5 bg-black/20 flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-black italic shadow-lg border-2 border-white/20">HJ</div>
-            <div>
-                <p class="text-[10px] text-slate-400 font-black uppercase tracking-tighter">Software Lead</p>
-                <p class="text-xs font-bold text-white uppercase italic">Hamilton Junior</p>
-            </div>
+
+        <div class="p-6 border-t border-white/5 bg-black/20">
+            <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Lead Developer</p>
+            <p class="text-xs font-bold text-white uppercase italic underline decoration-blue-500">Hamilton Junior</p>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0">
-        <header class="h-20 glass-header border-b border-slate-200 px-8 flex justify-between items-center shadow-sm z-10">
-            <div class="flex items-center space-x-6">
-                <h2 class="text-lg font-black text-slate-800 uppercase italic tracking-tighter">Fluxo de Produção <span class="text-blue-600 ml-2 text-xs not-italic tracking-normal">● LIVE</span></h2>
-                <div class="relative">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="filtroBusca" placeholder="PESQUISAR CLIENTE OU ARTIGO..." 
-                        class="bg-slate-100 border-none rounded-full py-2 pl-10 pr-6 text-[10px] font-bold w-64 focus:ring-2 focus:ring-blue-500 transition-all outline-none">
-                </div>
+        <header class="h-24 bg-white border-b border-slate-200 px-4 md:px-10 flex flex-wrap justify-between items-center shadow-sm z-10">
+            <div>
+                <h2 class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Gestão de Pedidos</h2>
+                <p id="stats" class="text-[10px] font-bold text-slate-400 uppercase">A carregar fluxo...</p>
             </div>
-            <button onclick="toggleModal(true)" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-black shadow-lg transition-all flex items-center text-sm transform hover:scale-105 active:scale-95">
-                <i class="fas fa-plus mr-2"></i> NOVO REGISTO
+            <button onclick="abrirModalPedido()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black shadow-lg transition-all flex items-center text-sm transform hover:scale-105">
+                <i class="fas fa-plus-circle mr-2"></i> NOVO PEDIDO (EDUARDO)
             </button>
         </header>
 
-        <div class="flex-1 overflow-auto p-6 bg-slate-50/50">
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-slate-50/80 border-b border-slate-200 text-slate-500">
-                        <tr>
-                            <th class="p-4 text-[10px] font-black uppercase tracking-widest w-32">Status/Prio</th>
-                            <th class="p-4 text-[10px] font-black uppercase tracking-widest">Entrega</th>
-                            <th class="p-4 text-[10px] font-black uppercase tracking-widest w-1/4">Cliente & Artigo</th>
-                            <th class="p-4 text-[10px] font-black uppercase tracking-widest text-center">Qtd</th>
-                            <th class="p-4 text-[10px] font-black uppercase tracking-widest">Operação</th>
-                            <th class="p-4 text-[10px] font-black uppercase tracking-widest">Observações</th>
-                            <th class="p-4 text-[10px] font-black uppercase tracking-widest text-right px-6">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-corpo" class="divide-y divide-slate-100 text-sm">
-                        </tbody>
-                </table>
-                <div id="loading" class="p-20 text-center text-slate-400 italic font-bold uppercase text-xs">
-                    <i class="fas fa-circle-notch fa-spin mr-2"></i> Sincronizando com Gamil Cloud...
-                </div>
+        <div id="container-pedidos" class="flex-1 overflow-auto p-4 md:p-8 grid grid-cols-1 xl:grid-cols-2 gap-6 content-start">
             </div>
-        </div>
     </main>
 
-    <div id="modal-add" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                <h3 class="text-xl font-black text-slate-800 uppercase italic ml-4">Novo Planeamento</h3>
-                <button onclick="toggleModal(false)" class="text-slate-300 hover:text-red-500 transition-colors text-3xl mr-4 font-light">&times;</button>
+    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-xl font-black text-slate-800 uppercase italic italic">Configurar Novo Pedido</h3>
+                <button onclick="fecharModal()" class="text-slate-300 text-3xl">&times;</button>
             </div>
-            <form id="form-planeamento" class="p-10 grid grid-cols-2 gap-5">
-                <div>
-                    <label class="label-gamil">Prioridade</label>
-                    <select id="in-prio" class="input-gamil">
-                        <option value="baixa">BAIXA (Verde)</option>
-                        <option value="media">MÉDIA (Laranja)</option>
-                        <option value="alta">ALTA (Vermelho)</option>
-                    </select>
+            <form id="form-pedido" class="p-8 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="label-gamil">Número do Pedido</label>
+                        <input id="p-numero" required type="text" class="input-gamil" placeholder="Ex: PED-2024-001">
+                    </div>
+                    <div>
+                        <label class="label-gamil">Cliente</label>
+                        <input id="p-cliente" required type="text" class="input-gamil">
+                    </div>
+                    <div>
+                        <label class="label-gamil">Quantidade Total</label>
+                        <input id="p-qtd" required type="number" class="input-gamil">
+                    </div>
+                    <div>
+                        <label class="label-gamil">Data Entrada</label>
+                        <input id="p-entrada" required type="date" class="input-gamil">
+                    </div>
+                    <div>
+                        <label class="label-gamil">Previsão Saída</label>
+                        <input id="p-saida" required type="date" class="input-gamil">
+                    </div>
                 </div>
-                <div>
-                    <label class="label-gamil">Estado Atual</label>
-                    <select id="in-estado" class="input-gamil">
-                        <option>EM FALTA</option>
-                        <option>EM CURSO</option>
-                        <option>CONCLUÍDO</option>
-                    </select>
-                </div>
-                <div class="col-span-2">
-                    <label class="label-gamil">Nome do Cliente</label>
-                    <input id="in-cliente" required type="text" class="input-gamil" placeholder="EX: TEXTIL MINHO">
-                </div>
-                <div class="col-span-1">
-                    <label class="label-gamil">Artigo / Referência</label>
-                    <input id="in-artigo" required type="text" class="input-gamil" placeholder="EX: REF 500 - CAPAS">
-                </div>
-                <div class="col-span-1">
-                    <label class="label-gamil">Data de Entrega</label>
-                    <input id="in-data" type="date" required class="input-gamil">
-                </div>
-                <div class="col-span-1">
-                    <label class="label-gamil">Quantidade</label>
-                    <input id="in-qtd" type="number" required class="input-gamil" placeholder="0">
-                </div>
-                <div class="col-span-1">
-                    <label class="label-gamil">Operação / Fase</label>
-                    <input id="in-op" type="text" class="input-gamil" placeholder="EX: CORTE">
-                </div>
-                <div class="col-span-2">
-                    <label class="label-gamil">Observações Importantes</label>
-                    <textarea id="in-obs" class="input-gamil h-24 resize-none" placeholder="NOTAS ADICIONAIS..."></textarea>
-                </div>
-                <button type="submit" id="btnSalvar" class="col-span-2 bg-gamil text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-slate-800 transition-all mt-4 flex justify-center items-center">
-                    GRAVAR NO SISTEMA
-                </button>
+                <button type="submit" class="w-full bg-gamil text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-slate-800 transition-all">Lançar Pedido</button>
             </form>
+        </div>
+    </div>
+
+    <div id="modal-update" class="hidden fixed inset-0 bg-blue-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-8">
+            <h3 id="update-title" class="text-lg font-black text-slate-800 uppercase mb-6 text-center">Atualizar Progresso</h3>
+            <input type="hidden" id="update-id">
+            <div class="space-y-6">
+                <div>
+                    <label class="label-gamil">Quem está a atualizar?</label>
+                    <select id="update-chefe" class="input-gamil">
+                        <option value="Chefe Manhã">Chefe Manhã</option>
+                        <option value="Chefe Noite">Chefe Noite</option>
+                        <option value="Eduardo">Eduardo</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-gamil">Percentagem Concluída (%): <span id="perc-val" class="text-blue-600">50</span>%</label>
+                    <input type="range" id="update-perc" min="0" max="100" step="5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('perc-val').innerText = this.value">
+                </div>
+                <button onclick="salvarUpdate()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg">Confirmar Atualização</button>
+                <button onclick="fecharModal()" class="w-full text-slate-400 font-bold text-xs uppercase">Cancelar</button>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAlvGJKZdMCNopDKoXMcUTuvHa5E9GqIHA",
@@ -152,98 +134,119 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const colRef = collection(db, "planeamentos");
+        const colRef = collection(db, "pedidos_producao");
 
-        window.toggleModal = (s) => document.getElementById('modal-add').classList.toggle('hidden', !s);
-
-        // GRAVAR DADOS
-        document.getElementById('form-planeamento').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSalvar');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-sync fa-spin mr-2"></i> ENVIANDO PARA CLOUD...';
-
-            try {
-                await addDoc(colRef, {
-                    prio: document.getElementById('in-prio').value,
-                    estado: document.getElementById('in-estado').value,
-                    data: document.getElementById('in-data').value,
-                    cliente: document.getElementById('in-cliente').value.toUpperCase(),
-                    qtd: document.getElementById('in-qtd').value,
-                    artigo: document.getElementById('in-artigo').value.toUpperCase(),
-                    op: document.getElementById('in-op').value.toUpperCase(),
-                    obs: document.getElementById('in-obs').value,
-                    timestamp: new Date()
-                });
-                
-                e.target.reset();
-                toggleModal(false);
-            } catch (err) {
-                alert("Erro ao gravar! Verifique as regras do Firebase.");
-                console.error(err);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "GRAVAR NO SISTEMA";
-            }
+        // UI Control
+        window.abrirModalPedido = () => document.getElementById('modal-pedido').classList.remove('hidden');
+        window.fecharModal = () => {
+            document.querySelectorAll('.fixed').forEach(m => m.classList.add('hidden'));
         };
 
-        // RENDERIZAR TABELA COM FILTRO
-        const render = (snapshot) => {
-            const corpo = document.getElementById('tabela-corpo');
-            const termo = document.getElementById('filtroBusca').value.toUpperCase();
-            document.getElementById('loading').classList.add('hidden');
-            corpo.innerHTML = "";
+        // Eduardo: Criar Pedido
+        document.getElementById('form-pedido').onsubmit = async (e) => {
+            e.preventDefault();
+            await addDoc(colRef, {
+                numero: document.getElementById('p-numero').value.toUpperCase(),
+                cliente: document.getElementById('p-cliente').value.toUpperCase(),
+                qtd: document.getElementById('p-qtd').value,
+                entrada: document.getElementById('p-entrada').value,
+                saida: document.getElementById('p-saida').value,
+                progresso: 0,
+                ultimo_chefe: 'Sistema',
+                timestamp: new Date()
+            });
+            e.target.reset();
+            fecharModal();
+        };
+
+        // Chefes: Preparar Atualização
+        window.prepararUpdate = (id, nome, perc) => {
+            document.getElementById('update-id').value = id;
+            document.getElementById('update-title').innerText = nome;
+            document.getElementById('update-perc').value = perc;
+            document.getElementById('perc-val').innerText = perc;
+            document.getElementById('modal-update').classList.remove('hidden');
+        };
+
+        // Chefes: Salvar No Firebase
+        window.salvarUpdate = async () => {
+            const id = document.getElementById('update-id').value;
+            const perc = parseInt(document.getElementById('update-perc').value);
+            const chefe = document.getElementById('update-chefe').value;
+            
+            await updateDoc(doc(db, "pedidos_producao", id), {
+                progresso: perc,
+                ultimo_chefe: chefe,
+                update_time: new Date()
+            });
+            fecharModal();
+        };
+
+        // Renderização em Real-Time (Cards para telemóvel/web)
+        onSnapshot(query(colRef, orderBy("timestamp", "desc")), (snapshot) => {
+            const container = document.getElementById('container-pedidos');
+            container.innerHTML = "";
+            let total = 0;
 
             snapshot.forEach(docSnap => {
-                const item = docSnap.data();
-                if (item.cliente.includes(termo) || item.artigo.includes(termo)) {
-                    const row = document.createElement('tr');
-                    row.className = `prioridade-${item.prio} hover:bg-slate-50 transition-colors`;
-                    
-                    const badge = { 
-                        alta: 'bg-red-50 text-red-600 border-red-100', 
-                        media: 'bg-orange-50 text-orange-600 border-orange-100', 
-                        baixa: 'bg-green-50 text-green-600 border-green-100' 
-                    };
-                    
-                    row.innerHTML = `
-                        <td class="p-4">
-                            <span class="px-2 py-1 rounded-md text-[9px] font-black uppercase border ${badge[item.prio]}">${item.prio}</span>
-                            <div class="text-[9px] font-bold text-slate-400 mt-1 uppercase">${item.estado}</div>
-                        </td>
-                        <td class="p-4 font-bold text-slate-600 italic">${item.data}</td>
-                        <td class="p-4">
-                            <div class="font-black text-slate-800 uppercase leading-tight">${item.cliente}</div>
-                            <div class="text-[10px] text-blue-500 font-bold uppercase mt-0.5">${item.artigo}</div>
-                        </td>
-                        <td class="p-4 text-center font-black text-slate-700">${item.qtd}</td>
-                        <td class="p-4 font-bold text-slate-400 text-[10px] uppercase">${item.op}</td>
-                        <td class="p-4 text-xs italic text-slate-400 max-w-xs truncate">${item.obs || '-'}</td>
-                        <td class="p-4 text-right px-6">
-                            <button onclick="confirmarDelecao('${docSnap.id}')" class="text-slate-200 hover:text-red-500 p-2 transition-colors">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>`;
-                    corpo.appendChild(row);
-                }
+                const p = docSnap.data();
+                const id = docSnap.id;
+                total++;
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-[2rem] p-6 shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-xl transition-all";
+                
+                const colorClass = p.progresso === 100 ? 'bg-green-500' : 'bg-blue-600';
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[10px] font-black text-blue-500 uppercase tracking-tighter">${p.numero}</span>
+                            <h4 class="text-lg font-black text-slate-800 leading-none uppercase">${p.cliente}</h4>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Quantidade</span>
+                            <span class="text-sm font-black text-slate-700">${p.qtd} UN</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-slate-50 p-3 rounded-2xl">
+                            <span class="text-[9px] font-bold text-slate-400 block uppercase italic text-center">Entrada</span>
+                            <span class="text-[11px] font-black text-slate-600 block text-center italic">${p.entrada}</span>
+                        </div>
+                        <div class="bg-orange-50 p-3 rounded-2xl border border-orange-100">
+                            <span class="text-[9px] font-bold text-orange-400 block uppercase italic text-center">Previsão Saída</span>
+                            <span class="text-[11px] font-black text-orange-600 block text-center italic">${p.saida}</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-[10px] font-black text-slate-400 uppercase italic">Status Produção</span>
+                            <span class="text-xl font-black ${p.progresso === 100 ? 'text-green-600' : 'text-blue-700'}">${p.progresso}%</span>
+                        </div>
+                        <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="progress-bar h-full ${colorClass}" style="width: ${p.progresso}%"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-[9px] font-bold uppercase text-slate-400 pt-2 italic">
+                            <span>Última mod: ${p.ultimo_chefe || 'Sistema'}</span>
+                            <button onclick="prepararUpdate('${id}', '${p.cliente}', ${p.progresso})" class="bg-slate-800 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">Atualizar</button>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmarDelete('${id}')" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-slate-200 hover:text-red-500 transition-all text-xs p-2">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(card);
             });
+            document.getElementById('stats').innerText = `${total} PEDIDOS EM MONITORIZAÇÃO ATIVA`;
+        });
+
+        window.confirmarDelete = async (id) => {
+            if(confirm("Eliminar este pedido permanentemente?")) await deleteDoc(doc(db, "pedidos_producao", id));
         };
-
-        // ESCUTA REAL-TIME
-        const q = query(colRef, orderBy("timestamp", "desc"));
-        let currentSnapshot = null;
-        onSnapshot(q, (s) => { currentSnapshot = s; render(s); });
-        
-        // FILTRO DE BUSCA
-        document.getElementById('filtroBusca').oninput = () => render(currentSnapshot);
-
-        // FUNÇÃO DE APAGAR
-        window.confirmarDelecao = async (id) => {
-            if(confirm("Deseja apagar permanentemente este registo?")) {
-                await deleteDoc(doc(db, "planeamentos", id));
-            }
-        };
-
     </script>
 </body>
 </html>
