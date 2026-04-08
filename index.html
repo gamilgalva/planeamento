@@ -3,44 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v3.7 | Full Production</title>
+    <title>Gamil Hub v3.8 | Professional Production</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
         :root { --gamil-blue: #002D5A; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .bg-gamil { background-color: var(--gamil-blue); }
         
+        /* LINHA DE PEDIDO ESTILO CARD */
         .grid-row { 
             display: grid; 
-            grid-template-columns: 8px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 110px;
+            grid-template-columns: 8px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 1.5fr 110px;
             align-items: center; gap: 12px;
-            @apply bg-white border border-slate-200 rounded-xl mb-2 px-0 py-3 shadow-sm hover:shadow-md transition-all;
+            @apply bg-white border border-slate-200 rounded-xl mb-3 px-0 py-3 shadow-sm hover:shadow-md transition-all;
         }
 
+        /* CABEÇALHO COM FUNDO DIFERENCIADO */
         .header-row { 
             display: grid; 
-            grid-template-columns: 8px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 110px;
+            grid-template-columns: 8px 110px 1.8fr 100px 80px 110px 100px 100px 110px 180px 1.5fr 110px;
             gap: 12px;
-            @apply px-0 mb-2 text-[9px] font-black uppercase text-slate-400 tracking-widest;
+            @apply px-0 py-3 mb-4 rounded-xl bg-slate-200/50 border border-slate-300 text-[9px] font-black uppercase text-blue-900 tracking-widest;
         }
 
         .status-tag { width: 8px; height: 50px; border-radius: 0 4px 4px 0; }
-        .main-content { overflow-y: auto; flex: 1; padding: 20px 40px; }
+        .main-content { overflow-y: auto; flex: 1; padding: 25px 40px; }
         .admin-view, .auth-element { display: none; }
         
         .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-2 focus:ring-blue-500; }
         .label-gamil { @apply block text-[10px] font-black uppercase text-slate-400 mb-1; }
 
-        /* IMPRESSÃO */
         @media print {
             aside, header, button, .no-print { display: none !important; }
             body { background: white !important; display: block !important; overflow: visible !important; }
             .main-content { padding: 0 !important; overflow: visible !important; }
-            .grid-row { border: 1px solid #ddd !important; break-inside: avoid; margin-bottom: 5px; page-break-inside: avoid; }
+            .header-row { display: grid !important; background: #eee !important; border: 1px solid #000 !important; color: black !important; margin-bottom: 10px !important;}
+            .grid-row { display: grid !important; border: 1px solid #ddd !important; break-inside: avoid; margin-bottom: 5px; grid-template-columns: 5px 80px 1.5fr 80px 60px 80px 80px 80px 80px 120px 1fr 0px !important; }
             .admin-view { display: block !important; }
-            .grid-row { grid-template-columns: 5px 80px 1.5fr 80px 60px 80px 80px 80px 80px 1fr 0px !important; }
         }
     </style>
 </head>
@@ -49,35 +50,35 @@
     <aside class="w-full md:w-64 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
         <div class="p-8 border-b border-white/10 text-center">
             <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-2" onerror="this.style.display='none'">
-            <h1 class="text-[9px] font-black tracking-widest uppercase text-blue-300">Gamil Hub v3.7</h1>
+            <h1 class="text-[9px] font-black tracking-widest uppercase text-blue-300 italic">Gamil Hub v3.8</h1>
         </div>
         <nav class="p-4 flex-1 space-y-3">
             <div id="user-info" class="p-4 bg-white/5 rounded-xl border border-white/10 text-center mb-4">
-                <p id="nome-logado" class="text-xs font-black uppercase italic">Visitante</p>
-                <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2">Sair</button>
+                <p id="nome-logado" class="text-xs font-black uppercase italic text-blue-100">Visitante</p>
+                <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2">Sair do Sistema</button>
             </div>
-            <button onclick="abrirModalPedido()" class="auth-element w-full p-3 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg">
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all">
                 <i class="fas fa-plus"></i> <span>Novo Pedido</span>
             </button>
             <button onclick="window.print()" class="w-full p-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase">
-                <i class="fas fa-print text-blue-400"></i> <span>Imprimir Lista</span>
+                <i class="fas fa-print"></i> <span>Imprimir Relatório</span>
             </button>
-            <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-xs font-bold transition">
-                <i class="fas fa-users"></i> <span>Clientes</span>
+            <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-xs font-bold">
+                <i class="fas fa-users"></i> <span>Base de Clientes</span>
             </button>
         </nav>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0">
         <header class="h-16 bg-white border-b px-10 flex justify-between items-center no-print">
-            <h2 class="text-sm font-black text-slate-700 uppercase italic">Planeamento Geral de Produção</h2>
+            <h2 class="text-sm font-black text-slate-700 uppercase italic tracking-widest">Planeamento de Produção</h2>
             <div class="text-[10px] font-black text-blue-600 uppercase">Hamilton Junior Dev</div>
         </header>
 
         <div class="main-content">
             <div class="header-row">
                 <div></div>
-                <div>Ref / Pedido</div>
+                <div class="pl-2">Ref / Pedido</div>
                 <div>Cliente Gamil</div>
                 <div class="text-center">Entrada</div>
                 <div class="text-center">Peso</div>
@@ -86,8 +87,10 @@
                 <div class="admin-view text-center">Entrega</div>
                 <div class="admin-view text-center">Local</div>
                 <div class="text-center">Progresso / Log</div>
+                <div class="text-left admin-view">Observações Eduardo</div>
                 <div class="text-right pr-4">Ações</div>
             </div>
+            
             <div id="container-pedidos"></div>
         </div>
     </main>
@@ -95,11 +98,11 @@
     <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
         <div class="bg-white rounded-[2rem] w-full max-w-md p-8 shadow-2xl">
             <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h3 class="text-sm font-black text-slate-800 uppercase italic italic">Histórico de Atividade</h3>
+                <h3 class="text-sm font-black text-slate-800 uppercase italic">Histórico do Pedido</h3>
                 <button onclick="fecharModal()" class="text-2xl">&times;</button>
             </div>
             <div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
-            <button onclick="fecharModal()" class="w-full mt-6 bg-slate-100 py-3 rounded-xl text-[10px] font-black uppercase">Fechar Janela</button>
+            <button onclick="fecharModal()" class="w-full mt-6 bg-slate-100 py-3 rounded-xl text-[10px] font-black uppercase">Fechar</button>
         </div>
     </div>
 
@@ -110,16 +113,16 @@
             <div class="space-y-4">
                 <div><label class="label-gamil">Percentagem: <span id="prog-perc-val" class="text-blue-600 font-black text-xl">0</span>%</label>
                 <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full accent-blue-600" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
-                <div><label class="label-gamil">O que aconteceu no turno?</label><textarea id="prog-obs" class="input-gamil h-24" placeholder="Escreva aqui o comentário..."></textarea></div>
-                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Confirmar Reporte</button>
+                <div><label class="label-gamil">Comentário do Turno</label><textarea id="prog-obs" class="input-gamil h-24" placeholder="Ex: Material pronto para expedição..."></textarea></div>
+                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Reportar</button>
             </div>
         </div>
     </div>
 
     <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-[2rem] w-full max-w-2xl shadow-2xl overflow-hidden">
-            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Gestão do Pedido</span><button onclick="fecharModal()">&times;</button></div>
-            <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[80vh] overflow-y-auto">
+            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs tracking-widest"><span>Gestão do Pedido</span><button onclick="fecharModal()">&times;</button></div>
+            <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[85vh] overflow-y-auto">
                 <input type="hidden" id="p-id">
                 <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
                 <div><label class="label-gamil">Nº Pedido</label><input id="p-pedido" required type="text" class="input-gamil"></div>
@@ -131,41 +134,13 @@
                     <div><label class="label-gamil">Furos?</label><select id="p-furos" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
                 </div>
                 <div class="admin-view col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2">
-                    <div><label class="label-gamil">Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
-                    <div><label class="label-gamil">Entrega</label><input id="p-saida" type="date" class="input-gamil"></div>
-                    <div><label class="label-gamil">Localização</label><input id="p-local" type="text" class="input-gamil"></div>
+                    <div><label class="label-gamil text-blue-600">Previsão Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
+                    <div><label class="label-gamil text-blue-600">Previsão Entrega</label><input id="p-saida" type="date" class="input-gamil"></div>
+                    <div class="col-span-2"><label class="label-gamil text-blue-600">Localização (Rack/Pátio)</label><input id="p-local" type="text" class="input-gamil"></div>
+                    <div class="col-span-2"><label class="label-gamil text-blue-600">Observações Eduardo (Para Impressão)</label><textarea id="p-obs-edu" class="input-gamil h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg mt-4">Guardar Tudo</button>
+                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg mt-4">Gravar Dados</button>
             </form>
-        </div>
-    </div>
-
-    <div id="modal-login" class="fixed inset-0 bg-gamil z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-sm p-10 text-center shadow-2xl">
-            <h3 class="text-xl font-black text-slate-800 uppercase mb-8 italic">Acesso Restrito Gamil</h3>
-            <select id="login-user" class="input-gamil mb-4 h-12 text-center font-bold">
-                <option value="Visitante">Consulta</option>
-                <option value="Sofia">Sofia</option>
-                <option value="Eduardo Pereira">Eduardo Pereira</option>
-                <option value="José Pedro">José Pedro</option>
-                <option value="José Castro">José Castro</option>
-                <option value="Luís Silva">Luís Silva</option>
-                <option value="Paulo Abreu">Paulo Abreu</option>
-            </select>
-            <input type="password" id="login-pass" placeholder="PASSWORD" class="input-gamil mb-6 h-12 text-center">
-            <button onclick="tentarLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-xl hover:bg-blue-700 transition-all">Entrar</button>
-        </div>
-    </div>
-
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm p-8 shadow-2xl flex flex-col h-[60vh]">
-            <h3 class="font-black uppercase italic mb-6">Clientes Cadastrados</h3>
-            <form id="form-cliente" class="mb-4 space-y-3">
-                <input id="c-cod" required type="text" class="input-gamil" placeholder="CÓDIGO">
-                <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME EMPRESA">
-                <button type="submit" class="w-full bg-gamil text-white py-3 rounded-xl font-black text-[10px] uppercase">Salvar</button>
-            </form>
-            <div id="lista-clientes-db" class="flex-1 overflow-y-auto space-y-1 text-[10px] font-bold text-slate-400"></div>
         </div>
     </div>
 
@@ -196,7 +171,7 @@
                 localStorage.setItem('gamil_admin', (user === "Eduardo Pereira" || user === "José Pedro" || user === "Sofia"));
                 localStorage.setItem('gamil_view_admin', (user === "Eduardo Pereira" || user === "José Pedro"));
                 checkPermissions();
-            } else alert("Acesso negado.");
+            } else alert("Senha Incorreta!");
         };
 
         const checkPermissions = () => {
@@ -213,15 +188,16 @@
 
         window.logout = () => { localStorage.clear(); window.location.reload(); };
 
+        // CLIENTES
         onSnapshot(colClientes, (snap) => {
             const select = document.getElementById('p-cliente');
             const listaDB = document.getElementById('lista-clientes-db');
-            select.innerHTML = '<option value="">-- CLIENTE --</option>';
+            select.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>';
             listaDB.innerHTML = "";
             snap.forEach(d => {
                 const c = d.data();
                 select.innerHTML += `<option value="${c.codigo} | ${c.nome}">${c.codigo} - ${c.nome}</option>`;
-                listaDB.innerHTML += `<div class="p-2 border-b">● ${c.codigo} - ${c.nome}</div>`;
+                listaDB.innerHTML += `<div class="p-2 border-b uppercase">● ${c.codigo} - ${c.nome}</div>`;
             });
         });
         document.getElementById('form-cliente').onsubmit = async (e) => {
@@ -230,6 +206,7 @@
             e.target.reset();
         };
 
+        // PEDIDOS
         document.getElementById('form-pedido').onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('p-id').value;
@@ -244,6 +221,7 @@
                 montagem: document.getElementById('p-montagem').value,
                 saida: document.getElementById('p-saida').value,
                 local: document.getElementById('p-local').value.toUpperCase(),
+                obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(),
                 timestamp: new Date()
             };
             if (id) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), data);
@@ -261,6 +239,7 @@
             fecharModal();
         };
 
+        // RENDERIZAÇÃO
         onSnapshot(query(colPedidos, orderBy("timestamp", "desc")), (snap) => {
             const container = document.getElementById('container-pedidos');
             container.innerHTML = "";
@@ -272,13 +251,13 @@
                 const id = docSnap.id;
                 const perc = p.progresso || 0;
                 const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
-                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Clique para ver logs';
+                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Sem comentários';
 
                 const row = document.createElement('div');
                 row.className = "grid-row";
                 row.innerHTML = `
                     <div class="status-tag ${color}"></div>
-                    <div class="text-blue-600 font-black italic text-xs">#${p.pedido}</div>
+                    <div class="text-blue-600 font-black italic text-xs pl-2">#${p.pedido}</div>
                     <div class="text-xs font-black uppercase text-slate-800 truncate">${p.cliente}</div>
                     <div class="text-center text-[10px] font-bold text-slate-400 italic">${p.entrada}</div>
                     <div class="text-center text-xs font-black text-slate-600">${p.peso}kg</div>
@@ -298,6 +277,8 @@
                         </div>
                         <div onclick='verLogs(${JSON.stringify(p.historico)})' class="text-[7px] font-bold text-slate-400 truncate mt-1 italic cursor-pointer hover:text-blue-500">${lastLog}</div>
                     </div>
+
+                    <div class="admin-view text-[9px] font-bold text-slate-500 italic uppercase truncate leading-tight border-l pl-2">${p.obs_edu || '---'}</div>
                     
                     <div class="text-right pr-4 flex justify-end space-x-2 no-print">
                         <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:text-green-700"><i class="fas fa-check-circle text-lg"></i></button>
@@ -312,7 +293,7 @@
 
         window.verLogs = (logs) => {
             const content = document.getElementById('logs-content');
-            content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[10px] font-bold text-slate-600">● ${l}</div>`).join('') : '<p class="text-xs italic text-slate-400 text-center">Nenhum comentário até ao momento.</p>';
+            content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[10px] font-bold text-slate-600">● ${l}</div>`).join('') : '<p class="text-xs italic text-slate-400 text-center">Nenhum comentário.</p>';
             document.getElementById('modal-logs').classList.remove('hidden');
         };
 
@@ -329,6 +310,7 @@
             document.getElementById('p-montagem').value = p.montagem;
             document.getElementById('p-saida').value = p.saida;
             document.getElementById('p-local').value = p.local;
+            document.getElementById('p-obs-edu').value = p.obs_edu || '';
             document.getElementById('modal-pedido').classList.remove('hidden');
         };
 
