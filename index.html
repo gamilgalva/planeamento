@@ -3,125 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v2.1 | Produção Real-Time</title>
+    <title>Gamil Hub v2.2 | Production Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; }
         .bg-gamil { background-color: #002D5A; }
         .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none uppercase text-sm; }
         .label-gamil { @apply block text-[10px] font-black uppercase text-slate-500 mb-1 ml-1; }
-        .progress-bar { transition: width 0.5s ease-in-out; }
+        /* Fix Mobile Scroll */
+        .main-content { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
     </style>
 </head>
-<body class="flex flex-col md:flex-row h-screen overflow-hidden">
+<body class="md:flex-row flex flex-col">
 
-    <aside class="w-full md:w-72 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-20">
+    <aside class="w-full md:w-72 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-20 md:h-screen">
         <div class="p-8 border-b border-white/5 text-center relative">
-            <div class="text-xs font-black text-blue-400 absolute top-2 right-4">v2.1</div>
+            <div class="text-[10px] font-black text-blue-400 absolute top-2 right-4 tracking-tighter uppercase">v2.2 Atualizada</div>
             <div class="mb-4 flex justify-center">
-                <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center text-gamil font-black text-2xl shadow-inner">G</div>
+                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-gamil font-black text-2xl shadow-xl border-4 border-blue-500/20">G</div>
             </div>
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase">Gamil Hub</h1>
-            <p class="text-[9px] text-blue-300 font-bold uppercase tracking-widest mt-1">Production Flow</p>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Gamil Hub</h1>
+            <p class="text-[9px] text-blue-300 font-bold uppercase tracking-widest mt-2">Industrial Intelligence</p>
         </div>
         
-        <nav class="p-4 flex-1 space-y-2 overflow-y-auto">
-            <div class="p-4 bg-white/10 border-l-4 border-blue-400 rounded-xl font-bold flex items-center space-x-3">
-                <i class="fas fa-industry text-blue-400"></i>
-                <span>Pedidos Ativos</span>
-            </div>
-            <div class="pt-6 px-2">
-                <p class="text-[10px] font-black text-slate-500 uppercase mb-3">Chefes em Serviço</p>
-                <div id="lista-chefes" class="space-y-2 text-xs font-bold text-slate-400">
-                    <div class="flex items-center space-x-2"><div class="w-2 h-2 bg-green-500 rounded-full"></div> <span>Equipa Manhã</span></div>
-                    <div class="flex items-center space-x-2"><div class="w-2 h-2 bg-blue-500 rounded-full"></div> <span>Equipa Noite</span></div>
-                </div>
-            </div>
+        <nav class="p-4 flex-1 space-y-4">
+            <button onclick="window.location.reload()" class="w-full p-4 bg-white/10 rounded-xl font-bold flex items-center space-x-3 hover:bg-white/20 transition">
+                <i class="fas fa-sync-alt text-blue-400"></i> <span>Atualizar Painel</span>
+            </button>
+            <button onclick="abrirModalCliente()" class="w-full p-4 hover:bg-white/5 rounded-xl font-bold flex items-center space-x-3 text-slate-400 transition">
+                <i class="fas fa-address-book"></i> <span>Gestão de Clientes</span>
+            </button>
         </nav>
 
         <div class="p-6 border-t border-white/5 bg-black/20">
-            <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Lead Developer</p>
-            <p class="text-xs font-bold text-white uppercase italic underline decoration-blue-500">Hamilton Junior</p>
+            <p class="text-[9px] text-slate-500 font-black uppercase mb-1 italic">Software Lead</p>
+            <p class="text-xs font-black text-white uppercase italic decoration-blue-500 underline underline-offset-4">Hamilton Junior</p>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col min-w-0">
-        <header class="h-24 bg-white border-b border-slate-200 px-4 md:px-10 flex flex-wrap justify-between items-center shadow-sm z-10">
+    <main class="flex-1 flex flex-col min-w-0 main-content">
+        <header class="h-24 bg-white border-b border-slate-200 px-6 md:px-10 flex justify-between items-center shadow-sm sticky top-0 z-10">
             <div>
-                <h2 class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Gestão de Pedidos</h2>
-                <p id="stats" class="text-[10px] font-bold text-slate-400 uppercase">A carregar fluxo...</p>
+                <h2 class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Monitorização de Pedidos</h2>
+                <p id="stats" class="text-[10px] font-bold text-blue-600 uppercase">Sincronizando Cloud...</p>
             </div>
-            <button onclick="abrirModalPedido()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black shadow-lg transition-all flex items-center text-sm transform hover:scale-105">
-                <i class="fas fa-plus-circle mr-2"></i> NOVO PEDIDO (EDUARDO)
+            <button onclick="abrirModalPedido()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black shadow-lg transition-all text-sm flex items-center">
+                <i class="fas fa-plus-circle mr-2"></i> NOVO PEDIDO
             </button>
         </header>
 
-        <div id="container-pedidos" class="flex-1 overflow-auto p-4 md:p-8 grid grid-cols-1 xl:grid-cols-2 gap-6 content-start">
+        <div id="container-pedidos" class="p-4 md:p-8 grid grid-cols-1 xl:grid-cols-2 gap-6 pb-20">
             </div>
     </main>
 
-    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                <h3 class="text-xl font-black text-slate-800 uppercase italic italic">Configurar Novo Pedido</h3>
-                <button onclick="fecharModal()" class="text-slate-300 text-3xl">&times;</button>
-            </div>
-            <form id="form-pedido" class="p-8 space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2">
-                        <label class="label-gamil">Número do Pedido</label>
-                        <input id="p-numero" required type="text" class="input-gamil" placeholder="Ex: PED-2024-001">
-                    </div>
-                    <div>
-                        <label class="label-gamil">Cliente</label>
-                        <input id="p-cliente" required type="text" class="input-gamil">
-                    </div>
-                    <div>
-                        <label class="label-gamil">Quantidade Total</label>
-                        <input id="p-qtd" required type="number" class="input-gamil">
-                    </div>
-                    <div>
-                        <label class="label-gamil">Data Entrada</label>
-                        <input id="p-entrada" required type="date" class="input-gamil">
-                    </div>
-                    <div>
-                        <label class="label-gamil">Previsão Saída</label>
-                        <input id="p-saida" required type="date" class="input-gamil">
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-gamil text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-slate-800 transition-all">Lançar Pedido</button>
+    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md p-8">
+            <h3 class="text-xl font-black text-slate-800 uppercase italic mb-6">Registar Cliente Gamil</h3>
+            <form id="form-cliente" class="space-y-4">
+                <div><label class="label-gamil">Código Gamil</label><input id="c-cod" required type="text" class="input-gamil" placeholder="Ex: 1050"></div>
+                <div><label class="label-gamil">Nome da Empresa</label><input id="c-nome" required type="text" class="input-gamil"></div>
+                <button type="submit" class="w-full bg-gamil text-white py-4 rounded-xl font-black uppercase tracking-widest">Salvar Cliente</button>
+                <button type="button" onclick="fecharModal()" class="w-full text-slate-400 font-bold text-xs uppercase">Fechar</button>
             </form>
         </div>
     </div>
 
-    <div id="modal-update" class="hidden fixed inset-0 bg-blue-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-8">
-            <h3 id="update-title" class="text-lg font-black text-slate-800 uppercase mb-6 text-center">Atualizar Progresso</h3>
+    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl w-full max-w-lg my-auto shadow-2xl">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-3xl">
+                <h3 class="text-xl font-black text-slate-800 uppercase italic">Lançar Novo Pedido</h3>
+                <button onclick="fecharModal()" class="text-slate-300 text-3xl font-light">&times;</button>
+            </div>
+            <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="label-gamil">Número do Pedido</label>
+                    <input id="p-numero" required type="text" class="input-gamil" placeholder="PED-2026-...">
+                </div>
+                <div class="col-span-2">
+                    <label class="label-gamil">Selecionar Cliente</label>
+                    <select id="p-cliente-select" required class="input-gamil"></select>
+                </div>
+                <div><label class="label-gamil">Qtd Total</label><input id="p-qtd" required type="number" class="input-gamil"></div>
+                <div><label class="label-gamil">Artigo</label><input id="p-art" required type="text" class="input-gamil"></div>
+                <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" required type="date" class="input-gamil"></div>
+                <div><label class="label-gamil">Previsão Saída</label><input id="p-saida" required type="date" class="input-gamil"></div>
+                <button type="submit" class="col-span-2 bg-gamil text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl mt-4">Ativar Pedido na Produção</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-update" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-8 shadow-2xl">
+            <h3 id="update-title" class="text-lg font-black text-slate-800 uppercase mb-6 text-center italic leading-none"></h3>
             <input type="hidden" id="update-id">
             <div class="space-y-6">
                 <div>
-                    <label class="label-gamil">Quem está a atualizar?</label>
+                    <label class="label-gamil">Chefe Responsável</label>
                     <select id="update-chefe" class="input-gamil">
-                        <option value="Chefe Manhã">Chefe Manhã</option>
-                        <option value="Chefe Noite">Chefe Noite</option>
-                        <option value="Eduardo">Eduardo</option>
+                        <optgroup label="Equipa Manhã">
+                            <option value="José Castro">José Castro</option>
+                            <option value="Eduardo">Eduardo</option>
+                        </optgroup>
+                        <optgroup label="Equipa Noite">
+                            <option value="Luís Silva">Luís Silva</option>
+                            <option value="Paulo Abreu">Paulo Abreu</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div>
-                    <label class="label-gamil">Percentagem Concluída (%): <span id="perc-val" class="text-blue-600">50</span>%</label>
-                    <input type="range" id="update-perc" min="0" max="100" step="5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('perc-val').innerText = this.value">
+                    <label class="label-gamil">Estado: <span id="perc-val" class="text-blue-600 text-lg">0</span>%</label>
+                    <input type="range" id="update-perc" min="0" max="100" step="10" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('perc-val').innerText = this.value">
                 </div>
-                <button onclick="salvarUpdate()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg">Confirmar Atualização</button>
-                <button onclick="fecharModal()" class="w-full text-slate-400 font-bold text-xs uppercase">Cancelar</button>
+                <button onclick="salvarUpdate()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">Confirmar Progresso</button>
+                <button onclick="fecharModal()" class="w-full text-slate-400 font-bold text-[10px] uppercase tracking-widest">Cancelar</button>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAlvGJKZdMCNopDKoXMcUTuvHa5E9GqIHA",
@@ -134,32 +137,51 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const colRef = collection(db, "pedidos_producao");
+        const colPedidos = collection(db, "pedidos_producao");
+        const colClientes = collection(db, "clientes_gamil");
 
-        // UI Control
         window.abrirModalPedido = () => document.getElementById('modal-pedido').classList.remove('hidden');
-        window.fecharModal = () => {
-            document.querySelectorAll('.fixed').forEach(m => m.classList.add('hidden'));
+        window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
+        window.fecharModal = () => document.querySelectorAll('.fixed').forEach(m => m.classList.add('hidden'));
+
+        // Cadastro de Clientes
+        document.getElementById('form-cliente').onsubmit = async (e) => {
+            e.preventDefault();
+            await addDoc(colClientes, { 
+                codigo: document.getElementById('c-cod').value, 
+                nome: document.getElementById('c-nome').value.toUpperCase() 
+            });
+            e.target.reset(); alert("Cliente Salvo!");
         };
+
+        // Carregar Clientes no Select
+        onSnapshot(colClientes, (snap) => {
+            const select = document.getElementById('p-cliente-select');
+            select.innerHTML = '<option value="">-- Selecione o Cliente --</option>';
+            snap.forEach(d => {
+                const c = d.data();
+                select.innerHTML += `<option value="${c.codigo} - ${c.nome}">${c.codigo} | ${c.nome}</option>`;
+            });
+        });
 
         // Eduardo: Criar Pedido
         document.getElementById('form-pedido').onsubmit = async (e) => {
             e.preventDefault();
-            await addDoc(colRef, {
+            await addDoc(colPedidos, {
                 numero: document.getElementById('p-numero').value.toUpperCase(),
-                cliente: document.getElementById('p-cliente').value.toUpperCase(),
+                cliente: document.getElementById('p-cliente-select').value,
                 qtd: document.getElementById('p-qtd').value,
+                artigo: document.getElementById('p-art').value.toUpperCase(),
                 entrada: document.getElementById('p-entrada').value,
                 saida: document.getElementById('p-saida').value,
                 progresso: 0,
-                ultimo_chefe: 'Sistema',
+                historico: [],
                 timestamp: new Date()
             });
-            e.target.reset();
-            fecharModal();
+            e.target.reset(); fecharModal();
         };
 
-        // Chefes: Preparar Atualização
+        // Update com Log de Histórico
         window.prepararUpdate = (id, nome, perc) => {
             document.getElementById('update-id').value = id;
             document.getElementById('update-title').innerText = nome;
@@ -168,84 +190,88 @@
             document.getElementById('modal-update').classList.remove('hidden');
         };
 
-        // Chefes: Salvar No Firebase
         window.salvarUpdate = async () => {
             const id = document.getElementById('update-id').value;
             const perc = parseInt(document.getElementById('update-perc').value);
             const chefe = document.getElementById('update-chefe').value;
-            
+            const logEntry = `${chefe} atualizou para ${perc}% em ${new Date().toLocaleString('pt-PT')}`;
+
             await updateDoc(doc(db, "pedidos_producao", id), {
                 progresso: perc,
                 ultimo_chefe: chefe,
-                update_time: new Date()
+                historico: arrayUnion(logEntry)
             });
             fecharModal();
         };
 
-        // Renderização em Real-Time (Cards para telemóvel/web)
-        onSnapshot(query(colRef, orderBy("timestamp", "desc")), (snapshot) => {
+        // Interface Principal
+        onSnapshot(query(colPedidos, orderBy("timestamp", "desc")), (snapshot) => {
             const container = document.getElementById('container-pedidos');
             container.innerHTML = "";
-            let total = 0;
+            let count = 0;
 
             snapshot.forEach(docSnap => {
                 const p = docSnap.data();
                 const id = docSnap.id;
-                total++;
+                count++;
 
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-[2rem] p-6 shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-xl transition-all";
+                card.className = "bg-white rounded-[2rem] p-6 shadow-sm border border-slate-200 relative group overflow-hidden touch-auto";
                 
-                const colorClass = p.progresso === 100 ? 'bg-green-500' : 'bg-blue-600';
+                // Histórico visual (últimos 3 eventos)
+                const ultimosLogs = p.historico ? p.historico.slice(-2).map(l => `<div class="bg-blue-50/50 p-2 rounded-lg mb-1 border-l-2 border-blue-400"> ● ${l}</div>`).join('') : '';
 
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
+                    <div class="flex justify-between items-start mb-6">
                         <div>
-                            <span class="text-[10px] font-black text-blue-500 uppercase tracking-tighter">${p.numero}</span>
-                            <h4 class="text-lg font-black text-slate-800 leading-none uppercase">${p.cliente}</h4>
+                            <span class="text-[10px] font-black text-blue-500 uppercase tracking-tighter italic">PEDIDO: ${p.numero}</span>
+                            <h4 class="text-lg font-black text-slate-800 leading-tight uppercase truncate max-w-[200px]">${p.cliente}</h4>
                         </div>
-                        <div class="text-right">
-                            <span class="text-[10px] font-bold text-slate-400 block uppercase">Quantidade</span>
-                            <span class="text-sm font-black text-slate-700">${p.qtd} UN</span>
-                        </div>
+                        <div class="bg-slate-800 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase">${p.qtd} UN</div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="bg-slate-50 p-3 rounded-2xl">
-                            <span class="text-[9px] font-bold text-slate-400 block uppercase italic text-center">Entrada</span>
-                            <span class="text-[11px] font-black text-slate-600 block text-center italic">${p.entrada}</span>
+                        <div class="text-center bg-slate-50 p-3 rounded-2xl">
+                            <span class="text-[9px] font-bold text-slate-400 block uppercase italic leading-none mb-1">Entrada</span>
+                            <span class="text-[11px] font-black text-slate-600 block">${p.entrada}</span>
                         </div>
-                        <div class="bg-orange-50 p-3 rounded-2xl border border-orange-100">
-                            <span class="text-[9px] font-bold text-orange-400 block uppercase italic text-center">Previsão Saída</span>
-                            <span class="text-[11px] font-black text-orange-600 block text-center italic">${p.saida}</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-end">
-                            <span class="text-[10px] font-black text-slate-400 uppercase italic">Status Produção</span>
-                            <span class="text-xl font-black ${p.progresso === 100 ? 'text-green-600' : 'text-blue-700'}">${p.progresso}%</span>
-                        </div>
-                        <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="progress-bar h-full ${colorClass}" style="width: ${p.progresso}%"></div>
-                        </div>
-                        <div class="flex justify-between items-center text-[9px] font-bold uppercase text-slate-400 pt-2 italic">
-                            <span>Última mod: ${p.ultimo_chefe || 'Sistema'}</span>
-                            <button onclick="prepararUpdate('${id}', '${p.cliente}', ${p.progresso})" class="bg-slate-800 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">Atualizar</button>
+                        <div class="text-center bg-orange-50 p-3 rounded-2xl border border-orange-100">
+                            <span class="text-[9px] font-bold text-orange-400 block uppercase italic leading-none mb-1">Entrega</span>
+                            <span class="text-[11px] font-black text-orange-600 block">${p.saida}</span>
                         </div>
                     </div>
 
-                    <button onclick="confirmarDelete('${id}')" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-slate-200 hover:text-red-500 transition-all text-xs p-2">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                    <div class="mb-6">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-[10px] font-black text-slate-400 uppercase italic">Andamento Industrial</span>
+                            <span class="text-2xl font-black text-blue-700">${p.progresso}%</span>
+                        </div>
+                        <div class="w-full h-5 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-100">
+                            <div class="h-full ${p.progresso === 100 ? 'bg-green-500' : 'bg-blue-600'} transition-all duration-700" style="width: ${p.progresso}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="text-[9px] font-bold text-slate-400 uppercase mb-3 italic">Registo de Atividade:</div>
+                    <div class="text-[9px] font-semibold text-slate-500 mb-6 italic">
+                        ${ultimosLogs || 'Aguardando início de produção...'}
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <button onclick="prepararUpdate('${id}', '${p.cliente}', ${p.progresso})" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[11px] shadow-lg shadow-blue-100 active:scale-95 transition-all">
+                            <i class="fas fa-edit mr-2"></i> Atualizar Estado
+                        </button>
+                        <button onclick="confirmarDelete('${id}')" class="w-12 bg-slate-100 text-slate-300 hover:text-red-500 rounded-xl transition-all">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 `;
                 container.appendChild(card);
             });
-            document.getElementById('stats').innerText = `${total} PEDIDOS EM MONITORIZAÇÃO ATIVA`;
+            document.getElementById('stats').innerText = `${count} PEDIDOS EM CURSO`;
         });
 
         window.confirmarDelete = async (id) => {
-            if(confirm("Eliminar este pedido permanentemente?")) await deleteDoc(doc(db, "pedidos_producao", id));
+            if(confirm("Deseja eliminar este pedido?")) await deleteDoc(doc(db, "pedidos_producao", id));
         };
     </script>
 </body>
