@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planeamento Gamil v2.3</title>
+    <title>Planeamento Gamil v2.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,114 +12,123 @@
         .bg-gamil { background-color: #002D5A; }
         .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-semibold text-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none uppercase text-sm; }
         .label-gamil { @apply block text-[10px] font-black uppercase text-slate-500 mb-1 ml-1; }
-        .main-content { overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; }
-        /* Transição suave de cores */
-        .progress-bar { transition: width 0.5s ease, background-color 0.5s ease; }
+        .main-content { overflow-y: auto; flex: 1; }
+        .admin-only { display: none; } /* Escondido por padrão */
     </style>
 </head>
 <body class="md:flex-row flex flex-col">
 
     <aside class="w-full md:w-72 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-20 md:h-screen">
         <div class="p-8 border-b border-white/5 text-center relative">
-            <div class="text-[9px] font-black text-blue-400/50 absolute top-2 right-4 tracking-tighter uppercase">v2.3</div>
             <div class="mb-4 flex justify-center">
-                 <img src="logo-gamil.png" alt="Gamil Logo" class="w-24 h-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                 <img src="logo-gamil.png" alt="Gamil Logo" class="w-24 h-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                  <div class="w-16 h-16 bg-white rounded-2xl hidden items-center justify-center text-gamil font-black text-2xl">G</div>
             </div>
-            <h1 class="text-xl font-black italic tracking-tighter uppercase leading-none text-blue-50">Planeamento Gamil</h1>
+            <h1 class="text-xl font-black italic tracking-tighter uppercase leading-none">Planeamento Gamil</h1>
         </div>
         
         <nav class="p-4 flex-1 space-y-4">
-            <button onclick="window.location.reload()" class="w-full p-4 bg-white/10 rounded-xl font-bold flex items-center space-x-3 hover:bg-white/20 transition">
-                <i class="fas fa-sync-alt text-blue-400"></i> <span>Sincronizar</span>
+            <div id="user-info" class="p-4 bg-blue-900/50 rounded-xl border border-blue-400/30 mb-6 text-center">
+                <p class="text-[9px] uppercase font-black text-blue-300">Sessão Ativa</p>
+                <p id="nome-logado" class="text-sm font-bold italic">Visitante</p>
+                <button onclick="logout()" class="text-[9px] underline text-red-400 font-bold mt-2 uppercase">Sair / Trocar</button>
+            </div>
+
+            <button onclick="window.location.reload()" class="w-full p-3 bg-white/10 rounded-xl font-bold flex items-center space-x-3">
+                <i class="fas fa-sync-alt text-blue-400"></i> <span>Painel Principal</span>
             </button>
-            <button onclick="verificarAcesso(abrirModalCliente)" class="w-full p-4 hover:bg-white/5 rounded-xl font-bold flex items-center space-x-3 text-slate-400 transition text-sm">
-                <i class="fas fa-users-cog"></i> <span>Base de Clientes</span>
+            <button onclick="abrirModalCliente()" class="w-full p-3 hover:bg-white/5 rounded-xl font-bold flex items-center space-x-3 text-slate-400 transition">
+                <i class="fas fa-address-book"></i> <span>Base de Clientes</span>
             </button>
         </nav>
 
-        <div class="p-4 opacity-10 hover:opacity-100 transition-opacity">
-            <p class="text-[8px] font-medium text-slate-500 uppercase text-center tracking-[0.2em]">Dev: Hamilton Junior</p>
+        <div class="p-4 opacity-10">
+            <p class="text-[8px] font-medium text-slate-500 uppercase text-center">Dev: Hamilton Junior</p>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0 main-content">
         <header class="h-20 bg-white border-b border-slate-200 px-6 md:px-10 flex justify-between items-center shadow-sm sticky top-0 z-10">
-            <div class="flex items-center space-x-4">
-                <div class="h-8 w-1.5 bg-blue-600 rounded-full"></div>
-                <h2 class="text-lg font-black text-slate-800 uppercase italic">Produção em Tempo Real</h2>
-            </div>
-            <button onclick="verificarAcesso(abrirModalPedido)" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black shadow-lg transition-all text-xs flex items-center">
-                <i class="fas fa-plus-circle mr-2"></i> LANÇAR PEDIDO
+            <h2 class="text-lg font-black text-slate-800 uppercase italic">Fluxo de Pedidos</h2>
+            <button onclick="abrirModalPedido()" class="admin-only bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black shadow-lg text-xs flex items-center transition-all transform hover:scale-105">
+                <i class="fas fa-plus-circle mr-2"></i> NOVO PEDIDO
             </button>
         </header>
 
         <div id="container-pedidos" class="p-4 md:p-8 grid grid-cols-1 xl:grid-cols-2 gap-6 pb-20"></div>
     </main>
 
-    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl w-full max-w-lg my-auto shadow-2xl">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-3xl">
-                <h3 id="modal-pedido-titulo" class="text-xl font-black text-slate-800 uppercase italic italic">Lançar Pedido</h3>
+    <div id="modal-login" class="fixed inset-0 bg-gamil z-[100] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-10 text-center shadow-2xl">
+            <div class="mb-6 flex justify-center"><img src="logo-gamil.png" class="w-24" onerror="this.parentElement.style.display='none'"></div>
+            <h3 class="text-xl font-black text-slate-800 uppercase italic mb-8">Acesso ao Sistema</h3>
+            <select id="login-user" class="input-gamil mb-4">
+                <option value="Visitante">Apenas Visualizar</option>
+                <option value="Eduardo Pereira">Eduardo Pereira (Admin)</option>
+                <option value="José Pedro">José Pedro (Diretor)</option>
+                <option value="José Castro">José Castro (Chefe)</option>
+                <option value="Luís Silva">Luís Silva (Chefe)</option>
+                <option value="Paulo Abreu">Paulo Abreu (Chefe)</option>
+            </select>
+            <input type="password" id="login-pass" placeholder="SENHA" class="input-gamil mb-6">
+            <button onclick="tentarLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-xl">Entrar</button>
+        </div>
+    </div>
+
+    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-2xl h-[80vh] flex flex-col overflow-hidden">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+                <h3 class="text-xl font-black text-slate-800 uppercase italic italic">Base de Clientes Gamil</h3>
+                <button onclick="fecharModal()" class="text-slate-300 text-3xl">&times;</button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-6">
+                <div class="admin-only border-b pb-6 mb-6">
+                    <p class="text-[10px] font-black text-blue-600 uppercase mb-4 tracking-widest">Registar Novo Cliente</p>
+                    <form id="form-cliente" class="grid grid-cols-2 gap-3">
+                        <input id="c-cod" required type="text" class="input-gamil" placeholder="CÓDIGO INTERNO">
+                        <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME DA EMPRESA">
+                        <button type="submit" class="col-span-2 bg-gamil text-white py-3 rounded-xl font-black text-xs uppercase">Salvar no Banco de Dados</button>
+                    </form>
+                </div>
+                
+                <p class="text-[10px] font-black text-slate-400 uppercase mb-3">Lista de Clientes Cadastrados</p>
+                <div id="lista-clientes-full" class="space-y-2">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50 rounded-t-3xl">
+                <h3 id="modal-pedido-titulo" class="text-xl font-black text-slate-800 uppercase italic">Lançar Pedido</h3>
                 <button onclick="fecharModal()" class="text-slate-300 text-3xl">&times;</button>
             </div>
             <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4">
                 <input type="hidden" id="p-id-edit">
-                <div class="col-span-2">
-                    <label class="label-gamil">Número do Pedido</label>
-                    <input id="p-numero" required type="text" class="input-gamil">
-                </div>
-                <div class="col-span-2">
-                    <label class="label-gamil">Cliente</label>
-                    <select id="p-cliente-select" required class="input-gamil"></select>
-                </div>
+                <div class="col-span-2"><label class="label-gamil">Número do Pedido</label><input id="p-numero" required type="text" class="input-gamil"></div>
+                <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente-select" required class="input-gamil"></select></div>
                 <div><label class="label-gamil">Qtd Total</label><input id="p-qtd" required type="number" class="input-gamil"></div>
                 <div><label class="label-gamil">Artigo</label><input id="p-art" required type="text" class="input-gamil"></div>
                 <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" required type="date" class="input-gamil"></div>
                 <div><label class="label-gamil">Previsão Saída</label><input id="p-saida" required type="date" class="input-gamil"></div>
-                <button type="submit" class="col-span-2 bg-gamil text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl mt-4">Guardar no Sistema</button>
+                <button type="submit" class="col-span-2 bg-gamil text-white py-5 rounded-2xl font-black uppercase tracking-widest mt-4">Guardar Pedido</button>
             </form>
         </div>
     </div>
 
     <div id="modal-update" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm p-8 shadow-2xl">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-8">
             <h3 id="update-title" class="text-lg font-black text-slate-800 uppercase mb-6 text-center italic"></h3>
             <input type="hidden" id="update-id">
             <div class="space-y-6">
-                <div>
-                    <label class="label-gamil">Responsável pelo Turno</label>
-                    <select id="update-chefe" class="input-gamil">
-                        <optgroup label="Direção e Liderança">
-                            <option value="Eduardo Pereira">Eduardo Pereira</option>
-                            <option value="José Pedro">José Pedro</option>
-                        </optgroup>
-                        <optgroup label="Chefes de Equipa">
-                            <option value="José Castro">José Castro</option>
-                            <option value="Luís Silva">Luís Silva</option>
-                            <option value="Paulo Abreu">Paulo Abreu</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div>
-                    <label class="label-gamil">Percentagem: <span id="perc-val" class="text-blue-600 text-lg">0</span>%</label>
+                <div><label class="label-gamil">Estado: <span id="perc-val" class="text-blue-600 text-lg">0</span>%</label>
                     <input type="range" id="update-perc" min="0" max="100" step="5" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('perc-val').innerText = this.value">
                 </div>
-                <button onclick="salvarUpdate()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">Confirmar Progresso</button>
+                <button onclick="salvarUpdate()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Confirmar Progresso</button>
                 <button onclick="fecharModal()" class="w-full text-slate-400 font-bold text-[10px] uppercase">Cancelar</button>
             </div>
-        </div>
-    </div>
-
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-md p-8 shadow-2xl">
-            <h3 class="text-xl font-black text-slate-800 uppercase italic mb-6">Registo de Clientes Gamil</h3>
-            <form id="form-cliente" class="space-y-4">
-                <div><label class="label-gamil">Código Interno</label><input id="c-cod" required type="text" class="input-gamil" placeholder="Ex: 1050"></div>
-                <div><label class="label-gamil">Nome Empresa</label><input id="c-nome" required type="text" class="input-gamil"></div>
-                <button type="submit" class="w-full bg-gamil text-white py-4 rounded-xl font-black uppercase shadow-lg">Salvar Cliente</button>
-                <button type="button" onclick="fecharModal()" class="w-full text-slate-400 font-bold text-xs uppercase pt-4">Fechar Janela</button>
-            </form>
         </div>
     </div>
 
@@ -141,40 +150,77 @@
         const colPedidos = collection(db, "pedidos_producao");
         const colClientes = collection(db, "clientes_gamil");
 
-        // SEGURANÇA
-        window.verificarAcesso = (callback) => {
-            const pass = prompt("Introduza a senha de acesso:");
-            if(pass === "eduardo1234") callback();
-            else alert("Acesso negado!");
+        // --- SISTEMA DE LOGIN ---
+        window.tentarLogin = () => {
+            const user = document.getElementById('login-user').value;
+            const pass = document.getElementById('login-pass').value;
+            
+            if (user === "Visitante") {
+                iniciarSessao(user, false);
+            } else if (pass === "eduardo1234") {
+                const isAdmin = (user === "Eduardo Pereira" || user === "José Pedro");
+                iniciarSessao(user, isAdmin);
+            } else {
+                alert("Senha Incorreta!");
+            }
         };
 
-        window.abrirModalPedido = () => {
-            document.getElementById('modal-pedido-titulo').innerText = "Lançar Pedido";
-            document.getElementById('p-id-edit').value = "";
-            document.getElementById('form-pedido').reset();
-            document.getElementById('modal-pedido').classList.remove('hidden');
+        const iniciarSessao = (nome, admin) => {
+            localStorage.setItem('gamil_user', nome);
+            localStorage.setItem('gamil_admin', admin);
+            document.getElementById('modal-login').classList.add('hidden');
+            checkPermissions();
         };
 
-        window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
-        window.fecharModal = () => document.querySelectorAll('.fixed').forEach(m => m.classList.add('hidden'));
+        window.logout = () => {
+            localStorage.removeItem('gamil_user');
+            localStorage.removeItem('gamil_admin');
+            window.location.reload();
+        };
 
-        // CRUD CLIENTES
+        const checkPermissions = () => {
+            const user = localStorage.getItem('gamil_user');
+            const isAdmin = localStorage.getItem('gamil_admin') === 'true';
+            
+            if (!user) {
+                document.getElementById('modal-login').classList.remove('hidden');
+                return;
+            }
+            
+            document.getElementById('modal-login').classList.add('hidden');
+            document.getElementById('nome-logado').innerText = user;
+            
+            // Mostrar/Esconder elementos administrativos
+            document.querySelectorAll('.admin-only').forEach(el => {
+                el.style.display = isAdmin ? 'block' : 'none';
+            });
+        };
+
+        // --- CRUD CLIENTES ---
         document.getElementById('form-cliente').onsubmit = async (e) => {
             e.preventDefault();
             await addDoc(colClientes, { codigo: document.getElementById('c-cod').value, nome: document.getElementById('c-nome').value.toUpperCase() });
-            e.target.reset(); alert("Cliente registado com sucesso!");
+            e.target.reset();
         };
 
         onSnapshot(colClientes, (snap) => {
             const select = document.getElementById('p-cliente-select');
-            select.innerHTML = '<option value="">-- SELECIONE O CLIENTE --</option>';
+            const listaFull = document.getElementById('lista-clientes-full');
+            select.innerHTML = '<option value="">-- SELECIONE --</option>';
+            listaFull.innerHTML = "";
+            
             snap.forEach(d => {
                 const c = d.data();
                 select.innerHTML += `<option value="${c.codigo} - ${c.nome}">${c.codigo} | ${c.nome}</option>`;
+                listaFull.innerHTML += `
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl border border-slate-200">
+                        <span class="text-xs font-black text-blue-600">${c.codigo}</span>
+                        <span class="text-xs font-bold text-slate-700 uppercase">${c.nome}</span>
+                    </div>`;
             });
         });
 
-        // CRUD PEDIDOS (SAVE/UPDATE)
+        // --- CRUD PEDIDOS ---
         document.getElementById('form-pedido').onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('p-id-edit').value;
@@ -186,123 +232,82 @@
                 entrada: document.getElementById('p-entrada').value,
                 saida: document.getElementById('p-saida').value
             };
-
-            if(id) {
-                await updateDoc(doc(db, "pedidos_producao", id), data);
-            } else {
-                await addDoc(colPedidos, { ...data, progresso: 0, historico: [], timestamp: new Date() });
-            }
+            if(id) await updateDoc(doc(db, "pedidos_producao", id), data);
+            else await addDoc(colPedidos, { ...data, progresso: 0, historico: [], timestamp: new Date() });
             fecharModal();
         };
 
         window.editarPedido = (id, data) => {
-            verificarAcesso(() => {
-                const p = JSON.parse(decodeURIComponent(data));
-                document.getElementById('modal-pedido-titulo').innerText = "Editar Pedido";
-                document.getElementById('p-id-edit').value = id;
-                document.getElementById('p-numero').value = p.numero;
-                document.getElementById('p-cliente-select').value = p.cliente;
-                document.getElementById('p-qtd').value = p.qtd;
-                document.getElementById('p-art').value = p.artigo;
-                document.getElementById('p-entrada').value = p.entrada;
-                document.getElementById('p-saida').value = p.saida;
-                document.getElementById('modal-pedido').classList.remove('hidden');
-            });
-        };
-
-        // UPDATE PROGRESSO
-        window.prepararUpdate = (id, nome, perc) => {
-            document.getElementById('update-id').value = id;
-            document.getElementById('update-title').innerText = nome;
-            document.getElementById('update-perc').value = perc;
-            document.getElementById('perc-val').innerText = perc;
-            document.getElementById('modal-update').classList.remove('hidden');
+            const p = JSON.parse(decodeURIComponent(data));
+            document.getElementById('modal-pedido-titulo').innerText = "Editar Pedido";
+            document.getElementById('p-id-edit').value = id;
+            document.getElementById('p-numero').value = p.numero;
+            document.getElementById('p-cliente-select').value = p.cliente;
+            document.getElementById('p-qtd').value = p.qtd;
+            document.getElementById('p-art').value = p.artigo;
+            document.getElementById('p-entrada').value = p.entrada;
+            document.getElementById('p-saida').value = p.saida;
+            document.getElementById('modal-pedido').classList.remove('hidden');
         };
 
         window.salvarUpdate = async () => {
             const id = document.getElementById('update-id').value;
             const perc = parseInt(document.getElementById('update-perc').value);
-            const chefe = document.getElementById('update-chefe').value;
-            const logEntry = `${chefe} ➔ ${perc}% (${new Date().toLocaleDateString('pt-PT')} ${new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'})})`;
-
-            await updateDoc(doc(db, "pedidos_producao", id), {
-                progresso: perc,
-                ultimo_chefe: chefe,
-                historico: arrayUnion(logEntry)
-            });
+            const user = localStorage.getItem('gamil_user');
+            const logEntry = `${user} ➔ ${perc}% (${new Date().toLocaleTimeString('pt-PT', {hour:'2-digit', minute:'2-digit'})})`;
+            await updateDoc(doc(db, "pedidos_producao", id), { progresso: perc, ultimo_chefe: user, historico: arrayUnion(logEntry) });
             fecharModal();
         };
 
-        // RENDERIZAÇÃO
+        // --- RENDERIZAÇÃO ---
         onSnapshot(query(colPedidos, orderBy("timestamp", "desc")), (snapshot) => {
             const container = document.getElementById('container-pedidos');
             container.innerHTML = "";
+            const isAdmin = localStorage.getItem('gamil_admin') === 'true';
+
             snapshot.forEach(docSnap => {
                 const p = docSnap.data();
                 const id = docSnap.id;
-                
-                // Cor Dinâmica
-                let colorClass = "bg-red-500";
-                if(p.progresso > 30) colorClass = "bg-orange-400";
-                if(p.progresso > 70) colorClass = "bg-blue-600";
-                if(p.progresso == 100) colorClass = "bg-green-500";
+                let colorClass = p.progresso < 31 ? 'bg-red-500' : p.progresso < 71 ? 'bg-orange-400' : p.progresso < 100 ? 'bg-blue-600' : 'bg-green-500';
+                const dataString = encodeURIComponent(JSON.stringify(p));
 
                 const card = document.createElement('div');
                 card.className = "bg-white rounded-[2rem] p-6 shadow-sm border border-slate-200 relative group";
-                
-                const dataString = encodeURIComponent(JSON.stringify(p));
-
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <span class="text-[10px] font-black text-blue-600 uppercase tracking-tight italic">PEDIDO: ${p.numero}</span>
-                            <h4 class="text-lg font-black text-slate-800 leading-tight uppercase truncate max-w-[200px]">${p.cliente}</h4>
+                            <span class="text-[10px] font-black text-blue-600 uppercase italic">PEDIDO: ${p.numero}</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase truncate max-w-[200px] leading-tight">${p.cliente}</h4>
                         </div>
-                        <div class="flex space-x-1">
+                        <div class="${isAdmin ? 'flex' : 'hidden'} space-x-1">
                             <button onclick="editarPedido('${id}', '${dataString}')" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-edit text-xs"></i></button>
-                            <button onclick="verificarAcesso(() => apagarPedido('${id}'))" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash-alt text-xs"></i></button>
+                            <button onclick="apagarPedido('${id}')" class="w-8 h-8 rounded-lg bg-slate-50 text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-trash-alt text-xs"></i></button>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-3 mb-6">
-                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                            <span class="text-[8px] font-bold text-slate-400 block uppercase mb-1">Entrada</span>
-                            <span class="text-[10px] font-black text-slate-600 block italic">${p.entrada}</span>
-                        </div>
-                        <div class="bg-orange-50 p-3 rounded-2xl border border-orange-100">
-                            <span class="text-[8px] font-bold text-orange-400 block uppercase mb-1">Previsão</span>
-                            <span class="text-[10px] font-black text-orange-600 block italic">${p.saida}</span>
-                        </div>
+                        <div class="bg-slate-50 p-2 rounded-xl text-center"><span class="text-[8px] font-bold text-slate-400 block uppercase">Entrada</span><span class="text-[10px] font-black italic">${p.entrada}</span></div>
+                        <div class="bg-orange-50 p-2 rounded-xl text-center"><span class="text-[8px] font-bold text-orange-400 block uppercase">Saída</span><span class="text-[10px] font-black italic">${p.saida}</span></div>
                     </div>
-
                     <div class="mb-6">
-                        <div class="flex justify-between items-end mb-2">
-                            <span class="text-[9px] font-black text-slate-400 uppercase italic">Andamento</span>
-                            <span class="text-2xl font-black text-slate-800">${p.progresso}%</span>
-                        </div>
-                        <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="progress-bar h-full ${colorClass}" style="width: ${p.progresso}%"></div>
-                        </div>
+                        <div class="flex justify-between items-end mb-2"><span class="text-[9px] font-black text-slate-400 uppercase italic">Progresso</span><span class="text-2xl font-black">${p.progresso}%</span></div>
+                        <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden"><div class="h-full ${colorClass} transition-all duration-700" style="width: ${p.progresso}%"></div></div>
                     </div>
-
-                    <div class="bg-slate-50/50 p-3 rounded-xl mb-6">
-                        <p class="text-[8px] font-black text-slate-400 uppercase mb-2">Últimas Atualizações:</p>
-                        <div class="space-y-1">
-                            ${(p.historico || []).slice(-2).map(log => `<div class="text-[9px] font-semibold text-slate-500">● ${log}</div>`).join('') || '<div class="text-[9px] italic text-slate-300">Sem registo inicial</div>'}
-                        </div>
+                    <div class="bg-slate-50/50 p-3 rounded-xl mb-4">
+                        <div class="space-y-1">${(p.historico || []).slice(-2).map(log => `<div class="text-[9px] font-semibold text-slate-500">● ${log}</div>`).join('') || '<div class="text-[9px] italic text-slate-300">Sem registo</div>'}</div>
                     </div>
-
-                    <button onclick="prepararUpdate('${id}', '${p.cliente}', ${p.progresso})" class="w-full bg-slate-800 text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-600 transition-all shadow-lg active:scale-95">
-                        <i class="fas fa-tasks mr-2"></i> Reportar Progresso
-                    </button>
+                    <button onclick="prepararUpdate('${id}', '${p.cliente}', ${p.progresso})" class="w-full bg-slate-800 text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-600 active:scale-95 transition-all">Reportar Progresso</button>
                 `;
                 container.appendChild(card);
             });
         });
 
-        window.apagarPedido = async (id) => {
-            if(confirm("Deseja eliminar permanentemente este registo?")) await deleteDoc(doc(db, "pedidos_producao", id));
-        };
+        window.abrirModalPedido = () => { document.getElementById('modal-pedido-titulo').innerText = "Lançar Pedido"; document.getElementById('p-id-edit').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('modal-pedido').classList.remove('hidden'); };
+        window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
+        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
+        window.apagarPedido = async (id) => { if(confirm("Apagar pedido?")) await deleteDoc(doc(db, "pedidos_producao", id)); };
+        window.prepararUpdate = (id, nome, perc) => { document.getElementById('update-id').value = id; document.getElementById('update-title').innerText = nome; document.getElementById('update-perc').value = perc; document.getElementById('perc-val').innerText = perc; document.getElementById('modal-update').classList.remove('hidden'); };
+
+        checkPermissions();
     </script>
 </body>
 </html>
