@@ -3,30 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v5.0 | Estabilidade Total</title>
+    <title>Gamil Hub v5.0 | Edição Profissional</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <script src="clientes_base.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         :root { --gamil-blue: #002D5A; }
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .bg-gamil { background-color: var(--gamil-blue); }
-        .main-content { overflow-x: auto; overflow-y: auto; flex: 1; padding: 20px; }
-        
-        /* TABELA RÍGIDA PARA EVITAR BAGUNÇA */
-        .gamil-table { min-width: 1450px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; }
+        .main-content { overflow-x: auto; overflow-y: auto; flex: 1; padding: 20px 40px; }
+        .gamil-table { min-width: 1450px; border-separate: border-spacing-y(10px); width: 100%; border-collapse: separate; }
         .gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
         .pedido-row { @apply bg-white shadow-sm hover:shadow-md transition-all duration-200; }
         .pedido-row td { @apply py-4 px-4 text-[11px] font-bold text-slate-600 first:rounded-l-xl last:rounded-r-xl border-y border-slate-100; }
-
         .status-strip { width: 6px; height: 40px; border-radius: 10px; }
         .admin-view, .auth-element { display: none; }
         .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-2 focus:ring-blue-500; }
         .label-gamil { @apply block text-[10px] font-black uppercase text-slate-400 mb-1; }
-        .btn-import { @apply bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-xl font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2; }
-        .btn-danger { @apply bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded-xl font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2; }
     </style>
 </head>
 <body class="md:flex-row flex flex-col">
@@ -34,29 +30,26 @@
     <aside class="w-full md:w-64 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
         <div class="p-8 border-b border-white/10 text-center">
             <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3" onerror="this.style.display='none'">
-            <h1 class="text-[10px] font-black tracking-[0.2em] uppercase text-blue-300">Gamil Hub v5.0</h1>
+            <h1 class="text-[10px] font-black tracking-[0.2em] uppercase text-blue-300">Hub v5.0 Master</h1>
         </div>
         <nav class="p-4 flex-1 space-y-3">
             <div id="user-info" class="p-4 bg-white/5 rounded-2xl border border-white/10 text-center mb-4">
-                <p id="nome-logado" class="text-xs font-black uppercase italic">Visitante</p>
+                <p id="nome-logado" class="text-xs font-black uppercase italic text-white">Visitante</p>
                 <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2">Sair</button>
             </div>
-            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg">
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700">
                 <i class="fas fa-plus"></i> <span>Novo Registo</span>
             </button>
             <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-[10px] font-bold">
-                <i class="fas fa-users text-blue-500"></i> <span>Base de Clientes</span>
-            </button>
-            <button onclick="window.print()" class="w-full p-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase">
-                <i class="fas fa-print"></i> <span>Imprimir</span>
+                <i class="fas fa-users"></i> <span>Base de Clientes</span>
             </button>
         </nav>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0">
-        <header class="h-16 bg-white border-b border-slate-200 px-8 flex justify-between items-center no-print">
-            <h2 class="text-sm font-black text-slate-800 uppercase italic">Planeamento Geral Gamil</h2>
-            <div id="sync-status" class="text-[9px] font-black text-blue-600 uppercase tracking-widest italic animate-pulse">Servidor Ativo</div>
+        <header class="h-16 bg-white border-b border-slate-200 px-8 flex justify-between items-center no-print text-xs">
+            <h2 class="font-black text-slate-800 uppercase italic">Gestão Longitudinal Gamil</h2>
+            <div class="text-blue-600 font-black uppercase tracking-widest italic">Híbrido: Local + Nuvem</div>
         </header>
 
         <div class="main-content">
@@ -66,7 +59,7 @@
                         <th style="width: 10px"></th>
                         <th style="width: 130px">Ref / Pedido</th>
                         <th style="width: 320px">Cliente Gamil</th>
-                        <th class="text-center" style="width: 100px">Entrada</th>
+                        <th class="text-center" style="width: 110px">Entrada</th>
                         <th class="text-center" style="width: 90px">Peso</th>
                         <th class="text-center" style="width: 120px">Serviços</th>
                         <th class="text-center admin-view" style="width: 120px">Montagem</th>
@@ -83,25 +76,31 @@
     </main>
 
     <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl flex flex-col h-[85vh]">
+        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl flex flex-col h-[70vh]">
             <div class="p-6 bg-slate-100 border-b flex justify-between items-center">
-                <h3 class="font-black uppercase italic text-slate-800">Clientes</h3>
+                <h3 class="font-black uppercase italic text-slate-800 text-sm">Base de Clientes</h3>
                 <button onclick="fecharModal()" class="text-2xl">&times;</button>
             </div>
-            <div class="p-6 border-b bg-slate-50 auth-element flex flex-col gap-2">
-                <div class="flex gap-2">
-                    <label class="btn-import cursor-pointer flex-1">
-                        <i class="fas fa-file-excel"></i> Importar Excel
-                        <input type="file" id="excelInput" class="hidden" accept=".xlsx, .xls, .csv">
-                    </label>
-                    <button onclick="limparTodaBaseClientes()" class="btn-danger flex-1">
-                        <i class="fas fa-trash-alt"></i> Limpar Tudo
-                    </button>
-                </div>
-                <p id="importStatus" class="text-[8px] font-bold text-blue-600 mt-1 text-center"></p>
+            <div class="p-6 border-b auth-element">
+                <form id="form-cliente" class="space-y-3">
+                    <input id="c-cod" required type="text" class="input-gamil" placeholder="NOVO CÓDIGO">
+                    <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME EMPRESA">
+                    <button type="submit" class="w-full bg-gamil text-white py-3 rounded-xl font-black text-[10px] uppercase">Guardar no Firebase</button>
+                </form>
             </div>
-            <div id="lista-clientes-db" class="flex-1 overflow-y-auto space-y-1 p-6 text-[10px] font-bold text-slate-500 uppercase italic">
-                Carregando dados...
+            <div id="lista-clientes-db" class="flex-1 overflow-y-auto space-y-1 p-6 text-[10px] font-bold text-slate-500 uppercase italic"></div>
+        </div>
+    </div>
+
+    <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] w-full max-w-sm p-8 shadow-2xl text-center">
+            <h3 id="prog-nome" class="text-sm font-black text-slate-800 uppercase mb-8 border-b pb-4 italic"></h3>
+            <input type="hidden" id="prog-id">
+            <div class="space-y-4">
+                <div><label class="label-gamil">Conclusão: <span id="prog-perc-val" class="text-blue-600 font-black text-xl">0</span>%</label>
+                <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
+                <textarea id="prog-obs" class="input-gamil h-24" placeholder="Alguma nota importante?"></textarea>
+                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Confirmar</button>
             </div>
         </div>
     </div>
@@ -114,22 +113,9 @@
         </div>
     </div>
 
-    <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-sm p-8 shadow-2xl text-center">
-            <h3 id="prog-nome" class="text-sm font-black text-slate-800 uppercase mb-8 border-b pb-4 italic"></h3>
-            <input type="hidden" id="prog-id">
-            <div class="space-y-4">
-                <div><label class="label-gamil">Progresso: <span id="prog-perc-val" class="text-blue-600 font-black text-xl">0</span>%</label>
-                <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
-                <textarea id="prog-obs" class="input-gamil h-24" placeholder="Comentário..."></textarea>
-                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
     <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col">
-            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Ficha de Pedido</span><button onclick="fecharModal()">&times;</button></div>
+            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Gestão do Pedido</span><button onclick="fecharModal()">&times;</button></div>
             <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[85vh] overflow-y-auto">
                 <input type="hidden" id="p-id">
                 <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
@@ -147,7 +133,7 @@
                     <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Localização</label><input id="p-local" type="text" class="input-gamil"></div>
                     <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Observações Eduardo</label><textarea id="p-obs-edu" class="input-gamil h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg mt-4">Gravar</button>
+                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg mt-4">Guardar</button>
             </form>
         </div>
     </div>
@@ -158,7 +144,7 @@
             <select id="login-user" class="input-gamil mb-4 h-12 text-center font-bold">
                 <option value="Visitante">Consulta</option>
                 <option value="Sofia">Sofia</option>
-                <option value="Eduardo Pereira">Eduardo</option>
+                <option value="Eduardo Pereira">Eduardo Pereira</option>
                 <option value="José Pedro">José Pedro</option>
                 <option value="José Castro">José Castro</option>
                 <option value="Luís Silva">Luís Silva</option>
@@ -171,7 +157,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc, arrayUnion, writeBatch, getDocs, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAlvGJKZdMCNopDKoXMcUTuvHa5E9GqIHA",
@@ -185,7 +171,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const colPedidos = collection(db, "pedidos_vfinal_gamil");
-        const colClientes = collection(db, "clientes_gamil");
+        const colClientesFirebase = collection(db, "clientes_gamil");
+
+        let clientesFirebase = [];
 
         window.tentarLogin = () => {
             const user = document.getElementById('login-user').value;
@@ -194,7 +182,6 @@
             if (user === "Visitante" || (creds[user] && pass === creds[user])) {
                 localStorage.setItem('gamil_user', user);
                 localStorage.setItem('gamil_admin', (user === "Eduardo Pereira" || user === "José Pedro" || user === "Sofia"));
-                localStorage.setItem('gamil_full_delete', (user === "Eduardo Pereira" || user === "José Pedro"));
                 localStorage.setItem('gamil_view_admin', (user === "Eduardo Pereira" || user === "José Pedro"));
                 checkPermissions();
             } else alert("Senha Incorreta!");
@@ -211,79 +198,58 @@
             document.querySelectorAll('.auth-element').forEach(el => el.style.display = isAdmin ? 'block' : 'none');
         };
 
-        window.logout = () => { localStorage.clear(); window.location.reload(); };
+        // --- LÓGICA DE CLIENTES (FICHEIRO + FIREBASE) ---
+        onSnapshot(query(colClientesFirebase, orderBy("nome")), (snap) => {
+            clientesFirebase = [];
+            snap.forEach(d => clientesFirebase.push(d.data()));
+            atualizarInterfaceClientes();
+        });
 
-        // --- GESTÃO DE CLIENTES (OPTIMIZADO PARA 2000 REGISTOS) ---
-        onSnapshot(query(colClientes, orderBy("nome"), limit(2500)), (snap) => {
+        function atualizarInterfaceClientes() {
             const select = document.getElementById('p-cliente');
             const listaDB = document.getElementById('lista-clientes-db');
+            
+            // Unir Clientes ESTATICOS (Ficheiro JS) + NOVOS (Firebase)
+            const listaCompleta = [...(typeof CLIENTES_ESTATICOS !== 'undefined' ? CLIENTES_ESTATICOS : []), ...clientesFirebase];
+            
+            // Remover possíveis duplicados e ordenar
+            listaCompleta.sort((a, b) => a.nome.localeCompare(b.nome));
+
             if(select) select.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>';
             if(listaDB) listaDB.innerHTML = "";
-            snap.forEach(d => {
-                const c = d.data();
-                const val = `${c.codigo} | ${c.nome}`;
-                if(select) select.innerHTML += `<option value="${val}">${val}</option>`;
-                if(listaDB) listaDB.innerHTML += `<div class="p-1 border-b uppercase">● ${val}</div>`;
-            });
-            if(snap.size === 0) listaDB.innerHTML = "Base vazia.";
-        });
 
-        window.limparTodaBaseClientes = async () => {
-            if (!confirm("Apagar TODOS os clientes para remover duplicados?")) return;
-            const status = document.getElementById('importStatus');
-            status.innerText = "LIMPANDO...";
-            const snap = await getDocs(colClientes);
-            for (let i = 0; i < snap.docs.length; i += 200) {
-                const batch = writeBatch(db);
-                snap.docs.slice(i, i + 200).forEach(d => batch.delete(d.ref));
-                await batch.commit();
-            }
-            alert("Limpeza concluída!"); status.innerText = "";
+            listaCompleta.forEach(c => {
+                const valor = `${c.codigo} | ${c.nome}`;
+                if(select) select.innerHTML += `<option value="${valor}">${valor}</option>`;
+                if(listaDB) listaDB.innerHTML += `<div class="p-1 border-b">● ${valor}</div>`;
+            });
+        }
+
+        document.getElementById('form-cliente').onsubmit = async (e) => {
+            e.preventDefault();
+            await addDoc(colClientesFirebase, { codigo: document.getElementById('c-cod').value, nome: document.getElementById('c-nome').value.toUpperCase() });
+            e.target.reset();
         };
 
-        document.getElementById('excelInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            const status = document.getElementById('importStatus');
-            reader.onload = async function(evt) {
-                try {
-                    const workbook = XLSX.read(evt.target.result, { type: 'binary' });
-                    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-                    if (rows.length === 0) return;
-                    status.innerText = "IMPORTANDO...";
-                    for (let i = 0; i < rows.length; i += 200) {
-                        const batch = writeBatch(db);
-                        rows.slice(i, i + 200).forEach(item => {
-                            const cod = String(item.Codigo || item.codigo || "");
-                            const nom = String(item.Nome || item.nome || "").toUpperCase();
-                            if(cod && nom) batch.set(doc(colClientes), { codigo: cod, nome: nom });
-                        });
-                        await batch.commit();
-                    }
-                    alert("Importação concluída!"); status.innerText = "";
-                } catch (e) { alert("Erro ao importar!"); }
-            };
-            reader.readAsBinaryString(file);
-        });
-
-        // --- PEDIDOS ---
+        // --- GESTÃO DE PEDIDOS ---
         onSnapshot(query(colPedidos, orderBy("timestamp", "desc")), (snap) => {
             const container = document.getElementById('container-pedidos');
             container.innerHTML = "";
             const isAdmin = localStorage.getItem('gamil_admin') === 'true';
-            const canDel = localStorage.getItem('gamil_full_delete') === 'true';
+            const viewAdmin = localStorage.getItem('gamil_view_admin') === 'true';
+
             snap.forEach(docSnap => {
                 const p = docSnap.data();
                 const id = docSnap.id;
                 const perc = p.progresso || 0;
                 const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
-                const lastLog = p.historico?.length ? p.historico[p.historico.length - 1] : 'Ver histórico';
+                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Sem reporte';
 
                 const tr = document.createElement('tr');
                 tr.className = "pedido-row";
                 tr.innerHTML = `
                     <td><div class="status-strip ${color}"></div></td>
-                    <td><span class="text-blue-600 font-black text-xs uppercase">#${p.pedido}</span></td>
+                    <td><span class="text-blue-600 font-black italic text-xs uppercase">#${p.pedido}</span></td>
                     <td><div class="text-[11px] font-black uppercase text-slate-800 truncate" style="max-width:320px">${p.cliente}</div></td>
                     <td class="text-center italic text-slate-400 text-[10px]">${p.entrada}</td>
                     <td class="text-center text-xs font-black text-slate-600">${p.peso}kg</td>
@@ -294,19 +260,19 @@
                     <td class="admin-view text-center text-[10px] font-black text-blue-900/80">${p.montagem || '--'}</td>
                     <td class="admin-view text-center text-[10px] font-black text-orange-600">${p.saida || '--'}</td>
                     <td class="admin-view text-center"><span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-[9px] font-black uppercase border border-blue-100">${p.local || '--'}</span></td>
-                    <td class="cursor-pointer" onclick='verLogs(${JSON.stringify(p.historico || [])})'>
+                    <td class="cursor-pointer" onclick='verLogs(${JSON.stringify(p.historico)})'>
                         <div class="flex items-center space-x-2">
-                            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden min-w-[70px]"><div class="h-full bg-blue-600" style="width: ${perc}%"></div></div>
+                            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden min-w-[70px]"><div class="h-full bg-blue-600 transition-all duration-700" style="width: ${perc}%"></div></div>
                             <span class="text-[10px] font-black text-slate-800">${perc}%</span>
                         </div>
                         <div class="text-[7px] font-bold text-slate-400 truncate mt-1 italic hover:text-blue-600">● ${lastLog}</div>
                     </td>
-                    <td class="admin-view text-[9px] font-bold text-slate-400 italic truncate border-l border-slate-100 pl-3" style="max-width:180px">${p.obs_edu || ''}</td>
+                    <td class="admin-view text-[9px] font-bold text-slate-400 italic uppercase truncate border-l border-slate-100 pl-3" style="max-width:180px">${p.obs_edu || ''}</td>
                     <td class="text-right pr-6 no-print">
                         <div class="flex justify-end space-x-2">
                             <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:text-green-700"><i class="fas fa-check-circle text-lg"></i></button>
                             ${isAdmin ? `<button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:text-orange-600"><i class="fas fa-pencil-alt text-lg"></i></button>` : ''}
-                            ${canDel ? `<button onclick="apagarPedido('${id}')" class="text-slate-200 hover:text-red-500"><i class="fas fa-trash-alt text-lg"></i></button>` : ''}
+                            ${viewAdmin ? `<button onclick="apagarPedido('${id}')" class="text-slate-200 hover:text-red-500"><i class="fas fa-trash-alt text-lg"></i></button>` : ''}
                         </div>
                     </td>
                 `;
@@ -315,20 +281,11 @@
             checkPermissions();
         });
 
+        // --- FUNÇÕES DE INTERFACE ---
         window.verLogs = (logs) => {
             const content = document.getElementById('logs-content');
-            content.innerHTML = logs.length ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-bold text-slate-600 shadow-sm leading-relaxed"> ${l}</div>`).join('') : '<p class="text-xs italic text-center py-10">Sem histórico.</p>';
+            content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-bold text-slate-600 shadow-sm leading-relaxed"> ${l}</div>`).join('') : '<p class="text-xs italic text-center py-10">Sem histórico.</p>';
             document.getElementById('modal-logs').classList.remove('hidden');
-        };
-
-        window.salvarProgresso = async () => {
-            const id = document.getElementById('prog-id').value;
-            const perc = parseInt(document.getElementById('prog-range').value);
-            const obs = document.getElementById('prog-obs').value.toUpperCase();
-            const user = localStorage.getItem('gamil_user');
-            const log = `${user}: ${perc}% ${obs ? '-> '+obs : ''} [${new Date().toLocaleString('pt-PT')}]`;
-            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) });
-            fecharModal();
         };
 
         window.preparaEdicao = (id, data) => {
@@ -348,11 +305,21 @@
             document.getElementById('modal-pedido').classList.remove('hidden');
         };
 
+        window.salvarProgresso = async () => {
+            const id = document.getElementById('prog-id').value;
+            const perc = parseInt(document.getElementById('prog-range').value);
+            const obs = document.getElementById('prog-obs').value.toUpperCase();
+            const user = localStorage.getItem('gamil_user');
+            const log = `${user}: ${perc}% ${obs ? '-> '+obs : ''} [${new Date().toLocaleString('pt-PT')}]`;
+            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) });
+            fecharModal();
+        };
+
         window.abrirProgresso = (id, nome, perc) => {
             document.getElementById('prog-id').value = id;
             document.getElementById('prog-nome').innerText = nome;
             document.getElementById('prog-range').value = perc;
-            document.getElementById('prog-perc-val').innerText = perc;
+            document.getElementById('prog-perc-val').innerText = perc + "%";
             document.getElementById('prog-obs').value = "";
             document.getElementById('modal-progresso').classList.remove('hidden');
         };
@@ -360,12 +327,16 @@
         window.apagarPedido = async (id) => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
         window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { 
-            document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); 
+            document.getElementById('p-id').value = ""; 
+            document.getElementById('form-pedido').reset(); 
             document.getElementById('p-entrada').value = new Date().toISOString().split('T')[0];
             document.getElementById('modal-pedido').classList.remove('hidden'); 
         };
         window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
+        window.logout = () => { localStorage.clear(); window.location.reload(); };
+        
         checkPermissions();
+        atualizarInterfaceClientes();
     </script>
 </body>
 </html>
