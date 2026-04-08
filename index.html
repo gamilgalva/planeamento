@@ -3,154 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v4.2 | Elite Design</title>
+    <title>Gamil Hub v4.3 | Alinhamento Garantido</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         :root { --gamil-blue: #002D5A; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .bg-gamil { background-color: var(--gamil-blue); }
         
-        /* CONTAINER LONGITUDINAL REFINADO */
-        .main-content { overflow-y: auto; flex: 1; padding: 30px 40px; }
+        /* CONTENTOR COM SCROLL HORIZONTAL CASO PRECISE */
+        .main-content { overflow-x: auto; overflow-y: auto; flex: 1; padding: 20px; }
         
-        .header-row { 
-            @apply flex items-center px-6 py-4 mb-4 text-[10px] font-black uppercase text-slate-400 tracking-[0.15em] border-b border-slate-200;
-            min-width: 1200px; /* Garante que o cabeçalho não encolha */
+        /* TABELA DE ALINHAMENTO RÍGIDO */
+        .gamil-table { min-width: 1300px; border-separate: border-spacing-y-3; width: 100%; }
+        
+        /* CABEÇALHO ESTRUTURADO */
+        .gamil-thead th { 
+            @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left;
         }
 
-        .pedido-card { 
-            @apply bg-white rounded-2xl mb-4 flex items-center shadow-[0_4px_15px_-3px_rgba(0,0,0,0.07)] border border-white transition-all duration-300 relative;
-            min-width: 1200px; /* Garante o layout longitudinal sem quebrar */
-            height: 90px;
-        }
+        /* CARD EM LINHA (TR) */
+        .pedido-row { @apply bg-white shadow-sm hover:shadow-md transition-all; }
+        .pedido-row td { @apply py-4 px-4 text-[11px] font-bold text-slate-600 first:rounded-l-xl last:rounded-r-xl border-y border-slate-100; }
 
-        .pedido-card:hover { @apply shadow-[0_10px_25px_-5px_rgba(0,0,0,0.12)] -translate-y-1 border-slate-200; }
-        .status-bar { width: 8px; height: 100%; position: absolute; left: 0; top: 0; border-radius: 20px 0 0 20px; }
-
-        /* LARGURAS DAS COLUNAS */
-        .col-ref { width: 140px; @apply pl-6 shrink-0; }
-        .col-cliente { width: 320px; @apply shrink-0 px-4; }
-        .col-data { width: 110px; @apply text-center shrink-0; }
-        .col-peso { width: 90px; @apply text-center shrink-0; }
-        .col-servicos { width: 120px; @apply text-center shrink-0; }
-        .col-local { width: 130px; @apply text-center shrink-0; }
-        .col-progresso { width: 220px; @apply px-6 shrink-0; }
-        .col-obs { flex-grow: 1; @apply px-6 italic text-slate-500 text-[10px] truncate border-l border-slate-50; }
-        .col-acoes { width: 120px; @apply flex justify-end pr-8 shrink-0; }
-
-        .badge { @apply px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-tighter border; }
-        .badge-blue { @apply bg-blue-50 text-blue-700 border-blue-100; }
-        .badge-orange { @apply bg-orange-50 text-orange-600 border-orange-100; }
-
+        .status-strip { width: 6px; height: 40px; border-radius: 10px; }
+        
         .admin-view, .auth-element { display: none; }
+        .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-700 outline-none uppercase text-xs; }
+
+        @media print {
+            aside, button, .no-print { display: none !important; }
+            body { background: white !important; display: block !important; }
+            .gamil-table { min-width: 100% !important; border-spacing: 0 !important; }
+            .pedido-row td { border: 1px solid #eee !important; border-radius: 0 !important; }
+        }
     </style>
 </head>
 <body class="md:flex-row flex flex-col">
 
     <aside class="w-full md:w-64 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
-        <div class="p-8 border-b border-white/5 text-center">
-            <img src="logo-gamil.png" alt="Gamil" class="w-36 mx-auto mb-4 drop-shadow-lg">
-            <h1 class="text-[10px] font-black tracking-[0.4em] uppercase text-blue-300/60">Gamil Hub v4.2</h1>
+        <div class="p-8 border-b border-white/10 text-center">
+            <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3">
+            <h1 class="text-[10px] font-black tracking-[0.2em] uppercase text-blue-300">Gamil Hub v4.3</h1>
         </div>
-        <nav class="p-5 flex-1 space-y-4">
-            <div id="user-info" class="p-5 bg-white/5 rounded-3xl border border-white/10 text-center">
-                <p id="nome-logado" class="text-sm font-black uppercase text-white">Visitante</p>
-                <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-3">Sair do Sistema</button>
+        <nav class="p-4 flex-1 space-y-3">
+            <div id="user-info" class="p-4 bg-white/5 rounded-2xl border border-white/10 text-center mb-4">
+                <p id="nome-logado" class="text-xs font-black uppercase italic text-white">Visitante</p>
+                <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2">Sair</button>
             </div>
-            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-2xl flex items-center justify-center space-x-3 text-xs font-black uppercase shadow-xl hover:bg-blue-500 transition-all transform active:scale-95">
-                <i class="fas fa-plus-circle text-lg"></i> <span>Novo Registo</span>
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all">
+                <i class="fas fa-plus"></i> <span>Novo Registo</span>
             </button>
-            <button onclick="window.print()" class="w-full p-3 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-[10px] font-bold uppercase transition">
-                <i class="fas fa-print text-blue-400"></i> <span>Imprimir Lista</span>
+            <button onclick="window.print()" class="w-full p-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase">
+                <i class="fas fa-print"></i> <span>Imprimir Lista</span>
             </button>
         </nav>
-        <div class="p-6 opacity-30 text-[7px] text-center uppercase tracking-widest">Hamilton Junior Dev</div>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0">
-        <header class="h-20 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print">
-            <h2 class="text-lg font-black text-slate-800 uppercase italic tracking-tighter">Planeamento Geral de Produção</h2>
-            <div class="flex items-center space-x-2 bg-green-50 px-4 py-2 rounded-full border border-green-100">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span class="text-[10px] font-black text-green-700 uppercase tracking-tighter">Sincronizado</span>
-            </div>
+        <header class="h-16 bg-white border-b px-8 flex justify-between items-center no-print">
+            <h2 class="text-sm font-black text-slate-800 uppercase italic">Planeamento Geral de Produção</h2>
+            <div class="text-[9px] font-black text-blue-600 uppercase tracking-widest">Live System</div>
         </header>
 
         <div class="main-content">
-            <div class="header-row no-print">
-                <div class="col-ref">Ref / Pedido</div>
-                <div class="col-cliente">Cliente Gamil</div>
-                <div class="col-data">Entrada</div>
-                <div class="col-peso">Peso</div>
-                <div class="col-servicos">Serviços</div>
-                <div class="admin-view col-data">Montagem</div>
-                <div class="admin-view col-data">Entrega</div>
-                <div class="admin-view col-local text-center">Local</div>
-                <div class="col-progresso">Progresso / Log</div>
-                <div class="col-obs admin-view">Observações Eduardo</div>
-                <div class="col-acoes">Ações</div>
-            </div>
-            
-            <div id="container-pedidos">
-                </div>
+            <table class="gamil-table">
+                <thead class="gamil-thead">
+                    <tr>
+                        <th style="width: 10px"></th>
+                        <th style="width: 130px">Ref / Pedido</th>
+                        <th style="width: 280px">Cliente Gamil</th>
+                        <th class="text-center" style="width: 100px">Entrada</th>
+                        <th class="text-center" style="width: 80px">Peso</th>
+                        <th class="text-center" style="width: 110px">Serviços</th>
+                        <th class="text-center admin-view" style="width: 110px">Montagem</th>
+                        <th class="text-center admin-view" style="width: 110px">Entrega</th>
+                        <th class="text-center admin-view" style="width: 100px">Local</th>
+                        <th class="text-center" style="width: 180px">Progresso / Log</th>
+                        <th class="admin-view">Observações Eduardo</th>
+                        <th class="text-right pr-6" style="width: 100px">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="container-pedidos">
+                    </tbody>
+            </table>
         </div>
     </main>
 
-    <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-10 shadow-2xl">
-            <h3 class="text-sm font-black text-slate-800 uppercase mb-6 border-b pb-4 italic">Histórico Completo</h3>
-            <div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto"></div>
-            <button onclick="fecharModal()" class="w-full mt-6 bg-slate-100 py-4 rounded-2xl text-[10px] font-black uppercase">Fechar</button>
-        </div>
-    </div>
-
     <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-10 shadow-2xl">
-            <h3 id="prog-nome" class="text-sm font-black text-slate-800 uppercase mb-8 text-center italic"></h3>
+        <div class="bg-white rounded-[2rem] w-full max-w-sm p-8 shadow-2xl">
+            <h3 id="prog-nome" class="text-sm font-black text-slate-800 uppercase mb-6 text-center italic border-b pb-4"></h3>
             <input type="hidden" id="prog-id">
-            <div class="space-y-6 text-center">
-                <div>
-                    <label class="label-gamil">Progresso: <span id="prog-perc-val" class="text-blue-600 font-black text-2xl">0%</span></label>
-                    <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value + '%'">
-                </div>
-                <textarea id="prog-obs" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs font-semibold uppercase h-24" placeholder="Alguma ocorrência?"></textarea>
-                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase shadow-xl hover:bg-blue-700 transition-all">Confirmar Reporte</button>
+            <div class="space-y-4 text-center">
+                <div><label class="label-gamil">Conclusão: <span id="prog-perc-val" class="text-blue-600 font-black text-xl">0</span>%</label>
+                <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full accent-blue-600" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
+                <textarea id="prog-obs" class="input-gamil h-24" placeholder="Comentário do turno..."></textarea>
+                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Reportar Turno</button>
             </div>
         </div>
     </div>
 
     <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col">
-            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Gestão do Pedido</span><button onclick="fecharModal()" class="text-2xl">&times;</button></div>
-            <form id="form-pedido" class="p-10 grid grid-cols-2 gap-5 overflow-y-auto max-h-[85vh]">
+            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Ficha de Pedido</span><button onclick="fecharModal()" class="text-2xl">&times;</button></div>
+            <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[85vh] overflow-y-auto">
                 <input type="hidden" id="p-id">
-                <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="w-full bg-slate-50 border p-3 rounded-xl text-xs font-bold uppercase"></select></div>
-                <div><label class="label-gamil">Nº Pedido</label><input id="p-pedido" required type="text" class="w-full bg-slate-50 border p-3 rounded-xl text-xs font-bold uppercase"></div>
-                <div><label class="label-gamil">Prioridade</label><select id="p-prio" class="w-full bg-slate-50 border p-3 rounded-xl text-xs font-bold uppercase"><option value="baixa">BAIXA</option><option value="media">MÉDIA</option><option value="alta">ALTA</option></select></div>
-                <div><label class="label-gamil">Peso (Kg)</label><input id="p-peso" required type="number" step="0.01" class="w-full bg-slate-50 border p-3 rounded-xl text-xs font-bold uppercase"></div>
-                <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" type="date" class="w-full bg-slate-50 border p-3 rounded-xl text-xs font-bold uppercase"></div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div><label class="label-gamil">Pesar?</label><select id="p-pesar" class="w-full bg-slate-50 border p-3 rounded-xl text-xs font-bold uppercase"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
-                    <div><label class="label-gamil">Furos?</label><select id="p-furos" class="w-full bg-slate-50 border p-3 rounded-xl text-xs font-bold uppercase"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
+                <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
+                <div><label class="label-gamil">Nº Pedido</label><input id="p-pedido" required type="text" class="input-gamil"></div>
+                <div><label class="label-gamil">Prioridade</label><select id="p-prio" class="input-gamil"><option value="baixa">BAIXA</option><option value="media">MÉDIA</option><option value="alta">ALTA</option></select></div>
+                <div><label class="label-gamil">Peso (Kg)</label><input id="p-peso" required type="number" step="0.01" class="input-gamil"></div>
+                <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" type="date" class="input-gamil"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="label-gamil">Pesar?</label><select id="p-pesar" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
+                    <div><label class="label-gamil">Furos?</label><select id="p-furos" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
                 </div>
-                <div class="admin-view col-span-2 grid grid-cols-2 gap-5 border-t pt-6 mt-2">
-                    <div><label class="label-gamil text-blue-600">Montagem</label><input id="p-montagem" type="date" class="w-full border-blue-100 border p-3 rounded-xl text-xs font-bold uppercase"></div>
-                    <div><label class="label-gamil text-orange-600">Entrega</label><input id="p-saida" type="date" class="w-full border-orange-100 border p-3 rounded-xl text-xs font-bold uppercase"></div>
-                    <div class="col-span-2"><label class="label-gamil text-blue-600">Localização</label><input id="p-local" type="text" class="w-full border-blue-100 border p-3 rounded-xl text-xs font-bold uppercase"></div>
-                    <div class="col-span-2"><label class="label-gamil text-blue-600">Observações Eduardo</label><textarea id="p-obs-edu" class="w-full border-blue-100 border p-3 rounded-xl text-xs font-bold uppercase h-20"></textarea></div>
+                <div class="admin-view col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2">
+                    <div><label class="label-gamil text-blue-600 font-bold">Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
+                    <div><label class="label-gamil text-orange-600 font-bold">Entrega</label><input id="p-saida" type="date" class="input-gamil"></div>
+                    <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Localização</label><input id="p-local" type="text" class="input-gamil"></div>
+                    <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Observações Eduardo</label><textarea id="p-obs-edu" class="input-gamil h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 bg-blue-600 text-white py-5 rounded-2xl font-black uppercase shadow-xl mt-4 active:scale-95 transition-all">Guardar Informação</button>
+                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg mt-4">Gravar Dados</button>
             </form>
         </div>
     </div>
 
     <div id="modal-login" class="fixed inset-0 bg-gamil z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-[3rem] w-full max-w-sm p-12 text-center shadow-2xl border-t-[10px] border-blue-500">
-            <img src="logo-gamil.png" class="w-32 mx-auto mb-10">
-            <select id="login-user" class="w-full bg-slate-50 border p-4 rounded-2xl font-bold mb-4 text-sm uppercase">
-                <option value="Visitante">Consulta Geral</option>
+        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-10 text-center shadow-2xl border-t-8 border-blue-500">
+            <h3 class="text-xl font-black text-slate-800 uppercase italic mb-8">Acesso Gamil</h3>
+            <select id="login-user" class="input-gamil mb-4 h-12 text-center font-bold">
+                <option value="Visitante">Consulta</option>
                 <option value="Sofia">Sofia</option>
                 <option value="Eduardo Pereira">Eduardo Pereira</option>
                 <option value="José Pedro">José Pedro</option>
@@ -158,8 +141,8 @@
                 <option value="Luís Silva">Luís Silva</option>
                 <option value="Paulo Abreu">Paulo Abreu</option>
             </select>
-            <input type="password" id="login-pass" placeholder="SENHA" class="w-full bg-slate-50 border p-4 rounded-2xl font-bold mb-8 text-sm text-center tracking-[0.3em]">
-            <button onclick="tentarLogin()" class="w-full bg-[#002D5A] text-white py-5 rounded-2xl font-extrabold uppercase shadow-xl hover:bg-black transition-all">Autenticar</button>
+            <input type="password" id="login-pass" placeholder="SENHA" class="input-gamil mb-6 h-12 text-center">
+            <button onclick="tentarLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-xl hover:bg-blue-700">Entrar</button>
         </div>
     </div>
 
@@ -200,9 +183,8 @@
             document.getElementById('nome-logado').innerText = user;
             const isAdmin = localStorage.getItem('gamil_admin') === 'true';
             const viewAdmin = localStorage.getItem('gamil_view_admin') === 'true';
-            document.querySelectorAll('.admin-view').forEach(el => el.style.display = viewAdmin ? 'block' : 'none');
+            document.querySelectorAll('.admin-view').forEach(el => el.style.display = viewAdmin ? 'table-cell' : 'none');
             document.querySelectorAll('.auth-element').forEach(el => el.style.display = isAdmin ? 'block' : 'none');
-            if(viewAdmin) document.querySelectorAll('form .admin-view').forEach(el => el.style.display = 'grid');
         };
 
         window.logout = () => { localStorage.clear(); window.location.reload(); };
@@ -255,62 +237,43 @@
                 const p = docSnap.data();
                 const id = docSnap.id;
                 const perc = p.progresso || 0;
-                const color = p.prio === 'alta' ? '#ef4444' : p.prio === 'media' ? '#f59e0b' : '#22c55e';
+                const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
                 const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Sem reporte';
 
-                const div = document.createElement('div');
-                div.className = "pedido-card";
-                div.innerHTML = `
-                    <div class="status-bar" style="background: ${color}"></div>
-                    <div class="col-ref">
-                        <span class="text-blue-600 font-extrabold italic text-xs">#${p.pedido}</span>
-                    </div>
-                    <div class="col-cliente">
-                        <h4 class="text-[11px] font-extrabold uppercase text-slate-700 truncate">${p.cliente}</h4>
-                    </div>
-                    <div class="col-data">
-                        <span class="text-[10px] font-bold text-slate-400 italic">${p.entrada}</span>
-                    </div>
-                    <div class="col-data">
-                        <span class="text-[11px] font-black text-slate-600">${p.peso} KG</span>
-                    </div>
-                    <div class="col-servicos flex justify-center space-x-1">
-                        <span class="badge ${p.pesar === 'SIM' ? 'badge-orange' : 'text-slate-200 border-transparent'}">PES</span>
-                        <span class="badge ${p.furos === 'SIM' ? 'badge-orange' : 'text-slate-200 border-transparent'}">FUR</span>
-                    </div>
-                    
-                    <div class="admin-view col-data text-[10px] font-black text-blue-900/80">${p.montagem || '--'}</div>
-                    <div class="admin-view col-data text-[10px] font-black text-orange-600">${p.saida || '--'}</div>
-                    <div class="admin-view col-local text-center"><span class="badge badge-blue">${p.local || '--'}</span></div>
-
-                    <div class="col-progresso cursor-pointer" onclick='verLogs(${JSON.stringify(p.historico)})'>
+                const tr = document.createElement('tr');
+                tr.className = "pedido-row";
+                tr.innerHTML = `
+                    <td><div class="status-strip ${color}"></div></td>
+                    <td><span class="text-blue-600 font-black italic text-xs">#${p.pedido}</span></td>
+                    <td><div class="text-[11px] font-black uppercase text-slate-800 truncate" style="max-width:250px">${p.cliente}</div></td>
+                    <td class="text-center italic text-slate-400 text-[10px]">${p.entrada}</td>
+                    <td class="text-center text-xs font-black text-slate-600">${p.peso}kg</td>
+                    <td class="text-center text-[9px] font-black">
+                        <span class="${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">PES</span> | 
+                        <span class="${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">FUR</span>
+                    </td>
+                    <td class="admin-view text-center text-[10px] font-black text-blue-800">${p.montagem || '--'}</td>
+                    <td class="admin-view text-center text-[10px] font-black text-orange-600">${p.saida || '--'}</td>
+                    <td class="admin-view text-center"><span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-[9px] font-black uppercase">${p.local || '--'}</span></td>
+                    <td>
                         <div class="flex items-center space-x-2">
-                            <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                                <div class="h-full bg-blue-600 transition-all duration-700" style="width: ${perc}%"></div>
-                            </div>
-                            <span class="text-[10px] font-black text-slate-800">${perc}%</span>
+                            <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden min-w-[60px]"><div class="h-full bg-blue-600" style="width: ${perc}%"></div></div>
+                            <span class="text-[9px] font-black">${perc}%</span>
                         </div>
-                        <div class="text-[7px] font-bold text-slate-400 truncate mt-1.5 italic hover:text-blue-600">● ${lastLog}</div>
-                    </div>
-
-                    <div class="admin-view col-obs border-l pl-4">${p.obs_edu || ''}</div>
-                    
-                    <div class="col-acoes">
-                        <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:text-green-600 p-2"><i class="fas fa-check-circle text-lg"></i></button>
-                        ${isAdmin ? `<button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:text-orange-500 p-2"><i class="fas fa-pencil-alt text-lg"></i></button>` : ''}
-                        ${viewAdmin ? `<button onclick="apagar('${id}')" class="text-slate-200 hover:text-red-500 p-2"><i class="fas fa-trash-alt"></i></button>` : ''}
-                    </div>
+                        <div class="text-[7px] font-bold text-slate-400 truncate mt-1 italic">● ${lastLog}</div>
+                    </td>
+                    <td class="admin-view text-[9px] font-bold text-slate-400 italic uppercase truncate" style="max-width:150px">${p.obs_edu || '---'}</td>
+                    <td class="text-right pr-6 no-print">
+                        <div class="flex justify-end space-x-2">
+                            <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:text-green-700"><i class="fas fa-check-circle text-lg"></i></button>
+                            ${isAdmin ? `<button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:text-orange-600"><i class="fas fa-pencil-alt text-lg"></i></button>` : ''}
+                        </div>
+                    </td>
                 `;
-                container.appendChild(div);
+                container.appendChild(tr);
             });
             checkPermissions();
         });
-
-        window.verLogs = (logs) => {
-            const content = document.getElementById('logs-content');
-            content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-bold text-slate-600 shadow-sm leading-relaxed"> ${l}</div>`).join('') : '<p class="text-xs italic text-center py-10">Sem histórico.</p>';
-            document.getElementById('modal-logs').classList.remove('hidden');
-        };
 
         window.preparaEdicao = (id, data) => {
             const p = JSON.parse(decodeURIComponent(data));
@@ -333,15 +296,13 @@
             document.getElementById('prog-id').value = id;
             document.getElementById('prog-nome').innerText = nome;
             document.getElementById('prog-range').value = perc;
-            document.getElementById('prog-perc-val').innerText = perc + "%";
+            document.getElementById('prog-perc-val').innerText = perc;
             document.getElementById('prog-obs').value = "";
             document.getElementById('modal-progresso').classList.remove('hidden');
         };
 
-        window.apagar = async (id) => { if(confirm("Apagar registo?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
         window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('modal-pedido').classList.remove('hidden'); };
-        window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
         checkPermissions();
     </script>
 </body>
