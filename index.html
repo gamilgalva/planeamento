@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planeamento Gamil v2.9</title>
+    <title>Gamil Hub v3.0 | Planeamento Profissional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -11,37 +11,39 @@
         :root { --gamil-blue: #002D5A; }
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         .bg-gamil { background-color: var(--gamil-blue); }
-        .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-2 focus:ring-blue-500; }
-        .label-gamil { @apply block text-[9px] font-black uppercase text-slate-400 mb-1; }
-        .main-content { overflow-y: auto; flex: 1; padding-bottom: 50px; }
+        .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-2 focus:ring-blue-500; }
+        .label-gamil { @apply block text-[9px] font-black uppercase text-slate-400 mb-1 tracking-widest; }
+        .main-content { overflow-y: auto; flex: 1; padding: 20px; }
         
-        /* Layout Longitudinal Esticado */
-        .list-row { 
-            @apply bg-white border border-slate-200 rounded-xl mb-3 flex items-center p-0 overflow-hidden shadow-sm hover:shadow-md transition-all;
-            min-height: 85px;
+        /* Box Longitudinal Estilizada */
+        .pedido-box { 
+            @apply bg-white border border-slate-200 rounded-2xl mb-4 flex items-center p-5 shadow-sm hover:shadow-md transition-all relative;
+            border-left-width: 10px;
         }
-        .status-indicator { width: 12px; align-self: stretch; shrink-0; }
-        
-        .admin-view, .sofia-view, .auth-only { display: none; }
+        .prio-alta { border-left-color: #ef4444; }
+        .prio-media { border-left-color: #f59e0b; }
+        .prio-baixa { border-left-color: #10b981; }
+
+        .auth-element { display: none; }
     </style>
 </head>
 <body class="md:flex-row flex flex-col">
 
     <aside class="w-full md:w-64 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
-        <div class="p-6 border-b border-white/10 text-center">
-            <img src="logo-gamil.png" alt="Gamil Logo" class="w-32 mx-auto mb-2">
-            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Gamil Hub v2.9</h1>
+        <div class="p-8 border-b border-white/10 text-center">
+            <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-2" onerror="this.style.display='none'">
+            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-200">Industrial Planning</h1>
         </div>
-        <nav class="p-4 flex-1 space-y-2">
-            <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center mb-4">
+        <nav class="p-4 flex-1 space-y-4">
+            <div class="p-4 bg-white/5 rounded-2xl border border-white/10 text-center">
                 <p id="nome-logado" class="text-xs font-black uppercase italic">Visitante</p>
                 <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2">Sair</button>
             </div>
-            <button onclick="window.location.reload()" class="w-full p-3 bg-white/10 rounded-xl flex items-center space-x-3 text-xs font-bold">
-                <i class="fas fa-sync"></i> <span>Painel Real-Time</span>
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-3 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg">
+                <i class="fas fa-plus"></i> <span>Novo Pedido</span>
             </button>
-            <button onclick="abrirModalCliente()" class="auth-only w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-xs font-bold">
-                <i class="fas fa-users"></i> <span>Clientes</span>
+            <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-xs font-bold">
+                <i class="fas fa-address-book text-blue-400"></i> <span>Base de Clientes</span>
             </button>
         </nav>
         <div class="p-4 opacity-10 text-[7px] text-center uppercase tracking-widest">Hamilton Junior Dev</div>
@@ -49,82 +51,114 @@
 
     <main class="flex-1 flex flex-col min-w-0">
         <header class="h-16 bg-white border-b px-8 flex justify-between items-center shadow-sm sticky top-0 z-20">
-            <h2 class="text-sm font-black text-slate-800 uppercase italic">Fluxo Longitudinal de Produção</h2>
-            <button onclick="abrirModalPedido()" class="sofia-view bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-black text-[10px] uppercase shadow-lg transition-all">
-                <i class="fas fa-plus mr-2"></i> NOVO REGISTO
-            </button>
+            <h2 class="text-sm font-black text-slate-800 uppercase italic tracking-tighter italic">Planeamento Gamil v3.0</h2>
+            <div id="stats-header" class="text-[10px] font-black text-blue-600 uppercase">Sincronizando...</div>
         </header>
 
-        <div id="container-pedidos" class="main-content p-4 md:p-6">
+        <div id="container-pedidos" class="main-content">
             </div>
     </main>
 
     <div id="modal-login" class="fixed inset-0 bg-gamil z-[100] flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-sm p-10 text-center shadow-2xl">
-            <h3 class="text-xl font-black text-slate-800 uppercase italic mb-8 italic">Acesso Gamil</h3>
+        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-10 text-center shadow-2xl">
+            <h3 class="text-xl font-black text-slate-800 uppercase italic mb-8">Acesso ao Sistema</h3>
             <select id="login-user" class="input-gamil mb-4 h-12 text-center">
-                <option value="Visitante">Consulta Geral</option>
-                <option value="Sofia">Sofia (Entrada)</option>
-                <option value="Eduardo Pereira">Eduardo (Planeamento)</option>
-                <option value="José Pedro">José Pedro (Direção)</option>
-                <option value="José Castro">José Castro (Chefe Manhã)</option>
-                <option value="Luís Silva">Luís Silva (Chefe Noite)</option>
-                <option value="Paulo Abreu">Paulo Abreu (Chefe Noite)</option>
+                <option value="Visitante">Consulta (Visitante)</option>
+                <option value="Sofia">Sofia</option>
+                <option value="Eduardo Pereira">Eduardo Pereira</option>
+                <option value="José Pedro">José Pedro</option>
+                <option value="José Castro">José Castro</option>
+                <option value="Luís Silva">Luís Silva</option>
+                <option value="Paulo Abreu">Paulo Abreu</option>
             </select>
             <input type="password" id="login-pass" placeholder="SENHA" class="input-gamil mb-6 h-12 text-center">
-            <button onclick="tentarLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-xl hover:bg-blue-700 transition-all">Entrar</button>
+            <button onclick="tentarLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-xl hover:bg-blue-700">Entrar</button>
+        </div>
+    </div>
+
+    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+            <div class="p-6 bg-slate-50 border-b flex justify-between items-center">
+                <h3 class="font-black uppercase italic text-sm">Base de Clientes</h3>
+                <button onclick="fecharModal()" class="text-2xl">&times;</button>
+            </div>
+            <div class="p-6 border-b">
+                <form id="form-cliente" class="space-y-3">
+                    <input id="c-cod" required type="text" class="input-gamil" placeholder="CÓDIGO (EX: 2284)">
+                    <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME DA EMPRESA">
+                    <button type="submit" class="w-full bg-gamil text-white py-3 rounded-lg font-black uppercase text-xs">Registar Cliente</button>
+                </form>
+            </div>
+            <div id="lista-clientes-db" class="flex-1 overflow-y-auto p-6 space-y-2 bg-slate-50/50">
+                </div>
         </div>
     </div>
 
     <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-2xl shadow-2xl overflow-hidden">
-            <div class="p-5 bg-gamil text-white flex justify-between items-center">
-                <h3 id="modal-titulo" class="font-black uppercase italic text-xs tracking-widest">Gestão de Pedido</h3>
+        <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="p-6 bg-gamil text-white flex justify-between items-center">
+                <h3 id="modal-titulo" class="font-black uppercase italic text-xs tracking-widest">Lançar/Editar Planeamento</h3>
                 <button onclick="fecharModal()" class="text-2xl">&times;</button>
             </div>
-            <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[80vh] overflow-y-auto">
+            <form id="form-pedido" class="p-8 grid grid-cols-2 gap-5 overflow-y-auto">
                 <input type="hidden" id="p-id">
                 
-                <div class="col-span-2 grid grid-cols-2 gap-4 border-b pb-4 mb-2">
-                    <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
+                <div class="col-span-2 grid grid-cols-3 gap-4 border-b pb-6">
+                    <div class="col-span-2">
+                        <label class="label-gamil text-blue-600">Cliente (Base de Dados)</label>
+                        <select id="p-cliente" required class="input-gamil"></select>
+                    </div>
                     <div><label class="label-gamil">Nº Pedido</label><input id="p-pedido" required type="text" class="input-gamil"></div>
-                    <div><label class="label-gamil">Peso (Kg)</label><input id="p-peso" required type="number" class="input-gamil"></div>
                     <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" type="date" class="input-gamil"></div>
+                    <div><label class="label-gamil">Peso Total (Kg)</label><input id="p-peso" required type="number" step="0.01" class="input-gamil"></div>
+                    <div>
+                        <label class="label-gamil">Prioridade</label>
+                        <select id="p-prio" class="input-gamil">
+                            <option value="baixa">BAIXA (Verde)</option>
+                            <option value="media">MÉDIA (Laranja)</option>
+                            <option value="alta">ALTA (Vermelho)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-span-2 grid grid-cols-2 gap-4 border-b pb-6">
+                    <div><label class="label-gamil">Previsão Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
+                    <div><label class="label-gamil">Previsão Entrega</label><input id="p-saida" type="date" class="input-gamil"></div>
+                    <div><label class="label-gamil">Localização / Rack</label><input id="p-local" type="text" class="input-gamil"></div>
                     <div class="grid grid-cols-2 gap-2">
                         <div><label class="label-gamil">Pesar?</label><select id="p-pesar" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
                         <div><label class="label-gamil">Furos?</label><select id="p-furos" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
                     </div>
                 </div>
 
-                <div class="admin-view col-span-2 grid grid-cols-2 gap-4 pt-2">
-                    <div><label class="label-gamil">Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
-                    <div><label class="label-gamil">Desmontagem</label><input id="p-desmontagem" type="date" class="input-gamil"></div>
-                    <div><label class="label-gamil">Expedição</label><input id="p-expedicao" type="date" class="input-gamil"></div>
-                    <div><label class="label-gamil">Local</label><input id="p-local" type="text" class="input-gamil"></div>
-                    <div class="col-span-2"><label class="label-gamil">Progresso (%)</label><input id="p-perc" type="range" min="0" max="100" class="w-full accent-blue-600"></div>
-                    <div class="col-span-2"><label class="label-gamil">Observações</label><textarea id="p-obs" class="input-gamil h-16"></textarea></div>
+                <div class="col-span-2">
+                    <label class="label-gamil">Observações & Notas</label>
+                    <textarea id="p-obs" class="input-gamil h-20"></textarea>
                 </div>
 
-                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg mt-4">Guardar Alterações</button>
+                <button type="submit" class="col-span-2 bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-xl mt-4">Guardar Alterações no Firebase</button>
             </form>
         </div>
     </div>
 
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-sm p-8 shadow-2xl">
-            <h3 class="font-black uppercase italic mb-4">Novo Cliente</h3>
-            <form id="form-cliente" class="space-y-4">
-                <input id="c-cod" required type="text" class="input-gamil" placeholder="CÓDIGO">
-                <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME EMPRESA">
-                <button type="submit" class="w-full bg-gamil text-white py-3 rounded-lg font-black uppercase text-xs">Guardar</button>
-                <button type="button" onclick="fecharModal()" class="w-full text-slate-400 font-bold text-[10px] uppercase">Fechar</button>
-            </form>
+    <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-8 shadow-2xl">
+            <h3 id="prog-title" class="text-sm font-black text-slate-800 uppercase mb-6 text-center italic">Atualizar Andamento</h3>
+            <input type="hidden" id="prog-id">
+            <div class="space-y-6 text-center">
+                <div>
+                    <span id="prog-val" class="text-3xl font-black text-blue-600">0%</span>
+                    <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full mt-4 accent-blue-600" oninput="document.getElementById('prog-val').innerText = this.value + '%'">
+                </div>
+                <button onclick="salvarProgresso()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase shadow-lg">Confirmar</button>
+                <button onclick="fecharModal()" class="text-[10px] font-bold text-slate-400 uppercase">Cancelar</button>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAlvGJKZdMCNopDKoXMcUTuvHa5E9GqIHA",
@@ -137,28 +171,20 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const colPedidos = collection(db, "pedidos_v29");
+        const colPedidos = collection(db, "pedidos_v30");
         const colClientes = collection(db, "clientes_gamil");
 
-        // LOGIN SYSTEM
+        // LOGIN
         window.tentarLogin = () => {
             const user = document.getElementById('login-user').value;
             const pass = document.getElementById('login-pass').value;
-            const creds = {
-                "Sofia": "gamil$$26",
-                "Eduardo Pereira": "gamil$$26",
-                "José Pedro": "gamil$$26",
-                "José Castro": "jose1234",
-                "Luís Silva": "luis1234",
-                "Paulo Abreu": "paulo1234"
-            };
+            const passwords = { "Sofia": "gamil$$26", "Eduardo Pereira": "gamil$$26", "José Pedro": "gamil$$26", "José Castro": "jose1234", "Luís Silva": "luis1234", "Paulo Abreu": "paulo1234" };
 
-            if (user === "Visitante" || (creds[user] && pass === creds[user])) {
+            if (user === "Visitante" || (passwords[user] && pass === passwords[user])) {
                 localStorage.setItem('gamil_user', user);
-                localStorage.setItem('gamil_admin', (user === "Eduardo Pereira" || user === "José Pedro"));
-                localStorage.setItem('gamil_sofia', (user === "Sofia" || user === "José Pedro"));
+                localStorage.setItem('gamil_auth', user !== "Visitante");
                 checkPermissions();
-            } else alert("Senha Incorreta!");
+            } else alert("Acesso negado.");
         };
 
         const checkPermissions = () => {
@@ -166,29 +192,31 @@
             if (!user) { document.getElementById('modal-login').classList.remove('hidden'); return; }
             document.getElementById('modal-login').classList.add('hidden');
             document.getElementById('nome-logado').innerText = user;
-            
-            const isAdmin = localStorage.getItem('gamil_admin') === 'true';
-            const isSofia = localStorage.getItem('gamil_sofia') === 'true';
-            
-            document.querySelectorAll('.admin-view').forEach(el => el.style.display = isAdmin ? 'grid' : 'none');
-            document.querySelectorAll('.sofia-view').forEach(el => el.style.display = isSofia ? 'block' : 'none');
-            document.querySelectorAll('.auth-only').forEach(el => el.style.display = (isAdmin || isSofia) ? 'block' : 'none');
+            if (localStorage.getItem('gamil_auth') === 'true') {
+                document.querySelectorAll('.auth-element').forEach(el => el.style.display = 'block');
+            }
         };
 
         window.logout = () => { localStorage.clear(); window.location.reload(); };
 
         // CLIENTES
-        onSnapshot(colClientes, (snap) => {
-            const s = document.getElementById('p-cliente');
-            s.innerHTML = '<option value="">-- CLIENTE --</option>';
-            snap.forEach(d => { s.innerHTML += `<option value="${d.data().codigo} | ${d.data().nome}">${d.data().codigo} - ${d.data().nome}</option>`; });
-        });
-
         document.getElementById('form-cliente').onsubmit = async (e) => {
             e.preventDefault();
             await addDoc(colClientes, { codigo: document.getElementById('c-cod').value, nome: document.getElementById('c-nome').value.toUpperCase() });
-            e.target.reset(); fecharModal();
+            e.target.reset();
         };
+
+        onSnapshot(colClientes, (snap) => {
+            const select = document.getElementById('p-cliente');
+            const listaDB = document.getElementById('lista-clientes-db');
+            select.innerHTML = '<option value="">-- CLIENTE --</option>';
+            listaDB.innerHTML = "";
+            snap.forEach(d => {
+                const c = d.data();
+                select.innerHTML += `<option value="${c.codigo} | ${c.nome}">${c.codigo} - ${c.nome}</option>`;
+                listaDB.innerHTML += `<div class="p-2 bg-white rounded border border-slate-200 text-[10px] font-bold"><b>${c.codigo}</b> - ${c.nome}</div>`;
+            });
+        });
 
         // PEDIDOS
         document.getElementById('form-pedido').onsubmit = async (e) => {
@@ -199,117 +227,126 @@
                 pedido: document.getElementById('p-pedido').value,
                 peso: document.getElementById('p-peso').value,
                 entrada: document.getElementById('p-entrada').value,
+                prio: document.getElementById('p-prio').value,
                 pesar: document.getElementById('p-pesar').value,
                 furos: document.getElementById('p-furos').value,
                 montagem: document.getElementById('p-montagem').value,
-                desmontagem: document.getElementById('p-desmontagem').value,
-                expedicao: document.getElementById('p-expedicao').value,
+                saida: document.getElementById('p-saida').value,
                 local: document.getElementById('p-local').value.toUpperCase(),
-                progresso: parseInt(document.getElementById('p-perc').value) || 0,
                 obs: document.getElementById('p-obs').value.toUpperCase()
             };
-
-            if (id) await updateDoc(doc(db, "pedidos_v29", id), data);
-            else await addDoc(colPedidos, { ...data, timestamp: new Date() });
+            if (id) await updateDoc(doc(db, "pedidos_v30", id), data);
+            else await addDoc(colPedidos, { ...data, progresso: 0, timestamp: new Date() });
             fecharModal();
         };
 
-        // RENDER LONGITUDINAL
-        onSnapshot(query(colPedidos), (snap) => {
+        window.salvarProgresso = async () => {
+            const id = document.getElementById('prog-id').value;
+            const perc = parseInt(document.getElementById('prog-range').value);
+            const user = localStorage.getItem('gamil_user');
+            await updateDoc(doc(db, "pedidos_v30", id), { progresso: perc, ultimo_chefe: user });
+            fecharModal();
+        };
+
+        // RENDER boxes
+        onSnapshot(query(colPedidos, orderBy("timestamp", "desc")), (snap) => {
             const container = document.getElementById('container-pedidos');
             container.innerHTML = "";
-            const user = localStorage.getItem('gamil_user');
-            const isAdmin = localStorage.getItem('gamil_admin') === 'true';
-            const isSofia = localStorage.getItem('gamil_sofia') === 'true';
+            const isAuth = localStorage.getItem('gamil_auth') === 'true';
 
-            let lista = [];
-            snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
-            lista.sort((a, b) => (new Date(a.montagem) - new Date(b.montagem)) || (b.timestamp - a.timestamp));
-
-            lista.forEach(p => {
+            snap.forEach(docSnap => {
+                const p = docSnap.data();
+                const id = docSnap.id;
                 const perc = p.progresso || 0;
-                let color = perc < 31 ? 'bg-red-500' : perc < 71 ? 'bg-yellow-400' : perc < 100 ? 'bg-blue-600' : 'bg-green-500';
-                
-                const row = document.createElement('div');
-                row.className = "list-row";
-                row.innerHTML = `
-                    <div class="status-indicator ${color}"></div>
-                    
-                    <div class="flex-1 px-6 py-2 border-r border-slate-100 min-w-[300px]">
+                let barColor = perc < 31 ? 'bg-red-500' : perc < 71 ? 'bg-orange-400' : perc < 100 ? 'bg-blue-600' : 'bg-green-500';
+
+                const box = document.createElement('div');
+                box.className = `pedido-box prio-${p.prio}`;
+                box.innerHTML = `
+                    <div class="flex-1 min-w-[250px] border-r border-slate-100 pr-4">
                         <div class="flex items-center gap-2 mb-1">
-                            <span class="text-[9px] font-black text-blue-600 bg-blue-50 px-2 rounded">REF: ${p.pedido}</span>
-                            <span class="text-[9px] font-bold text-slate-400 italic">${p.entrada}</span>
+                            <span class="text-[10px] font-black text-blue-700 bg-blue-50 px-2 rounded">PED: ${p.pedido}</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase italic">${p.entrada}</span>
                         </div>
-                        <h4 class="text-sm font-black text-slate-800 uppercase truncate">${p.cliente}</h4>
-                        <div class="flex gap-4 mt-1">
-                            <span class="text-[10px] font-bold text-slate-600">${p.peso} KG</span>
-                            <span class="text-[10px] font-bold ${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">PESAR: ${p.pesar}</span>
-                            <span class="text-[10px] font-bold ${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">FUROS: ${p.furos}</span>
-                        </div>
+                        <h4 class="text-sm font-black text-slate-800 uppercase leading-none">${p.cliente}</h4>
                     </div>
 
-                    <div class="${isAdmin ? 'flex' : 'hidden'} flex-[1.5] px-6 gap-6 items-center border-r border-slate-100">
+                    <div class="flex-1 px-4 border-r border-slate-100 flex gap-6 items-center">
                         <div class="text-center">
-                            <span class="text-[8px] font-black text-slate-400 uppercase block">Montagem</span>
-                            <span class="text-[10px] font-black text-blue-700">${p.montagem || '--'}</span>
+                            <span class="text-[8px] font-black text-slate-400 block uppercase mb-1">Peso (Kg)</span>
+                            <span class="text-xs font-black text-slate-600">${p.peso}</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="text-center"><span class="block text-[7px] font-black text-slate-400">PESAR</span><span class="text-[10px] font-black ${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">${p.pesar}</span></div>
+                            <div class="text-center"><span class="block text-[7px] font-black text-slate-400">FUROS</span><span class="text-[10px] font-black ${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-200'}">${p.furos}</span></div>
+                        </div>
+                    </div>
+
+                    <div class="flex-[1.5] px-4 border-r border-slate-100 flex gap-6 items-center">
+                        <div class="text-center">
+                            <span class="text-[8px] font-black text-blue-400 block uppercase mb-1 italic">Montagem</span>
+                            <span class="text-[10px] font-black text-slate-700">${p.montagem || '--'}</span>
                         </div>
                         <div class="text-center">
-                            <span class="text-[8px] font-black text-slate-400 uppercase block">Desmontagem</span>
-                            <span class="text-[10px] font-bold text-slate-600">${p.desmontagem || '--'}</span>
+                            <span class="text-[8px] font-black text-orange-400 block uppercase mb-1 italic">Saída</span>
+                            <span class="text-[10px] font-black text-slate-700">${p.saida || '--'}</span>
                         </div>
-                        <div class="bg-green-500 text-white px-4 py-2 rounded-lg text-center min-w-[100px]">
-                            <span class="text-[7px] font-black block uppercase opacity-70">Localização</span>
-                            <span class="text-[10px] font-black">${p.local || '---'}</span>
-                        </div>
-                    </div>
-
-                    <div class="w-32 px-6 text-center">
-                        <span class="text-[10px] font-black text-slate-800 block">${perc}%</span>
-                        <div class="w-full h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden">
-                            <div class="h-full ${color}" style="width: ${perc}%"></div>
+                        <div class="flex-1 bg-green-500 text-white rounded-xl p-2 text-center">
+                            <span class="text-[7px] font-black block uppercase opacity-70 tracking-widest">Local</span>
+                            <span class="text-[10px] font-black">${p.local || 'PENDENTE'}</span>
                         </div>
                     </div>
 
-                    <div class="px-6 flex gap-2 no-print">
-                        <button onclick="editarPedido('${p.id}', '${encodeURIComponent(JSON.stringify(p))}')" class="${(isAdmin || isSofia) ? 'flex' : 'hidden'} w-8 h-8 items-center justify-center bg-blue-50 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition-all">
-                            <i class="fas fa-edit text-xs"></i>
-                        </button>
-                        <button onclick="apagar('${p.id}')" class="${isAdmin ? 'flex' : 'hidden'} w-8 h-8 items-center justify-center bg-red-50 text-red-300 rounded-full hover:bg-red-500 hover:text-white transition-all">
-                            <i class="fas fa-trash text-xs"></i>
-                        </button>
+                    <div class="w-40 px-6 text-center">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Progresso</span>
+                            <span class="text-xs font-black text-slate-800">${perc}%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full ${barColor} transition-all duration-700" style="width: ${perc}%"></div>
+                        </div>
+                        <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="auth-element mt-2 text-[8px] font-black text-blue-600 uppercase underline">Atualizar</button>
+                    </div>
+
+                    <div class="${isAuth ? 'flex' : 'hidden'} gap-2 pl-4">
+                        <button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all"><i class="fas fa-edit text-xs"></i></button>
+                        <button onclick="apagar('${id}')" class="w-8 h-8 rounded-full bg-red-50 text-red-300 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-trash text-xs"></i></button>
                     </div>
                 `;
-                container.appendChild(row);
+                container.appendChild(box);
             });
             checkPermissions();
+            document.getElementById('stats-header').innerText = `Monitorização: ${snap.size} Pedidos Ativos`;
         });
 
-        window.editarPedido = (id, data) => {
+        window.preparaEdicao = (id, data) => {
             const p = JSON.parse(decodeURIComponent(data));
             document.getElementById('p-id').value = id;
             document.getElementById('p-cliente').value = p.cliente;
             document.getElementById('p-pedido').value = p.pedido;
             document.getElementById('p-peso').value = p.peso;
             document.getElementById('p-entrada').value = p.entrada;
+            document.getElementById('p-prio').value = p.prio;
             document.getElementById('p-pesar').value = p.pesar;
             document.getElementById('p-furos').value = p.furos;
             document.getElementById('p-montagem').value = p.montagem;
-            document.getElementById('p-desmontagem').value = p.desmontagem;
-            document.getElementById('p-expedicao').value = p.expedicao;
+            document.getElementById('p-saida').value = p.saida;
             document.getElementById('p-local').value = p.local;
-            document.getElementById('p-perc').value = p.progresso;
             document.getElementById('p-obs').value = p.obs;
             document.getElementById('modal-pedido').classList.remove('hidden');
         };
 
-        window.apagar = async (id) => { if(confirm("Eliminar registo?")) await deleteDoc(doc(db, "pedidos_v29", id)); };
-        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
-        window.abrirModalPedido = () => {
-            document.getElementById('p-id').value = "";
-            document.getElementById('form-pedido').reset();
-            document.getElementById('p-entrada').value = new Date().toISOString().split('T')[0];
-            document.getElementById('modal-pedido').classList.remove('hidden');
+        window.abrirProgresso = (id, nome, perc) => {
+            document.getElementById('prog-id').value = id;
+            document.getElementById('prog-title').innerText = nome;
+            document.getElementById('prog-range').value = perc;
+            document.getElementById('prog-val').innerText = perc + '%';
+            document.getElementById('modal-progresso').classList.remove('hidden');
         };
+
+        window.apagar = async (id) => { if(confirm("Eliminar registo permanentemente?")) await deleteDoc(doc(db, "pedidos_v30", id)); };
+        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
+        window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('modal-pedido').classList.remove('hidden'); };
         window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
 
         checkPermissions();
