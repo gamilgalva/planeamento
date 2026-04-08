@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamil Hub | Desenvolvido por Hamilton Junior</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .bg-gamil { background-color: #002D5A; }
+        .input-gamil { @apply w-full bg-white border-2 border-slate-200 rounded-2xl p-4 font-bold text-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all uppercase; }
+        .label-gamil { @apply block text-[10px] font-black uppercase text-slate-400 mb-2 ml-4 tracking-tighter; }
+        .tabela-header { @apply p-4 text-[10px] font-black uppercase text-slate-500 border-b border-slate-100; }
+        .prioridade-alta { border-left: 12px solid #ef4444 !important; }
+        .prioridade-media { border-left: 12px solid #f59e0b !important; }
+        .prioridade-baixa { border-left: 12px solid #10b981 !important; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-72 bg-gamil text-white flex flex-col shrink-0 shadow-2xl">
+        <div class="p-8 border-b border-white/5 text-center">
+            <h1 class="text-3xl font-black italic tracking-tighter uppercase">Gamil</h1>
+            <p class="text-[9px] text-blue-300 font-bold uppercase tracking-[0.3em] mt-1">Industrial Intelligence</p>
+        </div>
+        
+        <nav class="p-6 flex-1 space-y-2">
+            <button class="w-full flex items-center space-x-4 p-4 bg-blue-600 rounded-2xl font-bold border border-blue-400 shadow-lg">
+                <i class="fas fa-tasks"></i> <span>Planeamento Principal</span>
+            </button>
+            <button class="w-full flex items-center space-x-4 p-4 hover:bg-white/5 rounded-2xl text-slate-400 transition">
+                <i class="fas fa-users"></i> <span>Base de Clientes</span>
+            </button>
+        </nav>
+
+        <div class="p-8 border-t border-white/5 bg-black/20 text-center">
+            <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Software Engineering</p>
+            <p class="text-xs font-black text-white italic underline decoration-blue-500 underline-offset-4">HAMILTON JUNIOR</p>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0">
+        <header class="h-24 bg-white border-b border-slate-200 px-10 flex justify-between items-center shadow-sm z-10">
+            <h2 class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Fluxo de Produção em Tempo Real</h2>
+            <button onclick="abrirModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-[2rem] font-black shadow-xl shadow-blue-100 transition-all transform hover:scale-105 flex items-center">
+                <i class="fas fa-plus-circle mr-3"></i> NOVO PLANEAMENTO
+            </button>
+        </header>
+
+        <div class="flex-1 overflow-auto p-8">
+            <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-200 overflow-hidden">
+                <table class="w-full text-left border-collapse table-fixed">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="tabela-header w-32">Prioridade</th>
+                            <th class="tabela-header w-40">Estado</th>
+                            <th class="tabela-header w-32">Entrega</th>
+                            <th class="tabela-header w-64">Cliente / Artigo</th>
+                            <th class="tabela-header w-20 text-center">Qtd</th>
+                            <th class="tabela-header w-40">Operação</th>
+                            <th class="tabela-header">Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-corpo" class="divide-y divide-slate-50">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-add" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[3.5rem] w-full max-w-4xl shadow-2xl overflow-hidden">
+            <div class="p-10 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="text-3xl font-black text-slate-800 uppercase italic tracking-tighter">Novo Registo</h3>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Preenchimento exclusivo Eduardo</p>
+                </div>
+                <button onclick="fecharModal()" class="w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-slate-300 hover:text-red-500 text-3xl transition-all">&times;</button>
+            </div>
+            
+            <form class="p-10 grid grid-cols-1 md:grid-cols-3 gap-6" onsubmit="salvar(event)">
+                
+                <div>
+                    <label class="label-gamil">Prioridade</label>
+                    <select id="in-prio" class="input-gamil">
+                        <option value="alta">ALTA (Vermelho)</option>
+                        <option value="media">MÉDIA (Laranja)</option>
+                        <option value="baixa">BAIXA (Verde)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-gamil">Estado</label>
+                    <select id="in-estado" class="input-gamil">
+                        <option>EM FALTA</option>
+                        <option>EM CURSO</option>
+                        <option>CONCLUÍDO</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-gamil">Data Entrega</label>
+                    <input id="in-data" type="date" required class="input-gamil">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="label-gamil">Cliente (Memória Inteligente)</label>
+                    <input id="in-cliente" list="clientes-lista" required type="text" class="input-gamil" placeholder="NOME DA EMPRESA">
+                    <datalist id="clientes-lista"></datalist>
+                </div>
+                <div>
+                    <label class="label-gamil">Quantidade</label>
+                    <input id="in-qtd" type="number" required class="input-gamil" placeholder="0">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="label-gamil">Artigo / Material</label>
+                    <input id="in-artigo" required type="text" class="input-gamil" placeholder="EX: CAPAS PVC REF 200">
+                </div>
+                <div>
+                    <label class="label-gamil">Operação / Fase</label>
+                    <input id="in-op" type="text" class="input-gamil" placeholder="EX: CORTE / COSTURA">
+                </div>
+
+                <div class="md:col-span-3">
+                    <label class="label-gamil">Observações & Justificativas</label>
+                    <textarea id="in-obs" class="input-gamil h-32 resize-none pt-4" placeholder="REGISTE AQUI QUALQUER IMPEDIMENTO OU NOTA ESPECIAL..."></textarea>
+                </div>
+                
+                <div class="md:col-span-3 pt-4">
+                    <button type="submit" class="w-full bg-gamil text-white py-6 rounded-[2.5rem] font-black uppercase tracking-widest shadow-2xl hover:bg-blue-900 transition-all flex items-center justify-center">
+                        <i class="fas fa-save mr-3"></i> Gravar Planeamento no Sistema
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // MEMÓRIA DE CLIENTES (Persistente)
+        let clientes = JSON.parse(localStorage.getItem('gamil_clientes_hj')) || ["ESTOFOS NORTE", "TEXTIL MINHO", "VIANA DESIGN"];
+
+        function atualizarDatalist() {
+            const list = document.getElementById('clientes-lista');
+            list.innerHTML = clientes.map(c => `<option value="${c}">`).join('');
+        }
+
+        function abrirModal() { 
+            atualizarDatalist();
+            document.getElementById('modal-add').classList.remove('hidden'); 
+        }
+        function fecharModal() { document.getElementById('modal-add').classList.add('hidden'); }
+
+        function salvar(e) {
+            e.preventDefault();
+            const clienteInput = document.getElementById('in-cliente').value.toUpperCase();
+            
+            // Adiciona novo cliente à memória se não existir
+            if(!clientes.includes(clienteInput)) {
+                clientes.push(clienteInput);
+                localStorage.setItem('gamil_clientes_hj', JSON.stringify(clientes));
+            }
+
+            const novoItem = {
+                prio: document.getElementById('in-prio').value,
+                estado: document.getElementById('in-estado').value,
+                data: document.getElementById('in-data').value,
+                cliente: clienteInput,
+                qtd: document.getElementById('in-qtd').value,
+                artigo: document.getElementById('in-artigo').value,
+                op: document.getElementById('in-op').value,
+                obs: document.getElementById('in-obs').value
+            };
+
+            addLinha(novoItem);
+            fecharModal();
+            e.target.reset();
+        }
+
+        function addLinha(item) {
+            const corpo = document.getElementById('tabela-corpo');
+            const row = document.createElement('tr');
+            row.className = `prioridade-${item.prio} hover:bg-slate-50 transition-colors`;
+            
+            const badgeCores = { alta: 'bg-red-100 text-red-700', media: 'bg-orange-100 text-orange-700', baixa: 'bg-green-100 text-green-700' };
+
+            row.innerHTML = `
+                <td class="p-6"><span class="px-3 py-1 rounded-full text-[10px] font-black uppercase ${badgeCores[item.prio]}">${item.prio}</span></td>
+                <td class="p-6"><span class="text-[10px] font-bold text-slate-500 uppercase bg-slate-100 px-2 py-1 rounded border">${item.estado}</span></td>
+                <td class="p-6 font-bold text-slate-700 italic text-sm">${item.data}</td>
+                <td class="p-6">
+                    <div class="font-black text-slate-800 uppercase leading-none truncate">${item.cliente}</div>
+                    <div class="text-[10px] text-slate-400 mt-1 font-bold uppercase">${item.artigo}</div>
+                </td>
+                <td class="p-6 text-center font-black text-slate-700">${item.qtd}</td>
+                <td class="p-6 uppercase text-[10px] font-bold text-blue-600">${item.op}</td>
+                <td class="p-6 text-xs italic text-slate-400 leading-tight">${item.obs}</td>
+            `;
+            corpo.prepend(row);
+        }
+
+        atualizarDatalist();
+    </script>
+</body>
+</html>
