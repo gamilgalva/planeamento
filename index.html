@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v5.0 | Edição Profissional</title>
+    <title>Gamil Hub v5.1 | Alta Performance</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -30,18 +30,21 @@
     <aside class="w-full md:w-64 bg-gamil text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
         <div class="p-8 border-b border-white/10 text-center">
             <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3" onerror="this.style.display='none'">
-            <h1 class="text-[10px] font-black tracking-[0.2em] uppercase text-blue-300">Hub v5.0 Master</h1>
+            <h1 class="text-[10px] font-black tracking-[0.2em] uppercase text-blue-300">Hub v5.1 Master</h1>
         </div>
         <nav class="p-4 flex-1 space-y-3">
             <div id="user-info" class="p-4 bg-white/5 rounded-2xl border border-white/10 text-center mb-4">
-                <p id="nome-logado" class="text-xs font-black uppercase italic text-white">Visitante</p>
+                <p id="nome-logado" class="text-xs font-black uppercase italic text-white italic">Visitante</p>
                 <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2">Sair</button>
             </div>
-            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700">
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all">
                 <i class="fas fa-plus"></i> <span>Novo Registo</span>
             </button>
-            <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-[10px] font-bold">
+            <button onclick="abrirModalCliente()" class="auth-element w-full p-3 hover:bg-white/5 rounded-xl flex items-center space-x-3 text-slate-400 text-[10px] font-bold transition">
                 <i class="fas fa-users"></i> <span>Base de Clientes</span>
+            </button>
+            <button onclick="window.print()" class="w-full p-3 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase transition-all">
+                <i class="fas fa-print"></i> <span>Imprimir</span>
             </button>
         </nav>
     </aside>
@@ -49,7 +52,7 @@
     <main class="flex-1 flex flex-col min-w-0">
         <header class="h-16 bg-white border-b border-slate-200 px-8 flex justify-between items-center no-print text-xs">
             <h2 class="font-black text-slate-800 uppercase italic">Gestão Longitudinal Gamil</h2>
-            <div class="text-blue-600 font-black uppercase tracking-widest italic">Híbrido: Local + Nuvem</div>
+            <div id="sync-status" class="text-blue-600 font-black uppercase tracking-widest italic">Híbrido Ativo (Local + Nuvem)</div>
         </header>
 
         <div class="main-content">
@@ -76,19 +79,27 @@
     </main>
 
     <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl flex flex-col h-[70vh]">
+        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl flex flex-col h-[75vh]">
             <div class="p-6 bg-slate-100 border-b flex justify-between items-center">
                 <h3 class="font-black uppercase italic text-slate-800 text-sm">Base de Clientes</h3>
                 <button onclick="fecharModal()" class="text-2xl">&times;</button>
             </div>
             <div class="p-6 border-b auth-element">
                 <form id="form-cliente" class="space-y-3">
-                    <input id="c-cod" required type="text" class="input-gamil" placeholder="NOVO CÓDIGO">
+                    <input id="c-cod" required type="text" class="input-gamil" placeholder="CÓDIGO NOVO">
                     <input id="c-nome" required type="text" class="input-gamil" placeholder="NOME EMPRESA">
-                    <button type="submit" class="w-full bg-gamil text-white py-3 rounded-xl font-black text-[10px] uppercase">Guardar no Firebase</button>
+                    <button type="submit" class="w-full bg-gamil text-white py-3 rounded-xl font-black text-[10px] uppercase">Guardar na Nuvem</button>
                 </form>
             </div>
             <div id="lista-clientes-db" class="flex-1 overflow-y-auto space-y-1 p-6 text-[10px] font-bold text-slate-500 uppercase italic"></div>
+        </div>
+    </div>
+
+    <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] w-full max-w-md p-8 shadow-2xl">
+            <h3 class="text-xs font-black text-slate-800 uppercase italic border-b pb-4 mb-4 text-center">Histórico</h3>
+            <div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto"></div>
+            <button onclick="fecharModal()" class="w-full mt-6 bg-slate-100 py-3 rounded-xl text-[10px] font-black uppercase">Fechar</button>
         </div>
     </div>
 
@@ -105,17 +116,9 @@
         </div>
     </div>
 
-    <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-md p-8 shadow-2xl">
-            <h3 class="text-xs font-black text-slate-800 uppercase italic border-b pb-4 mb-4 text-center">Histórico</h3>
-            <div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto"></div>
-            <button onclick="fecharModal()" class="w-full mt-6 bg-slate-100 py-3 rounded-xl text-[10px] font-black uppercase">Fechar</button>
-        </div>
-    </div>
-
     <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col">
-            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Gestão do Pedido</span><button onclick="fecharModal()">&times;</button></div>
+            <div class="p-6 bg-gamil text-white flex justify-between items-center font-black uppercase text-xs"><span>Ficha de Pedido</span><button onclick="fecharModal()">&times;</button></div>
             <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[85vh] overflow-y-auto">
                 <input type="hidden" id="p-id">
                 <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
@@ -144,7 +147,7 @@
             <select id="login-user" class="input-gamil mb-4 h-12 text-center font-bold">
                 <option value="Visitante">Consulta</option>
                 <option value="Sofia">Sofia</option>
-                <option value="Eduardo Pereira">Eduardo Pereira</option>
+                <option value="Eduardo Pereira">Eduardo</option>
                 <option value="José Pedro">José Pedro</option>
                 <option value="José Castro">José Castro</option>
                 <option value="Luís Silva">Luís Silva</option>
@@ -182,9 +185,10 @@
             if (user === "Visitante" || (creds[user] && pass === creds[user])) {
                 localStorage.setItem('gamil_user', user);
                 localStorage.setItem('gamil_admin', (user === "Eduardo Pereira" || user === "José Pedro" || user === "Sofia"));
+                localStorage.setItem('gamil_full_delete', (user === "Eduardo Pereira" || user === "José Pedro"));
                 localStorage.setItem('gamil_view_admin', (user === "Eduardo Pereira" || user === "José Pedro"));
                 checkPermissions();
-            } else alert("Senha Incorreta!");
+            } else alert("Acesso negado.");
         };
 
         const checkPermissions = () => {
@@ -198,10 +202,13 @@
             document.querySelectorAll('.auth-element').forEach(el => el.style.display = isAdmin ? 'block' : 'none');
         };
 
-        // --- LÓGICA DE CLIENTES (FICHEIRO + FIREBASE) ---
+        // --- LÓGICA DE CLIENTES (JS LOCAL + FIREBASE) ---
         onSnapshot(query(colClientesFirebase, orderBy("nome")), (snap) => {
             clientesFirebase = [];
             snap.forEach(d => clientesFirebase.push(d.data()));
+            atualizarInterfaceClientes();
+        }, (error) => {
+            console.log("Banco de Clientes Vazio ou Quota Excedida. Usando cache local.");
             atualizarInterfaceClientes();
         });
 
@@ -209,10 +216,11 @@
             const select = document.getElementById('p-cliente');
             const listaDB = document.getElementById('lista-clientes-db');
             
-            // Unir Clientes ESTATICOS (Ficheiro JS) + NOVOS (Firebase)
-            const listaCompleta = [...(typeof CLIENTES_ESTATICOS !== 'undefined' ? CLIENTES_ESTATICOS : []), ...clientesFirebase];
+            // Une os estáticos (clientes_base.js) com os novos do Firebase
+            const estaticos = (typeof CLIENTES_ESTATICOS !== 'undefined') ? CLIENTES_ESTATICOS : [];
+            const listaCompleta = [...estaticos, ...clientesFirebase];
             
-            // Remover possíveis duplicados e ordenar
+            // Ordena alfabeticamente
             listaCompleta.sort((a, b) => a.nome.localeCompare(b.nome));
 
             if(select) select.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>';
@@ -221,7 +229,7 @@
             listaCompleta.forEach(c => {
                 const valor = `${c.codigo} | ${c.nome}`;
                 if(select) select.innerHTML += `<option value="${valor}">${valor}</option>`;
-                if(listaDB) listaDB.innerHTML += `<div class="p-1 border-b">● ${valor}</div>`;
+                if(listaDB) listaDB.innerHTML += `<div class="p-1 border-b uppercase">● ${valor}</div>`;
             });
         }
 
@@ -231,7 +239,7 @@
             e.target.reset();
         };
 
-        // --- GESTÃO DE PEDIDOS ---
+        // --- GESTÃO DE PEDIDOS (LIVE) ---
         onSnapshot(query(colPedidos, orderBy("timestamp", "desc")), (snap) => {
             const container = document.getElementById('container-pedidos');
             container.innerHTML = "";
@@ -243,14 +251,14 @@
                 const id = docSnap.id;
                 const perc = p.progresso || 0;
                 const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
-                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Sem reporte';
+                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Ver histórico';
 
                 const tr = document.createElement('tr');
                 tr.className = "pedido-row";
                 tr.innerHTML = `
                     <td><div class="status-strip ${color}"></div></td>
                     <td><span class="text-blue-600 font-black italic text-xs uppercase">#${p.pedido}</span></td>
-                    <td><div class="text-[11px] font-black uppercase text-slate-800 truncate" style="max-width:320px">${p.cliente}</div></td>
+                    <td><div class="text-[11px] font-black uppercase text-slate-800 truncate" style="max-width:300px">${p.cliente}</div></td>
                     <td class="text-center italic text-slate-400 text-[10px]">${p.entrada}</td>
                     <td class="text-center text-xs font-black text-slate-600">${p.peso}kg</td>
                     <td class="text-center text-[9px] font-black">
@@ -271,7 +279,7 @@
                     <td class="text-right pr-6 no-print">
                         <div class="flex justify-end space-x-2">
                             <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:text-green-700"><i class="fas fa-check-circle text-lg"></i></button>
-                            ${isAdmin ? `<button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:text-orange-600"><i class="fas fa-pencil-alt text-lg"></i></button>` : ''}
+                            ${isAdmin ? `<button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:text-orange-600 transform transition hover:scale-110 active:scale-95"><i class="fas fa-pencil-alt text-lg"></i></button>` : ''}
                             ${viewAdmin ? `<button onclick="apagarPedido('${id}')" class="text-slate-200 hover:text-red-500"><i class="fas fa-trash-alt text-lg"></i></button>` : ''}
                         </div>
                     </td>
@@ -281,7 +289,7 @@
             checkPermissions();
         });
 
-        // --- FUNÇÕES DE INTERFACE ---
+        // --- FUNÇÕES DE AUXÍLIO ---
         window.verLogs = (logs) => {
             const content = document.getElementById('logs-content');
             content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-bold text-slate-600 shadow-sm leading-relaxed"> ${l}</div>`).join('') : '<p class="text-xs italic text-center py-10">Sem histórico.</p>';
@@ -324,7 +332,7 @@
             document.getElementById('modal-progresso').classList.remove('hidden');
         };
 
-        window.apagarPedido = async (id) => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
+        window.apagarPedido = async (id) => { if(confirm("Apagar registo permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
         window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { 
             document.getElementById('p-id').value = ""; 
