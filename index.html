@@ -2,54 +2,55 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gamil - Hub Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamil - Sistema de Planeamento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
     <script src="clientes_base.js"></script>
 </head>
-<body>
+<body class="md:flex-row flex flex-col">
     <div id="modal-login" class="no-print">
         <div class="login-container">
-            <h1 class="login-title">Gamil Login</h1>
+            <h1 class="text-white font-black italic uppercase tracking-tighter text-xl mb-8 opacity-20">Login Gamil</h1>
             <div class="flex flex-col space-y-3">
-                <select id="login-user" class="login-select">
-                    <option value="Visitante">Consulta</option>
-                    <option value="Sofia">Sofia Meira</option>
-                    <option value="Eduardo Pereira">Eduardo Pereira</option>
-                    <option value="José Pedro">José Pedro</option>
-                    <option value="José Castro">José Castro</option>
-                    <option value="Luís Silva">Luís Silva</option>
-                    <option value="Paulo Abreu">Paulo Abreu</option>
-                </select>
-                <input type="password" id="login-pass" placeholder="PASSWORD" class="login-input-field">
-                <button onclick="tentarLogin()" class="btn-login-main">Entrar</button>
+                <div class="flex space-x-2">
+                    <select id="login-user" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none">
+                        <option value="Visitante">Consulta</option>
+                        <option value="Sofia">Sofia Meira</option>
+                        <option value="Eduardo Pereira">Eduardo Pereira</option>
+                        <option value="José Pedro">José Pedro</option>
+                        <option value="José Castro">José Castro</option>
+                        <option value="Luís Silva">Luís Silva</option>
+                        <option value="Paulo Abreu">Paulo Abreu</option>
+                    </select>
+                    <input type="password" id="login-pass" placeholder="PASSWORD" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none text-center">
+                </div>
+                <button onclick="tentarLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-xl transition-all">Entrar</button>
             </div>
         </div>
     </div>
 
     <aside class="sidebar no-print">
-        <div class="sidebar-header">
-            <img src="logo-gamil.png" alt="Gamil" class="logo-img" onerror="this.style.display='none'">
-            <h1 class="version-tag">Hub v9.9</h1>
+        <div class="p-8 border-b border-white/10 text-center">
+            <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3" onerror="this.style.display='none'">
+            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Hub v9.9</h1>
         </div>
-        <nav class="nav-container">
-            <div id="user-info" class="user-card">
-                <p id="nome-logado">Visitante</p>
-                <button onclick="logout()" class="btn-logout">Sair</button>
+        <nav class="p-4 flex-1 space-y-4">
+            <div id="user-info" class="p-5 bg-white/5 rounded-3xl border border-white/10 text-center mb-4">
+                <p id="nome-logado" class="text-xs font-black uppercase italic text-blue-100 tracking-tighter">Visitante</p>
+                <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2 tracking-widest">Sair</button>
             </div>
-            <button onclick="abrirModalPedido()" class="auth-element btn-action-blue"><i class="fas fa-plus"></i> <span>Novo Registo</span></button>
-            <button onclick="window.print()" class="btn-action-ghost"><i class="fas fa-print"></i> <span>Imprimir</span></button>
-            <button onclick="abrirModalCliente()" class="auth-element btn-action-ghost"><i class="fas fa-users"></i> <span>Clientes</span></button>
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all"><i class="fas fa-plus"></i> <span>Novo Registo</span></button>
+            <button onclick="window.print()" class="w-full p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase transition-all"><i class="fas fa-print text-blue-400"></i> <span>Imprimir Lista</span></button>
+            <button onclick="abrirModalCliente()" class="auth-element w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-slate-300 text-[10px] font-bold transition"><i class="fas fa-users text-blue-400"></i> <span>Clientes</span></button>
         </nav>
     </aside>
 
     <main class="main-container">
-        <header class="header-desktop no-print">
-            <h2>R.030.01 - Planeamento Geral</h2>
-            <div class="live-tag">Live Sync Master</div>
+        <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print">
+            <h2 class="text-xs font-black text-slate-800 uppercase italic tracking-widest">R.030.01 - Planeamento Geral</h2>
+            <div class="flex items-center space-x-2 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Sync Master</div>
         </header>
         <div class="main-content">
             <div class="table-responsive">
