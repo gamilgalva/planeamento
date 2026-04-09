@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 1. CONFIGURAÇÃO FIREBASE
+// 1. CONFIGURAÇÃO FIREBASE (Hamilton, confira se estes dados batem com o seu Firebase)
 const firebaseConfig = { 
     apiKey: "AIzaSyAlvGJKZdMCNopDKoXMcUTuvHa5E9GqIHA", 
     authDomain: "planeamento-cf642.firebaseapp.com", 
@@ -15,84 +15,84 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const colPedidos = collection(db, "pedidos_vfinal_gamil");
 
-// 2. LISTA DE CLIENTES (COLOCADA AQUI PARA NÃO FALHAR O IMPORT)
-const CLIENTES_LISTA = [
-    { codigo: "GAM", nome: "GAMIL" },
-    { codigo: "GAL", nome: "GALVANIZAÇÃO" },
-    // Adicione os seus principais aqui ou cole a lista do seu clientes_base.js aqui dentro
-];
-
-const formatarDataBR = (str) => { 
-    if (!str || str === '--' || str === '') return '--'; 
-    const pts = str.split('-'); 
-    return pts.length === 3 ? `${pts[2]}-${pts[1]}-${pts[0]}` : str; 
-};
-
-// 3. FUNÇÕES GLOBAIS (WINDOW) - ESSENCIAIS PARA O EDUARDO E JOSÉ PEDRO
+// 2. FUNÇÕES DE LOGIN (FORÇADAS NO WINDOW)
 window.tentarLogin = () => {
+    console.log("Tentativa de login iniciada...");
     const user = document.getElementById('login-user').value;
     const pass = document.getElementById('login-pass').value;
-    const creds = { "Sofia": "gamil$$26", "Eduardo Pereira": "gamil$$26", "José Pedro": "gamil$$26", "José Castro": "jose1234", "Luís Silva": "luis1234", "Paulo Abreu": "paulo1234" };
+    
+    const creds = { 
+        "Sofia": "gamil$$26", 
+        "Eduardo Pereira": "gamil$$26", 
+        "José Pedro": "gamil$$26", 
+        "José Castro": "jose1234", 
+        "Luís Silva": "luis1234", 
+        "Paulo Abreu": "paulo1234" 
+    };
+
     if (user === "Visitante" || (creds[user] && pass === creds[user])) {
         localStorage.setItem('gamil_user', user);
-        localStorage.setItem('gamil_admin', (user === "Eduardo Pereira" || user === "José Pedro"));
+        localStorage.setItem('gamil_admin', (user === "Eduardo Pereira" || user === "José Pedro" ? "true" : "false"));
+        localStorage.setItem('gamil_sofia', (user === "Sofia" ? "true" : "false"));
+        localStorage.setItem('gamil_encarregado', (user === "José Castro" || user === "Luís Silva" || user === "Paulo Abreu" ? "true" : "false"));
+        
+        console.log("Login aceite para:", user);
         window.location.reload();
-    } else alert("Senha incorreta.");
+    } else {
+        alert("Senha incorreta para o usuário selecionado.");
+    }
 };
 
-window.logout = () => { localStorage.clear(); window.location.reload(); };
-
-// EDIÇÃO INLINE (RANKING E DATAS)
-window.editPosInline = (id, el) => {
-    if (localStorage.getItem('gamil_admin') !== 'true' || el.querySelector('input')) return;
-    const val = el.innerText.replace('º', '');
-    el.innerHTML = `<input type="number" class="w-12 p-1 text-black border-2 border-blue-500 rounded" value="${val}" onblur="confirmarPosInline('${id}', this.value)">`;
-    el.querySelector('input').focus();
+window.logout = () => {
+    localStorage.clear();
+    window.location.reload();
 };
 
-window.confirmarPosInline = async (id, val) => {
-    await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: val ? parseInt(val) : '' });
-};
-
-window.editDataInline = (id, campo, el) => {
-    if (localStorage.getItem('gamil_admin') !== 'true' || el.querySelector('input')) return;
-    const raw = el.getAttribute('data-raw') || '';
-    el.innerHTML = `<input type="date" class="p-1 text-[10px] text-black border-2 border-blue-500 rounded" value="${raw}" onblur="confirmarDataInline('${id}', '${campo}', this.value)">`;
-};
-
-window.confirmarDataInline = async (id, campo, val) => {
-    await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val });
-};
-
-// APAGAR E PROGRESSO
-window.apagarPedido = async (id) => { if(confirm("Deseja apagar este pedido?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
-
-window.abrirProgresso = (id, n, p) => {
-    document.getElementById('prog-id').value = id;
-    document.getElementById('prog-nome').innerText = n;
-    document.getElementById('prog-range').value = p;
-    document.getElementById('prog-perc-val').innerText = p;
-    document.getElementById('modal-progresso').classList.remove('hidden');
-};
-
-window.salvarProgresso = async () => {
-    const id = document.getElementById('prog-id').value;
-    const perc = parseInt(document.getElementById('prog-range').value);
-    const obs = document.getElementById('prog-obs').value.toUpperCase();
-    const log = `${localStorage.getItem('gamil_user')}: ${perc}% ${obs ? '-> '+obs : ''} [${new Date().toLocaleString()}]`;
-    await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) });
-    window.fecharModal();
-};
-
-// 4. RENDERIZAÇÃO EM TEMPO REAL
-onSnapshot(colPedidos, snap => {
-    const container = document.getElementById('container-pedidos');
-    if(!container) return;
-    container.innerHTML = "";
-    const isAdmin = localStorage.getItem('gamil_admin') === 'true';
+// 3. VERIFICAÇÃO DE PERMISSÕES AO CARREGAR
+const checkPermissions = () => {
+    const user = localStorage.getItem('gamil_user');
+    const modalLogin = document.getElementById('modal-login');
     
-    let lista = []; snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
-    lista.sort((a, b) => (a.ranking || 9999) - (b.ranking || 9999));
+    if (!user) {
+        console.log("Nenhum usuário logado. Mostrando modal.");
+        if (modalLogin) modalLogin.style.display = 'flex';
+        return;
+    }
+
+    console.log("Usuário logado:", user);
+    if (modalLogin) modalLogin.style.display = 'none';
+    
+    const nomeEl = document.getElementById('nome-logado');
+    if (nomeEl) nomeEl.innerText = user;
+
+    // Aplicar classes de permissão no BODY
+    if (localStorage.getItem('gamil_admin') === 'true') document.body.classList.add('admin-mode');
+    if (localStorage.getItem('gamil_sofia') === 'true') document.body.classList.add('sofia-mode');
+    if (localStorage.getItem('gamil_encarregado') === 'true') document.body.classList.add('encarregado-mode');
+};
+
+// 4. FUNÇÕES DE INTERFACE (WINDOW)
+window.fecharModal = () => {
+    document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
+};
+
+window.abrirModalPedido = () => {
+    const form = document.getElementById('form-pedido');
+    if(form) form.reset();
+    document.getElementById('p-id').value = "";
+    document.getElementById('modal-pedido').classList.remove('hidden');
+};
+
+// 5. ESCUTA DO FIREBASE (TEMPO REAL)
+onSnapshot(colPedidos, (snap) => {
+    const container = document.getElementById('container-pedidos');
+    if (!container) return;
+    
+    container.innerHTML = "";
+    let lista = [];
+    snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+
+    lista.sort((a, b) => (a.ranking || 999) - (b.ranking || 999));
 
     lista.forEach(p => {
         const tr = document.createElement('tr');
@@ -101,48 +101,33 @@ onSnapshot(colPedidos, snap => {
         const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
 
         tr.innerHTML = `
-            <td class="pos-text ${isAdmin ? 'cursor-pointer hover:bg-blue-50' : ''}" onclick="editPosInline('${p.id}', this)">${p.ranking ? p.ranking + 'º' : '--'}</td>
-            <td><div class="status-strip ${color}"></div></td>
+            <td class="pos-text">${p.ranking ? p.ranking + 'º' : '--'}</td>
+            <td style="width: 15px"><div class="status-strip ${color}"></div></td>
             <td class="ref-text">#${p.pedido}</td>
             <td class="client-text">${p.cliente}</td>
-            <td class="text-center other-row-text">${formatarDataBR(p.entrada)}</td>
-            <td class="text-center other-row-text">${p.peso}kg</td>
+            <td class="text-center other-row-text">${p.entrada || '--'}</td>
+            <td class="text-center other-row-text">${p.peso || '0'}kg</td>
             <td class="text-center other-row-text">${p.pesar || 'NÃO'} | ${p.furos || 'NÃO'}</td>
-            <td class="admin-view encarregado-view text-center font-black text-blue-900/80 other-row-text ${isAdmin ? 'cursor-pointer hover:bg-blue-50' : ''}" data-raw="${p.montagem || ''}" onclick="editDataInline('${p.id}', 'montagem', this)">${formatarDataBR(p.montagem)}</td>
-            <td class="admin-view encarregado-view sofia-view text-center font-black text-orange-600 other-row-text ${isAdmin ? 'cursor-pointer hover:bg-blue-50' : ''}" data-raw="${p.saida || ''}" onclick="editDataInline('${p.id}', 'saida', this)">${formatarDataBR(p.saida)}</td>
-            <td onclick="abrirProgresso('${p.id}', '${p.cliente}', ${perc})">
-                <div class="flex items-center space-x-2 cursor-pointer"><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-600" style="width: ${perc}%"></div></div><span class="text-[10px] font-black">${perc}%</span></div>
+            <td class="admin-view encarregado-view text-center font-black text-blue-900/80 other-row-text">${p.montagem || '--'}</td>
+            <td class="admin-view encarregado-view sofia-view text-center font-black text-orange-600 other-row-text">${p.saida || '--'}</td>
+            <td>
+                <div class="flex items-center space-x-2">
+                    <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner">
+                        <div class="h-full bg-blue-600" style="width: ${perc}%"></div>
+                    </div>
+                    <span class="text-[10px] font-black">${perc}%</span>
+                </div>
             </td>
             <td class="admin-view italic uppercase truncate border-l pl-3 other-row-text">${p.obs_edu || ''}</td>
             <td class="text-right pr-6 no-print">
-                <div class="flex justify-end gap-3">
-                    <button onclick="preparaEdicao('${p.id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400"><i class="fas fa-pencil-alt"></i></button>
-                    ${isAdmin ? `<button onclick="apagarPedido('${p.id}')" class="text-red-300 hover:text-red-600"><i class="fas fa-trash"></i></button>` : ''}
-                </div>
-            </td>`;
+                <button class="text-orange-400"><i class="fas fa-pencil-alt"></i></button>
+            </td>
+        `;
         container.appendChild(tr);
     });
+}, (error) => {
+    console.error("Erro no Firebase:", error);
 });
 
-// MODAIS E INICIALIZAÇÃO
-window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
-
-window.abrirModalPedido = () => {
-    document.getElementById('p-id').value = "";
-    document.getElementById('form-pedido').reset();
-    document.getElementById('modal-pedido').classList.remove('hidden');
-};
-
-// Carrega os clientes no select
-const selectCli = document.getElementById('p-cliente');
-if (selectCli) {
-    selectCli.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>' + 
-    CLIENTES_LISTA.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
-}
-
-const user = localStorage.getItem('gamil_user');
-if (user) {
-    document.getElementById('modal-login').style.display = 'none';
-    document.getElementById('nome-logado').innerText = user;
-    if (localStorage.getItem('gamil_admin') === 'true') document.body.classList.add('admin-mode');
-}
+// Executar verificação ao carregar o script
+checkPermissions();
