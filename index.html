@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v7.7 | Master Edition</title>
+    <title>Gamil Hub v7.9 | Edição Estável Completa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="clientes_base.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         :root { --gamil-blue: #1a2a3a; }
         
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
@@ -34,12 +34,15 @@
         
         /* SISTEMA DE VISIBILIDADE */
         .admin-view, .encarregado-view, .sofia-view, .auth-element { display: none !important; }
+        
         body.admin-mode .admin-view, body.admin-mode .encarregado-view { display: table-cell !important; }
         body.encarregado-mode .encarregado-view { display: table-cell !important; }
         body.sofia-mode .sofia-view { display: table-cell !important; }
+        
         body.admin-mode th.admin-view, body.admin-mode th.encarregado-view { display: table-cell !important; }
         body.encarregado-mode th.encarregado-view { display: table-cell !important; }
         body.sofia-mode th.sofia-view { display: table-cell !important; }
+        
         body.admin-mode .auth-element, body.sofia-mode .auth-element { display: block !important; }
 
         /* ESTILO EDIÇÃO RÁPIDA */
@@ -74,7 +77,7 @@
     <aside class="w-full md:w-64 bg-[#1a2a3a] text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
         <div class="p-8 border-b border-white/10 text-center">
             <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3" onerror="this.style.display='none'">
-            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Gamil Hub v7.7</h1>
+            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Gamil Hub v7.9</h1>
         </div>
         <nav class="p-4 flex-1 space-y-4">
             <div id="user-info" class="p-5 bg-white/5 rounded-3xl border border-white/10 text-center mb-4">
@@ -101,7 +104,7 @@
             <h2 class="text-xs font-black text-slate-800 uppercase italic tracking-widest">R.030.01 - Planeamento Geral de Produção</h2>
             <div class="flex items-center space-x-2 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">
                 <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                <span class="text-[9px] font-black text-blue-600 uppercase italic tracking-widest">Live Sync v7.7</span>
+                <span class="text-[9px] font-black text-blue-600 uppercase italic tracking-widest">Live Sync v7.9</span>
             </div>
         </header>
 
@@ -150,7 +153,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="label-gamil">Posição (Fila)</label>
+                    <label class="label-gamil">Ranking na Fila</label>
                     <input id="p-pos" type="number" class="input-gamil bg-white p-3" placeholder="Ex: 1">
                 </div>
                 <div>
@@ -200,7 +203,7 @@
                 <form id="form-cliente" class="space-y-4">
                     <input id="c-cod" required type="text" class="input-gamil bg-slate-50 p-3" placeholder="CÓDIGO NOVO">
                     <input id="c-nome" required type="text" class="input-gamil bg-slate-50 p-3" placeholder="NOME EMPRESA">
-                    <button type="submit" class="w-full bg-[#1a2a3a] text-white py-3 rounded-xl font-bold uppercase text-[10px]">Guardar Cliente na Nuvem</button>
+                    <button type="submit" class="btn-premium-gamil"><i class="fas fa-save"></i> Guardar Cliente na Nuvem</button>
                 </form>
             </div>
             <div id="lista-clientes-db" class="flex-1 overflow-y-auto p-8 text-[10px] font-bold text-slate-400 uppercase italic"></div>
@@ -277,7 +280,7 @@
                 document.getElementById('modal-login').classList.add('hidden');
                 checkPermissions();
                 setTimeout(atualizarInterfaceClientes, 300);
-            } else alert("Senha incorreta.");
+            } else alert("Credenciais erradas.");
         };
 
         const checkPermissions = () => {
@@ -297,7 +300,7 @@
             document.querySelectorAll('.auth-element').forEach(el => el.style.display = (isAdmin || isSofia) ? 'block' : 'none');
         };
 
-        // EDIÇÃO INLINE
+        // --- EDIÇÃO INLINE ---
         window.editPosInline = (id, el) => {
             if (localStorage.getItem('gamil_admin') !== 'true') return;
             if (el.querySelector('input')) return;
@@ -329,7 +332,7 @@
             await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val === 'SIM' ? 'NÃO' : 'SIM' });
         };
 
-        // DADOS CLIENTES
+        // --- CLIENTES ---
         onSnapshot(query(colClientesFirebase, orderBy("nome")), snap => {
             clientesFirebase = []; snap.forEach(d => clientesFirebase.push(d.data())); atualizarInterfaceClientes();
         });
@@ -373,13 +376,13 @@
                 tr.innerHTML = `
                     <td class="pos-text ${isAdmin ? 'editable-cell' : ''}" onclick="editPosInline('${id}', this)">${p.ranking ? p.ranking + 'º' : '--'}</td>
                     <td style="width: 15px"><div class="status-strip ${color}"></div></td>
-                    <td class="ref-text">#${p.pedido}</td>
-                    <td class="client-text">${p.cliente}</td>
+                    <td><span class="text-blue-600 font-black italic">#${p.pedido}</span></td>
+                    <td><div class="text-[10px] font-bold uppercase text-slate-800 truncate">${p.cliente}</div></td>
                     <td class="text-center italic text-slate-400 text-[10px]">${formatarDataBR(p.entrada)}</td>
-                    <td class="text-center text-xs font-bold text-slate-600 italic">${p.peso}kg</td>
+                    <td class="text-center text-[10px] font-bold text-slate-600">${p.peso}kg</td>
                     <td class="text-center text-[9px] font-black">
-                        <span onclick="toggleServico('${id}', 'pesar', '${p.pesar}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.pesar === 'SIM' ? 'text-orange-500 font-black' : 'text-slate-200'}">PES</span> | 
-                        <span onclick="toggleServico('${id}', 'furos', '${p.furos}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.furos === 'SIM' ? 'text-orange-500 font-black' : 'text-slate-200'}">FUR</span>
+                        <span onclick="toggleServico('${id}', 'pesar', '${p.pesar}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.pesar === 'SIM' ? 'text-orange-500 font-black' : 'text-slate-300'}">PES</span> | 
+                        <span onclick="toggleServico('${id}', 'furos', '${p.furos}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.furos === 'SIM' ? 'text-orange-500 font-black' : 'text-slate-300'}">FUR</span>
                     </td>
                     <td class="admin-view encarregado-view text-center text-[10px] font-black text-blue-900/80 ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.montagem || ''}" onclick="editDataInline('${id}', 'montagem', this)">${formatarDataBR(p.montagem)}</td>
                     <td class="admin-view encarregado-view sofia-view text-center text-[10px] font-black text-orange-600 ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.saida || ''}" onclick="editDataInline('${id}', 'saida', this)">${formatarDataBR(p.saida)}</td>
@@ -428,8 +431,8 @@
         window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('p-entrada').value = new Date().toISOString().split('T')[0]; document.getElementById('modal-pedido').classList.remove('hidden'); };
         window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
         window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('prog-obs').value = ""; document.getElementById('modal-progresso').classList.remove('hidden'); };
-        window.apagarPedido = async id => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
-        window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem histórico.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
+        window.apagarPedido = async id => { if(confirm("Eliminar registo permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
+        window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem registos.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
 
         window.onload = () => { if (localStorage.getItem('gamil_user')) { document.getElementById('modal-login').classList.add('hidden'); checkPermissions(); setTimeout(atualizarInterfaceClientes, 300); } };
     </script>
