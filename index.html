@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil Hub v6.7 | UI Aprimorada</title>
+    <title>Gamil Hub v6.9 | Controlo Total de Produção</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -16,7 +16,8 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .main-content { overflow-x: auto; overflow-y: auto; flex: 1; padding: 25px 40px; }
         
-        .gamil-table { min-width: 1450px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; table-layout: fixed; }
+        /* TABELA PREMIUM ACADÉMICOS */
+        .gamil-table { min-width: 1550px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; table-layout: fixed; }
         .gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
         
         .pedido-row { @apply bg-white shadow-sm hover:shadow-md transition-all duration-300; }
@@ -47,15 +48,18 @@
             border-radius: 10px; 
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); 
             border: 2px solid #3b82f6; 
-            width: 160px; /* Aumentado para o botão respirar */
+            width: fit-content;
             position: absolute;
             z-index: 50;
-            margin-left: -10px;
+            transform: translateX(-10px);
         }
-        .inline-date-input { font-size: 11px; border: none; outline: none; width: 105px; font-weight: 800; color: #1e40af; }
+        .inline-input { font-size: 11px; border: none; outline: none; font-weight: 800; color: #1e40af; background: transparent; }
         
         .btn-confirm-inline { @apply bg-green-500 hover:bg-green-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-sm transition-all active:scale-90; }
 
+        .input-gamil { @apply w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs transition-all focus:ring-4 focus:ring-blue-100 focus:border-blue-500; }
+        .label-gamil { @apply block text-[10px] font-black uppercase text-slate-500 mb-1 ml-2; }
+        
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
 
         @media print {
@@ -73,7 +77,7 @@
     <aside class="w-full md:w-64 bg-[#1a2a3a] text-white flex flex-col shrink-0 shadow-2xl z-30 md:h-screen no-print">
         <div class="p-8 border-b border-white/10 text-center">
             <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3" onerror="this.style.display='none'">
-            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Gamil Hub v6.7</h1>
+            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Gamil Hub v6.9</h1>
         </div>
         <nav class="p-4 flex-1 space-y-4">
             <div id="user-info" class="p-5 bg-white/5 rounded-3xl border border-white/10 text-center mb-4">
@@ -97,10 +101,10 @@
 
     <main class="flex-1 flex flex-col min-w-0">
         <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print">
-            <h2 class="text-xs font-black text-slate-800 uppercase italic tracking-widest">Planeamento Geral de Produção</h2>
+            <h2 class="text-xs font-black text-slate-800 uppercase italic tracking-widest">R.030.01 - Planeamento Geral de Produção</h2>
             <div class="flex items-center space-x-2 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100">
                 <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                <span class="text-[9px] font-black text-blue-600 uppercase italic tracking-widest">Faturamento Ativo</span>
+                <span class="text-[9px] font-black text-blue-600 uppercase italic">Faturamento Ativo</span>
             </div>
         </header>
 
@@ -109,6 +113,7 @@
                 <thead class="gamil-thead">
                     <tr>
                         <th style="width: 15px"></th>
+                        <th style="width: 50px">Pos</th>
                         <th style="width: 140px">Ref / Pedido</th>
                         <th style="width: 320px">Cliente Gamil</th>
                         <th class="text-center" style="width: 110px">Entrada</th>
@@ -168,24 +173,25 @@
 
     <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col">
-            <div class="p-6 bg-[#1a2a3a] text-white flex justify-between items-center font-black uppercase text-xs"><span>Ficha de Pedido</span><button onclick="fecharModal()">&times;</button></div>
+            <div class="p-6 bg-[#1a2a3a] text-white flex justify-between items-center font-black uppercase text-xs"><span>Gestão de Pedido</span><button onclick="fecharModal()">&times;</button></div>
             <form id="form-pedido" class="p-8 grid grid-cols-2 gap-4 max-h-[85vh] overflow-y-auto text-left">
                 <input type="hidden" id="p-id">
-                <div class="col-span-2"><label class="label-gamil">Designação do Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
-                <div><label class="label-gamil">Nº Pedido / Obra</label><input id="p-pedido" required type="text" class="input-gamil"></div>
-                <div><label class="label-gamil">Nível de Prioridade</label><select id="p-prio" class="input-gamil"><option value="baixa">BAIXA</option><option value="media">MÉDIA</option><option value="alta">ALTA</option></select></div>
-                <div><label class="label-gamil">Peso Estimado (Kg)</label><input id="p-peso" required type="number" step="0.01" class="input-gamil"></div>
-                <div><label class="label-gamil">Data de Entrada</label><input id="p-entrada" type="date" class="input-gamil"></div>
+                <div class="col-span-2"><label class="label-gamil">Seleccionar Cliente</label><select id="p-cliente" required class="input-gamil"></select></div>
+                <div><label class="label-gamil">Nº Pedido</label><input id="p-pedido" required type="text" class="input-gamil"></div>
+                <div><label class="label-gamil">Prioridade</label><select id="p-prio" class="input-gamil"><option value="baixa">BAIXA</option><option value="media">MÉDIA</option><option value="alta">ALTA</option></select></div>
+                <div><label class="label-gamil">Fila (Posição)</label><input id="p-pos" type="number" class="input-gamil" placeholder="Ex: 1"></div>
+                <div><label class="label-gamil">Peso (Kg)</label><input id="p-peso" required type="number" step="0.01" class="input-gamil"></div>
+                <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" type="date" class="input-gamil"></div>
                 <div class="grid grid-cols-2 gap-2">
                     <div><label class="label-gamil">Pesar?</label><select id="p-pesar" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
                     <div><label class="label-gamil">Furos?</label><select id="p-furos" class="input-gamil"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div>
                 </div>
                 <div class="col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2" id="fields-admin-only" style="display:none">
-                    <div><label class="label-gamil text-blue-600 font-bold">Previsão Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
-                    <div><label class="label-gamil text-orange-600 font-bold">Data Entrega</label><input id="p-saida" type="date" class="input-gamil"></div>
-                    <div class="col-span-2 admin-view-only"><label class="label-gamil text-blue-600 font-bold">Observações de Fábrica</label><textarea id="p-obs-edu" class="input-gamil h-20"></textarea></div>
+                    <div><label class="label-gamil text-blue-600 font-bold">Montagem</label><input id="p-montagem" type="date" class="input-gamil"></div>
+                    <div><label class="label-gamil text-orange-600 font-bold">Entrega</label><input id="p-saida" type="date" class="input-gamil"></div>
+                    <div class="col-span-2 admin-view-only"><label class="label-gamil text-blue-600 font-bold">Notas Eduardo</label><textarea id="p-obs-edu" class="input-gamil h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar Dados na Base</button>
+                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar Registo</button>
             </form>
         </div>
     </div>
@@ -223,9 +229,7 @@
 
         const formatarDataBR = (str) => {
             if (!str || str === '--') return '--';
-            const parts = str.split('-');
-            if(parts.length !== 3) return str;
-            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            const pts = str.split('-'); return pts.length === 3 ? `${pts[2]}-${pts[1]}-${pts[0]}` : str;
         };
 
         window.tentarLogin = () => {
@@ -240,7 +244,7 @@
                 document.getElementById('modal-login').classList.add('hidden');
                 checkPermissions();
                 setTimeout(atualizarInterfaceClientes, 300);
-            } else alert("Credenciais erradas.");
+            } else alert("Acesso negado.");
         };
 
         const checkPermissions = () => {
@@ -249,35 +253,35 @@
             document.getElementById('nome-logado').innerText = user;
             const isAdmin = localStorage.getItem('gamil_admin') === 'true';
             const isSofia = localStorage.getItem('gamil_sofia') === 'true';
-            const isEncarregado = localStorage.getItem('gamil_encarregado') === 'true';
+            const isEnc = localStorage.getItem('gamil_encarregado') === 'true';
             document.body.classList.remove('admin-mode', 'sofia-mode', 'encarregado-mode', 'can-edit');
             if (isAdmin) { document.body.classList.add('admin-mode', 'can-edit'); }
             if (isSofia) document.body.classList.add('sofia-mode');
-            if (isEncarregado) document.body.classList.add('encarregado-mode');
-            document.getElementById('fields-admin-only').style.display = (isAdmin || isSofia || isEncarregado) ? 'grid' : 'none';
+            if (isEnc) document.body.classList.add('encarregado-mode');
+            document.getElementById('fields-admin-only').style.display = (isAdmin || isSofia || isEnc) ? 'grid' : 'none';
             document.querySelectorAll('.admin-view-only').forEach(el => el.style.display = isAdmin ? 'block' : 'none');
             document.querySelectorAll('.auth-element').forEach(el => el.style.display = (isAdmin || isSofia) ? 'block' : 'none');
         };
 
-        // EDIÇÃO INLINE MELHORADA
-        window.toggleServico = async (id, campo, valorAtual) => {
+        // --- EDIÇÃO INLINE RANKING & DATAS ---
+        window.editPosInline = (id, el) => {
             if (localStorage.getItem('gamil_admin') !== 'true') return;
-            const novoValor = valorAtual === 'SIM' ? 'NÃO' : 'SIM';
-            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: novoValor });
+            if (el.querySelector('input')) return;
+            const val = el.innerText === '--' ? '' : el.innerText.replace('º', '');
+            el.innerHTML = `<div class="inline-edit-container no-print"><input type="number" class="inline-input w-12" value="${val}"><button class="btn-confirm-inline" onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check text-[10px]"></i></button></div>`;
+            el.querySelector('input').focus();
+        };
+
+        window.confirmarPosInline = async (id, btn) => {
+            const val = btn.parentElement.querySelector('input').value;
+            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: val ? parseInt(val) : '' });
         };
 
         window.editDataInline = (id, campo, el) => {
             if (localStorage.getItem('gamil_admin') !== 'true') return;
             if (el.querySelector('input')) return;
-            const originalValue = el.getAttribute('data-raw') || '';
-            el.innerHTML = `
-                <div class="inline-edit-container no-print" onclick="event.stopPropagation()">
-                    <input type="date" class="inline-date-input" value="${originalValue}">
-                    <button class="btn-confirm-inline" onclick="confirmarDataInline('${id}', '${campo}', this)">
-                        <i class="fas fa-check"></i>
-                    </button>
-                </div>
-            `;
+            const raw = el.getAttribute('data-raw') || '';
+            el.innerHTML = `<div class="inline-edit-container no-print" style="width:160px"><input type="date" class="inline-input w-28" value="${raw}"><button class="btn-confirm-inline" onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check text-[10px]"></i></button></div>`;
             el.querySelector('input').focus();
         };
 
@@ -286,153 +290,105 @@
             await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val });
         };
 
-        // CLIENTES
-        onSnapshot(query(colClientesFirebase, orderBy("nome")), (snap) => {
-            clientesFirebase = [];
-            snap.forEach(d => clientesFirebase.push(d.data()));
-            atualizarInterfaceClientes();
+        window.toggleServico = async (id, campo, val) => {
+            if (localStorage.getItem('gamil_admin') !== 'true') return;
+            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val === 'SIM' ? 'NÃO' : 'SIM' });
+        };
+
+        // --- CLIENTES & PEDIDOS ---
+        onSnapshot(query(colClientesFirebase, orderBy("nome")), snap => {
+            clientesFirebase = []; snap.forEach(d => clientesFirebase.push(d.data())); atualizarInterfaceClientes();
         });
 
         function atualizarInterfaceClientes() {
-            const select = document.getElementById('p-cliente');
-            const listaDB = document.getElementById('lista-clientes-db');
-            if(!select || !listaDB) return;
+            const select = document.getElementById('p-cliente'); if(!select) return;
             const estaticos = (typeof CLIENTES_ESTATICOS !== 'undefined') ? CLIENTES_ESTATICOS : [];
-            const listaCompleta = [...estaticos, ...clientesFirebase].sort((a, b) => a.nome.localeCompare(b.nome));
-            const fragSelect = document.createDocumentFragment();
-            const fragLista = document.createDocumentFragment();
-            const defaultOpt = document.createElement('option');
-            defaultOpt.text = "-- SELECCIONAR CLIENTE --"; defaultOpt.value = "";
-            fragSelect.appendChild(defaultOpt);
-            listaCompleta.forEach(c => {
-                const valor = `${c.codigo} | ${c.nome}`;
-                const opt = document.createElement('option'); opt.value = valor; opt.text = valor;
-                fragSelect.appendChild(opt);
-                const item = document.createElement('div');
-                item.className = "p-2 border-b border-slate-100 uppercase text-slate-500 text-[10px]";
-                item.innerText = `● ${valor}`;
-                fragLista.appendChild(item);
-            });
-            select.innerHTML = ""; select.appendChild(fragSelect);
-            listaDB.innerHTML = ""; listaDB.appendChild(fragLista);
+            const completa = [...estaticos, ...clientesFirebase].sort((a,b) => a.nome.localeCompare(b.nome));
+            select.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>' + completa.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
         }
 
-        document.getElementById('form-cliente').onsubmit = async (e) => {
-            e.preventDefault();
-            await addDoc(colClientesFirebase, { codigo: document.getElementById('c-cod').value, nome: document.getElementById('c-nome').value.toUpperCase() });
-            e.target.reset();
-            alert("Salvo!");
-        };
-
-        // PEDIDOS COM ORDENAÇÃO
-        onSnapshot(colPedidos, (snap) => {
-            const container = document.getElementById('container-pedidos');
-            container.innerHTML = "";
+        onSnapshot(colPedidos, snap => {
+            const container = document.getElementById('container-pedidos'); container.innerHTML = "";
             const isAdmin = localStorage.getItem('gamil_admin') === 'true';
             const isSofia = localStorage.getItem('gamil_sofia') === 'true';
-            let lista = [];
-            snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+            let lista = []; snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
+
+            // ORDENAÇÃO MASTER: Ranking > Prioridade > Montagem
             const pesoPrio = { 'alta': 1, 'media': 2, 'baixa': 3 };
             lista.sort((a, b) => {
+                const rankA = a.ranking || 999999; const rankB = b.ranking || 999999;
+                if (rankA !== rankB) return rankA - rankB;
                 if (pesoPrio[a.prio] !== pesoPrio[b.prio]) return pesoPrio[a.prio] - pesoPrio[b.prio];
                 return (a.montagem || '9999-99-99').localeCompare(b.montagem || '9999-99-99');
             });
+
             lista.forEach(p => {
-                const id = p.id;
                 const perc = p.progresso || 0;
+                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length-1] : 'Sem reporte';
                 const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
-                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length - 1] : 'Sem reporte';
-                const tr = document.createElement('tr');
-                tr.className = "pedido-row";
+                const tr = document.createElement('tr'); tr.className = "pedido-row";
                 tr.innerHTML = `
                     <td style="width: 15px"><div class="status-strip ${color}"></div></td>
-                    <td><span class="text-blue-600 font-black italic text-xs uppercase">#${p.pedido}</span></td>
+                    <td class="text-center ${isAdmin ? 'editable-cell' : ''}" onclick="editPosInline('${p.id}', this)">${p.ranking ? p.ranking + 'º' : '--'}</td>
+                    <td><span class="text-blue-600 font-black italic uppercase">#${p.pedido}</span></td>
                     <td><div class="text-[11px] font-black uppercase text-slate-800 truncate">${p.cliente}</div></td>
                     <td class="text-center italic text-slate-400 text-[10px]">${formatarDataBR(p.entrada)}</td>
                     <td class="text-center text-xs font-black text-slate-600 italic">${p.peso}kg</td>
                     <td class="text-center text-[9px] font-black">
-                        <span onclick="toggleServico('${id}', 'pesar', '${p.pesar}')" class="${isAdmin ? 'editable-cell' : ''} ${p.pesar === 'SIM' ? 'text-orange-500 font-black' : 'text-slate-300'}">PES</span> | 
-                        <span onclick="toggleServico('${id}', 'furos', '${p.furos}')" class="${isAdmin ? 'editable-cell' : ''} ${p.furos === 'SIM' ? 'text-orange-500 font-black' : 'text-slate-300'}">FUR</span>
+                        <span onclick="toggleServico('${p.id}', 'pesar', '${p.pesar}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">PES</span> | 
+                        <span onclick="toggleServico('${p.id}', 'furos', '${p.furos}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">FUR</span>
                     </td>
-                    <td class="admin-view encarregado-view text-center text-[10px] font-black text-blue-900/80 ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.montagem || ''}" onclick="editDataInline('${id}', 'montagem', this)">${formatarDataBR(p.montagem)}</td>
-                    <td class="admin-view encarregado-view sofia-view text-center text-[10px] font-black text-orange-600 ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.saida || ''}" onclick="editDataInline('${id}', 'saida', this)">${formatarDataBR(p.saida)}</td>
+                    <td class="admin-view encarregado-view text-center text-[10px] font-black text-blue-900/80 ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.montagem || ''}" onclick="editDataInline('${p.id}', 'montagem', this)">${formatarDataBR(p.montagem)}</td>
+                    <td class="admin-view encarregado-view sofia-view text-center text-[10px] font-black text-orange-600 ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.saida || ''}" onclick="editDataInline('${p.id}', 'saida', this)">${formatarDataBR(p.saida)}</td>
                     <td class="cursor-pointer" onclick='verLogs(${JSON.stringify(p.historico)})'>
-                        <div class="flex items-center space-x-2">
-                            <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner"><div class="h-full bg-blue-600 transition-all duration-700" style="width: ${perc}%"></div></div>
-                            <span class="text-[10px] font-black text-slate-700">${perc}%</span>
-                        </div>
+                        <div class="flex items-center space-x-2"><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner"><div class="h-full bg-blue-600 transition-all duration-700" style="width: ${perc}%"></div></div><span class="text-[10px] font-black text-slate-700">${perc}%</span></div>
                         <div class="text-[7px] font-bold text-slate-400 truncate mt-1 italic no-print">● ${lastLog}</div>
                     </td>
                     <td class="admin-view text-[9px] font-bold text-slate-400 italic uppercase truncate border-l border-slate-100 pl-3">${p.obs_edu || ''}</td>
                     <td class="text-right pr-6 no-print">
                         <div class="flex justify-end space-x-2">
-                             <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:scale-125 transition"><i class="fas fa-check-circle text-xl"></i></button>
-                             ${(isAdmin || isSofia) ? `<button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:scale-125 transition"><i class="fas fa-pencil-alt text-xl"></i></button>` : ''}
-                             ${isAdmin ? `<button onclick="apagarPedido('${id}')" class="text-slate-300 hover:text-red-500 transition"><i class="fas fa-trash-alt text-xl"></i></button>` : ''}
+                             <button onclick="abrirProgresso('${p.id}', '${p.cliente}', ${perc})" class="text-green-500 hover:scale-125 transition"><i class="fas fa-check-circle text-xl"></i></button>
+                             ${(isAdmin || isSofia) ? `<button onclick="preparaEdicao('${p.id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:scale-125 transition"><i class="fas fa-pencil-alt text-xl"></i></button>` : ''}
+                             ${isAdmin ? `<button onclick="apagarPedido('${p.id}')" class="text-slate-300 hover:text-red-500 transition"><i class="fas fa-trash-alt text-xl"></i></button>` : ''}
                         </div>
                     </td>
-                `;
-                container.appendChild(tr);
-            });
-            checkPermissions();
+                `; container.appendChild(tr);
+            }); checkPermissions();
         });
 
         document.getElementById('form-pedido').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('p-id').value;
-            const data = {
-                cliente: document.getElementById('p-cliente').value, pedido: document.getElementById('p-pedido').value,
-                prio: document.getElementById('p-prio').value, peso: document.getElementById('p-peso').value,
-                entrada: document.getElementById('p-entrada').value, pesar: document.getElementById('p-pesar').value,
-                furos: document.getElementById('p-furos').value, montagem: document.getElementById('p-montagem').value,
-                saida: document.getElementById('p-saida').value, obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), timestamp: new Date()
-            };
-            if (id) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), data);
-            else await addDoc(colPedidos, { ...data, progresso: 0, historico: [] });
+            e.preventDefault(); const id = document.getElementById('p-id').value;
+            const data = { cliente: document.getElementById('p-cliente').value, pedido: document.getElementById('p-pedido').value, prio: document.getElementById('p-prio').value, ranking: parseInt(document.getElementById('p-pos').value) || '', peso: document.getElementById('p-peso').value, entrada: document.getElementById('p-entrada').value, pesar: document.getElementById('p-pesar').value, furos: document.getElementById('p-furos').value, montagem: document.getElementById('p-montagem').value, saida: document.getElementById('p-saida').value, obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), timestamp: new Date() };
+            if (id) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), data); else await addDoc(colPedidos, { ...data, progresso: 0, historico: [] });
             fecharModal();
         };
 
         window.salvarProgresso = async () => {
-            const id = document.getElementById('prog-id').value;
-            const perc = parseInt(document.getElementById('prog-range').value);
-            const obs = document.getElementById('prog-obs').value.toUpperCase();
+            const id = document.getElementById('prog-id').value; const perc = parseInt(document.getElementById('prog-range').value); const obs = document.getElementById('prog-obs').value.toUpperCase();
             const log = `${localStorage.getItem('gamil_user')}: ${perc}% ${obs ? '-> '+obs : ''} [${new Date().toLocaleString('pt-PT')}]`;
-            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) });
-            fecharModal();
-        };
-
-        window.verLogs = (logs) => {
-            const content = document.getElementById('logs-content');
-            content.innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-[10px] font-bold text-slate-600 shadow-sm mb-2 leading-relaxed">${l}</div>`).join('') : '<p class="text-xs italic text-center py-10">Sem histórico.</p>';
-            document.getElementById('modal-logs').classList.remove('hidden');
+            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) }); fecharModal();
         };
 
         window.preparaEdicao = (id, data) => {
             const p = JSON.parse(decodeURIComponent(data));
             document.getElementById('p-id').value = id; document.getElementById('p-cliente').value = p.cliente;
             document.getElementById('p-pedido').value = p.pedido; document.getElementById('p-prio').value = p.prio;
-            document.getElementById('p-peso').value = p.peso; document.getElementById('p-entrada').value = p.entrada;
-            document.getElementById('p-pesar').value = p.pesar; document.getElementById('p-furos').value = p.furos;
-            document.getElementById('p-montagem').value = p.montagem; document.getElementById('p-saida').value = p.saida;
-            document.getElementById('p-obs-edu').value = p.obs_edu || ''; document.getElementById('modal-pedido').classList.remove('hidden');
+            document.getElementById('p-pos').value = p.ranking || ''; document.getElementById('p-peso').value = p.peso;
+            document.getElementById('p-entrada').value = p.entrada; document.getElementById('p-pesar').value = p.pesar;
+            document.getElementById('p-furos').value = p.furos; document.getElementById('p-montagem').value = p.montagem;
+            document.getElementById('p-saida').value = p.saida; document.getElementById('p-obs-edu').value = p.obs_edu || '';
+            document.getElementById('modal-pedido').classList.remove('hidden');
         };
 
-        window.abrirProgresso = (id, nome, perc) => {
-            document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = nome;
-            document.getElementById('prog-range').value = perc; document.getElementById('prog-perc-val').innerText = perc + "%";
-            document.getElementById('prog-obs').value = ""; document.getElementById('modal-progresso').classList.remove('hidden');
-        };
-
-        window.apagarPedido = async (id) => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
+        window.logout = () => { localStorage.clear(); window.location.reload(); };
         window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('p-entrada').value = new Date().toISOString().split('T')[0]; document.getElementById('modal-pedido').classList.remove('hidden'); };
         window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
-        window.logout = () => { localStorage.clear(); window.location.reload(); };
+        window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('prog-obs').value = ""; document.getElementById('modal-progresso').classList.remove('hidden'); };
+        window.apagarPedido = async id => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
+        window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem histórico.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
 
-        window.onload = () => {
-            const user = localStorage.getItem('gamil_user');
-            if (user) { document.getElementById('modal-login').classList.add('hidden'); checkPermissions(); setTimeout(atualizarInterfaceClientes, 300); }
-        };
+        window.onload = () => { if (localStorage.getItem('gamil_user')) { document.getElementById('modal-login').classList.add('hidden'); checkPermissions(); setTimeout(atualizarInterfaceClientes, 300); } };
     </script>
 </body>
 </html>
