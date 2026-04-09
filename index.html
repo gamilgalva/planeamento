@@ -14,29 +14,25 @@
         
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: row; overflow: hidden; margin: 0; }
         
-        /* SIDEBAR */
         .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); }
         .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #f1f5f9; overflow: hidden; }
         .main-content { flex: 1; overflow-x: hidden; overflow-y: auto; padding: 25px 40px; }
 
-        /* TABELA - REMOVIDO O SCROLL HORIZONTAL */
+        /* TABELA SEM SCROLL */
         .gamil-table { width: 100%; border-separate: border-spacing-y(12px); border-collapse: separate; table-layout: auto; }
         .gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
         .pedido-row { @apply bg-white shadow-sm hover:shadow-md transition-all duration-300; }
         .pedido-row td { @apply py-5 px-4 first:rounded-l-2xl last:rounded-r-2xl border-y border-slate-100; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* FONTES MASTER */
         .pos-text { font-size: 10px !important; @apply font-black text-slate-400 text-center; width: 45px; }
         .ref-text { font-size: 10px !important; color: #2563eb !important; font-weight: 800 !important; @apply uppercase italic; }
         .client-text { font-size: 10px !important; font-weight: 800 !important; @apply uppercase text-slate-800 tracking-tighter; }
         .other-row-text { font-size: 10px !important; @apply font-bold text-slate-600; }
         .status-strip { width: 5px; height: 35px; border-radius: 20px; }
 
-        /* LOGIN */
         #modal-login { position: fixed; inset: 0; background-color: #1a2a3a; z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-container { width: 100%; max-width: 350px; padding: 20px; text-align: center; }
 
-        /* VISIBILIDADE */
         .admin-view, .encarregado-view, .sofia-view, .auth-element { display: none !important; }
         body.admin-mode .admin-view, body.admin-mode .encarregado-view { display: table-cell !important; }
         body.encarregado-mode .encarregado-view { display: table-cell !important; }
@@ -45,22 +41,9 @@
         body.sofia-mode th.sofia-view { display: table-cell !important; }
         body.admin-mode .auth-element, body.sofia-mode .auth-element { display: block !important; }
 
-        .editable-cell { cursor: pointer; transition: all 0.2s; border-radius: 8px; }
-        body.can-edit .editable-cell:hover { background-color: #f0f9ff; box-shadow: inset 0 0 0 1px #bfdbfe; }
-        
-        .inline-edit-container { display: flex; align-items: center; gap: 8px; background: white; padding: 4px 8px; border-radius: 10px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); border: 2px solid #3b82f6; width: fit-content; position: absolute; z-index: 100; transform: translateX(-10px); }
         .modal-input { @apply w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100; }
         .label-gamil { @apply block text-[10px] font-black uppercase text-slate-500 mb-1 ml-2; }
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
-
-        @media print {
-            @page { size: landscape; margin: 10mm; }
-            body { background: white !important; overflow: visible !important; display: block !important; height: auto !important; }
-            aside, header, .no-print, button, .actions-cell { display: none !important; }
-            .main-content { padding: 0 !important; overflow: visible !important; }
-            .gamil-table { min-width: 100% !important; border-spacing: 0 5px !important; }
-            .pedido-row td { border: 1px solid #f1f1f1 !important; border-radius: 0 !important; font-size: 9px !important; color: black !important; }
-        }
     </style>
 </head>
 <body>
@@ -97,7 +80,6 @@
             </div>
             <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all"><i class="fas fa-plus"></i> <span>Novo Registo</span></button>
             <button onclick="window.print()" class="w-full p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase transition-all"><i class="fas fa-print text-blue-400"></i> <span>Imprimir Lista</span></button>
-            <button onclick="abrirModalCliente()" class="auth-element w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-slate-300 text-[10px] font-bold transition"><i class="fas fa-users text-blue-400"></i> <span>Clientes</span></button>
         </nav>
     </aside>
 
@@ -175,7 +157,7 @@
                 localStorage.setItem('gamil_sofia', (user === "Sofia"));
                 localStorage.setItem('gamil_encarregado', (user === "José Castro" || user === "Luís Silva" || user === "Paulo Abreu"));
                 checkPermissions();
-                setTimeout(atualizarInterfaceClientes, 300);
+                atualizarInterfaceClientes();
             } else alert("Senha incorreta.");
         };
 
@@ -185,33 +167,30 @@
             document.getElementById('modal-login').style.display = 'none';
             document.getElementById('nome-logado').innerText = user;
             const isAdmin = localStorage.getItem('gamil_admin') === 'true';
-            const isSofia = localStorage.getItem('gamil_sofia') === 'true';
-            const isEnc = localStorage.getItem('gamil_encarregado') === 'true';
             document.body.classList.remove('admin-mode', 'sofia-mode', 'encarregado-mode', 'can-edit');
             if (isAdmin) document.body.classList.add('admin-mode', 'can-edit');
-            if (isSofia) document.body.classList.add('sofia-mode');
-            if (isEnc) document.body.classList.add('encarregado-mode');
-            document.getElementById('fields-admin-only').style.display = (isAdmin || isSofia || isEnc) ? 'grid' : 'none';
+            if (localStorage.getItem('gamil_sofia') === 'true') document.body.classList.add('sofia-mode');
+            if (localStorage.getItem('gamil_encarregado') === 'true') document.body.classList.add('encarregado-mode');
+            document.getElementById('fields-admin-only').style.display = (isAdmin || localStorage.getItem('gamil_sofia') === 'true' || localStorage.getItem('gamil_encarregado') === 'true') ? 'grid' : 'none';
         };
 
-        window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º', ''); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 p-1 text-black" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
-        window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: val ? parseInt(val) : '' }); };
-        
-        window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="p-1 text-[10px]" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
-        window.confirmarDataInline = async (id, campo, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val }); };
-
-        onSnapshot(query(colClientesFirebase, orderBy("nome")), snap => {
+        // CLIENTES
+        window.atualizarInterfaceClientes = () => {
             const select = document.getElementById('p-cliente'); if(!select) return;
-            let list = []; snap.forEach(d => list.push(d.data()));
-            const estaticos = (typeof CLIENTES_ESTATICOS !== 'undefined') ? CLIENTES_ESTATICOS : [];
-            const completa = [...estaticos, ...list].sort((a,b) => a.nome.localeCompare(b.nome));
-            select.innerHTML = '<option value="">-- CLIENTE --</option>' + completa.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
-        });
+            // Busca da variável global que o arquivo clientes_base.js carrega
+            const estaticos = (window.CLIENTES_ESTATICOS) ? window.CLIENTES_ESTATICOS : [];
+            onSnapshot(query(colClientesFirebase, orderBy("nome")), snap => {
+                let fbList = []; snap.forEach(d => fbList.push(d.data()));
+                const completa = [...estaticos, ...fbList].sort((a,b) => a.nome.localeCompare(b.nome));
+                select.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>' + 
+                    completa.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
+            });
+        }
 
+        // PEDIDOS
         onSnapshot(colPedidos, snap => {
             const container = document.getElementById('container-pedidos'); container.innerHTML = "";
             const isAdmin = localStorage.getItem('gamil_admin') === 'true';
-            const isSofia = localStorage.getItem('gamil_sofia') === 'true';
             let lista = []; snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
             lista.sort((a, b) => (a.ranking || 999) - (b.ranking || 999));
 
@@ -220,7 +199,31 @@
                 const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length-1] : 'Sem reporte';
                 const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
                 const tr = document.createElement('tr'); tr.className = "pedido-row";
-                tr.innerHTML = `<td class="pos-text ${isAdmin ? 'editable-cell' : ''}" onclick="editPosInline('${p.id}', this)">${p.ranking ? p.ranking + 'º' : '--'}</td><td><div class="status-strip ${color}"></div></td><td class="ref-text">#${p.pedido}</td><td class="client-text">${p.cliente}</td><td class="text-center italic text-slate-400 other-row-text">${formatarDataBR(p.entrada)}</td><td class="text-center other-row-text">${p.peso}kg</td><td class="text-center other-row-text">${p.pesar || 'NÃO'} | ${p.furos || 'NÃO'}</td><td class="admin-view encarregado-view text-center font-black text-blue-900/80 other-row-text ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.montagem || ''}" onclick="editDataInline('${p.id}', 'montagem', this)">${formatarDataBR(p.montagem)}</td><td class="admin-view encarregado-view sofia-view text-center font-black text-orange-600 other-row-text ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.saida || ''}" onclick="editDataInline('${p.id}', 'saida', this)">${formatarDataBR(p.saida)}</td><td onclick="abrirProgresso('${p.id}', '${p.cliente}', ${perc})"><div class="flex items-center space-x-2 cursor-pointer"><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner"><div class="h-full bg-blue-600" style="width: ${perc}%"></div></div><span class="text-[10px] font-black">${perc}%</span></div><div class="text-[7px] font-bold text-slate-400 truncate mt-1 italic other-row-text">● ${lastLog}</div></td><td class="admin-view italic uppercase truncate border-l pl-3 other-row-text">${p.obs_edu || ''}</td><td class="text-right pr-6 no-print"><button onclick="preparaEdicao('${p.id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:scale-125 transition"><i class="fas fa-pencil-alt text-xl"></i></button>${isAdmin ? `<button onclick="apagarPedido('${p.id}')" class="ml-2 text-slate-300 hover:text-red-600"><i class="fas fa-trash-alt text-xl"></i></button>` : ''}</td>`;
+                tr.innerHTML = `
+                    <td class="pos-text">${p.ranking ? p.ranking + 'º' : '--'}</td>
+                    <td><div class="status-strip ${color}"></div></td>
+                    <td class="ref-text">#${p.pedido}</td>
+                    <td class="client-text">${p.cliente}</td>
+                    <td class="text-center italic text-slate-400 other-row-text">${formatarDataBR(p.entrada)}</td>
+                    <td class="text-center other-row-text">${p.peso}kg</td>
+                    <td class="text-center font-black other-row-text">
+                        <span class="${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">PES</span> | 
+                        <span class="${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">FUR</span>
+                    </td>
+                    <td class="admin-view encarregado-view text-center font-black text-blue-900/80 other-row-text">${formatarDataBR(p.montagem)}</td>
+                    <td class="admin-view encarregado-view sofia-view text-center font-black text-orange-600 other-row-text">${formatarDataBR(p.saida)}</td>
+                    <td onclick="abrirProgresso('${p.id}', '${p.cliente}', ${perc})">
+                        <div class="flex items-center space-x-2 cursor-pointer">
+                            <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner"><div class="h-full bg-blue-600" style="width: ${perc}%"></div></div>
+                            <span class="text-[10px] font-black">${perc}%</span>
+                        </div>
+                        <div class="text-[7px] font-bold text-slate-400 truncate mt-1 italic other-row-text">● ${lastLog}</div>
+                    </td>
+                    <td class="admin-view italic uppercase truncate border-l pl-3 other-row-text">${p.obs_edu || ''}</td>
+                    <td class="text-right pr-6 no-print">
+                        <button onclick="preparaEdicao('${p.id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400"><i class="fas fa-pencil-alt text-xl"></i></button>
+                    </td>
+                `;
                 container.appendChild(tr);
             });
         });
@@ -229,9 +232,16 @@
         window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('modal-pedido').classList.remove('hidden'); };
         window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('modal-progresso').classList.remove('hidden'); };
-        window.salvarProgresso = async () => { const id = document.getElementById('prog-id').value; const perc = parseInt(document.getElementById('prog-range').value); const obs = document.getElementById('prog-obs').value.toUpperCase(); const log = `${localStorage.getItem('gamil_user')}: ${perc}% ${obs ? '-> '+obs : ''} [${new Date().toLocaleString('pt-PT')}]`; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) }); fecharModal(); };
-        window.apagarPedido = async id => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
         
+        window.salvarProgresso = async () => {
+            const id = document.getElementById('prog-id').value;
+            const perc = parseInt(document.getElementById('prog-range').value);
+            const obs = document.getElementById('prog-obs').value.toUpperCase();
+            const log = `${localStorage.getItem('gamil_user')}: ${perc}% ${obs ? '-> '+obs : ''} [${new Date().toLocaleString()}]`;
+            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) });
+            fecharModal();
+        };
+
         window.preparaEdicao = (id, data) => {
             const p = JSON.parse(decodeURIComponent(data));
             document.getElementById('p-id').value = id;
@@ -249,16 +259,8 @@
             document.getElementById('modal-pedido').classList.remove('hidden');
         };
 
-        document.getElementById('form-pedido').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('p-id').value;
-            const data = { cliente: document.getElementById('p-cliente').value, pedido: document.getElementById('p-pedido').value, prio: document.getElementById('p-prio').value, ranking: parseInt(document.getElementById('p-pos').value) || '', peso: document.getElementById('p-peso').value, entrada: document.getElementById('p-entrada').value, pesar: document.getElementById('p-pesar').value, furos: document.getElementById('p-furos').value, montagem: document.getElementById('p-montagem').value, saida: document.getElementById('p-saida').value, obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), timestamp: new Date() };
-            if (id) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), data);
-            else await addDoc(colPedidos, { ...data, progresso: 0, historico: [] });
-            fecharModal();
-        };
-
         checkPermissions();
+        if(localStorage.getItem('gamil_user')) atualizarInterfaceClientes();
     </script>
 </body>
 </html>
