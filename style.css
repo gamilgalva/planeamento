@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-
 :root { --gamil-blue: #1a2a3a; }
 
 body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: row; overflow: hidden; margin: 0; }
@@ -10,17 +9,19 @@ body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100v
 .main-content { flex: 1; overflow-x: auto; overflow-y: auto; padding: 25px 40px; }
 
 /* TABELA */
-.table-responsive { width: 100%; overflow-x: auto; }
 .gamil-table { min-width: 1550px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; table-layout: fixed; }
-.gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
-.pedido-row { @apply bg-white shadow-sm hover:shadow-md transition-all duration-300; }
-.pedido-row td { @apply py-5 px-4 first:rounded-l-2xl last:rounded-r-2xl border-y border-slate-100; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gamil-thead th { font-size: 10px; font-weight: 900; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.1em; padding: 8px 16px; text-align: left; }
+.pedido-row { background-color: white; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: all 0.3s; }
+.pedido-row:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.pedido-row td { padding: 20px 16px; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pedido-row td:first-child { border-left: 1px solid #f1f5f9; border-top-left-radius: 1rem; border-bottom-left-radius: 1rem; }
+.pedido-row td:last-child { border-right: 1px solid #f1f5f9; border-top-right-radius: 1rem; border-bottom-right-radius: 1rem; }
 
-/* TEXTOS ESPECÍFICOS DA MATRIZ */
-.pos-text { font-size: 10px !important; @apply font-black text-slate-400 text-center; width: 45px; }
-.ref-text { font-size: 10px !important; color: #2563eb !important; font-weight: 800 !important; @apply uppercase italic; }
-.client-text { font-size: 10px !important; font-weight: 800 !important; @apply uppercase text-slate-800 tracking-tighter; }
-.other-row-text { font-size: 10px !important; @apply font-bold text-slate-600; }
+/* FONTES MATRIZ */
+.pos-text { font-size: 10px !important; font-weight: 900; color: #94a3b8; text-align: center; width: 45px; }
+.ref-text { font-size: 10px !important; color: #2563eb !important; font-weight: 800 !important; text-transform: uppercase; font-style: italic; }
+.client-text { font-size: 10px !important; font-weight: 800 !important; text-transform: uppercase; color: #1e293b; letter-spacing: -0.025em; }
+.other-row-text { font-size: 10px !important; font-weight: 700; color: #475569; }
 
 .status-strip { width: 5px; height: 35px; border-radius: 20px; }
 
@@ -28,7 +29,7 @@ body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100v
 #modal-login { position: fixed; inset: 0; background-color: #1a2a3a; z-index: 9999; display: flex; align-items: center; justify-content: center; }
 .login-container { width: 100%; max-width: 350px; padding: 20px; text-align: center; }
 
-/* REGRAS DE VISIBILIDADE */
+/* VISIBILIDADE */
 .admin-view, .encarregado-view, .sofia-view, .auth-element { display: none !important; }
 body.admin-mode .admin-view, body.admin-mode .encarregado-view { display: table-cell !important; }
 body.encarregado-mode .encarregado-view { display: table-cell !important; }
@@ -37,7 +38,12 @@ body.admin-mode th.admin-view, body.admin-mode th.encarregado-view { display: ta
 body.sofia-mode th.sofia-view { display: table-cell !important; }
 body.admin-mode .auth-element, body.sofia-mode .auth-element { display: block !important; }
 
-/* OTIMIZAÇÃO MOBILE NO MESMO ARQUIVO */
+.modal-input { width: 100%; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1rem; font-weight: 600; color: #334155; outline: none; text-transform: uppercase; font-size: 0.75rem; transition: all 0.2s; }
+.modal-input:focus { ring: 4px; ring-color: #dbeafe; }
+.label-gamil { display: block; font-size: 10px; font-weight: 900; text-transform: uppercase; color: #64748b; margin-bottom: 0.25rem; margin-left: 0.5rem; }
+.btn-premium-gamil { width: 100%; background-color: #1a2a3a; color: white; padding: 1rem; border-radius: 0.75rem; font-weight: 900; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
+.btn-premium-gamil:hover { background-color: black; }
+
 @media (max-width: 1024px) {
     body { flex-direction: column; overflow: auto; }
     .sidebar { width: 100%; height: auto; position: relative; }
