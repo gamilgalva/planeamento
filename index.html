@@ -2,8 +2,8 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamil - Sistema de Planeamento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gamil - Hub Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="clientes_base.js"></script>
@@ -12,21 +12,21 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         :root { --gamil-blue: #1a2a3a; }
         
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; min-height: 100vh; margin: 0; display: flex; flex-direction: row; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: row; overflow: hidden; margin: 0; }
         
-        /* SIDEBAR RESPONSIVA */
-        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); position: sticky; top: 0; }
-        .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #f1f5f9; }
-        .main-content { flex: 1; padding: 25px 40px; overflow-y: auto; }
+        /* SIDEBAR ADAPTÁVEL */
+        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); transition: all 0.3s ease; }
+        .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #f1f5f9; }
+        .main-content { flex: 1; overflow-x: auto; overflow-y: auto; padding: 25px 40px; }
 
-        /* TABELA E SCROLL MOBILE */
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 1rem; }
-        .gamil-table { min-width: 1400px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; table-layout: fixed; }
+        /* TABELA DINÂMICA */
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 1.5rem; }
+        .gamil-table { min-width: 1550px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; table-layout: fixed; }
         .gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
         .pedido-row { @apply bg-white shadow-sm hover:shadow-md transition-all duration-300; }
         .pedido-row td { @apply py-5 px-4 first:rounded-l-2xl last:rounded-r-2xl border-y border-slate-100; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* TEXTOS */
+        /* ESTILOS DE TEXTO */
         .pos-text { font-size: 10px !important; @apply font-black text-slate-400 text-center; width: 45px; }
         .ref-text { font-size: 10px !important; color: #2563eb !important; font-weight: 800 !important; @apply uppercase italic; }
         .client-text { font-size: 10px !important; font-weight: 800 !important; @apply uppercase text-slate-800 tracking-tighter; }
@@ -35,9 +35,8 @@
 
         /* LOGIN */
         #modal-login { position: fixed; inset: 0; background-color: #1a2a3a; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .login-container { width: 100%; max-width: 350px; padding: 20px; text-align: center; }
 
-        /* VISIBILIDADE DE PERMISSÕES */
+        /* VISIBILIDADE */
         .admin-view, .encarregado-view, .sofia-view, .auth-element { display: none !important; }
         body.admin-mode .admin-view, body.admin-mode .encarregado-view { display: table-cell !important; }
         body.encarregado-mode .encarregado-view { display: table-cell !important; }
@@ -51,97 +50,78 @@
         
         .inline-edit-container { display: flex; align-items: center; gap: 8px; background: white; padding: 4px 8px; border-radius: 10px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); border: 2px solid #3b82f6; width: fit-content; position: absolute; z-index: 100; transform: translateX(-10px); }
         .modal-input { @apply w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100; }
-        .label-gamil { @apply block text-[10px] font-black uppercase text-slate-500 mb-1 ml-2; }
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
 
-        /* AJUSTES MOBILE EXTRAS */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .sidebar nav { flex-direction: row; overflow-x: auto; padding: 10px; }
-            .main-content { padding: 15px; }
-            .header-desktop { height: auto; padding: 15px; flex-direction: column; gap: 10px; }
-            .gamil-table { min-width: 1200px; } /* Garante que os dados não esmaguem */
+        /* MEDIA QUERIES PARA MOBILE (MÁGICA UNIFICADA) */
+        @media (max-width: 1024px) {
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; height: auto; position: sticky; top: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+            .sidebar nav { flex-direction: row; padding: 10px; overflow-x: auto; gap: 10px; }
+            .sidebar .p-8 { padding: 15px; border-bottom: none; display: flex; align-items: center; justify-content: space-between; }
+            .sidebar img { height: 25px; width: auto; margin: 0; }
+            #user-info { margin: 0 !important; padding: 8px 15px; border-radius: 15px; }
+            .main-content { padding: 15px 10px; }
+            header { display: none; } /* Poupa espaço no mobile */
         }
 
         @media print {
             @page { size: landscape; margin: 10mm; }
-            body { background: white !important; display: block !important; }
+            body { background: white !important; overflow: visible !important; display: block !important; height: auto !important; }
             aside, header, .no-print, button, .actions-cell { display: none !important; }
-            .main-content { padding: 0 !important; }
+            .main-content { padding: 0 !important; overflow: visible !important; }
             .gamil-table { min-width: 100% !important; border-spacing: 0 5px !important; }
-            .pedido-row td { border: 1px solid #f1f1f1 !important; border-radius: 0 !important; font-size: 9px !important; }
+            .pedido-row td { border: 1px solid #f1f1f1 !important; border-radius: 0 !important; font-size: 9px !important; color: black !important; }
         }
     </style>
 </head>
 <body>
+
     <div id="modal-login" class="no-print">
-        <div class="login-container">
-            <h1 class="text-white font-black italic uppercase tracking-tighter text-xl mb-8 opacity-20">Login Gamil</h1>
+        <div class="login-container max-w-[320px] w-full p-6 text-center">
+            <h1 class="text-white font-black italic uppercase tracking-tighter text-xl mb-8 opacity-40">Gamil Login</h1>
             <div class="flex flex-col space-y-3">
-                <div class="flex space-x-2">
-                    <select id="login-user" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none">
-                        <option value="Visitante">Consulta</option>
-                        <option value="Sofia">Sofia Meira</option>
-                        <option value="Eduardo Pereira">Eduardo Pereira</option>
-                        <option value="José Pedro">José Pedro</option>
-                        <option value="José Castro">José Castro</option>
-                        <option value="Luís Silva">Luís Silva</option>
-                        <option value="Paulo Abreu">Paulo Abreu</option>
-                    </select>
-                    <input type="password" id="login-pass" placeholder="PASSWORD" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none text-center">
-                </div>
-                <button onclick="tentarLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-xl transition-all">Entrar</button>
+                <select id="login-user" class="p-4 rounded-2xl font-bold text-sm outline-none">
+                    <option value="Visitante">Consulta</option>
+                    <option value="Sofia">Sofia Meira</option>
+                    <option value="Eduardo Pereira">Eduardo Pereira</option>
+                    <option value="José Pedro">José Pedro</option>
+                    <option value="José Castro">José Castro</option>
+                    <option value="Luís Silva">Luís Silva</option>
+                    <option value="Paulo Abreu">Paulo Abreu</option>
+                </select>
+                <input type="password" id="login-pass" placeholder="PASSWORD" class="p-4 rounded-2xl font-bold text-sm outline-none text-center uppercase tracking-widest">
+                <button onclick="tentarLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl transition-all">Entrar</button>
             </div>
         </div>
     </div>
 
     <aside class="sidebar no-print">
-        <div class="p-8 border-b border-white/10 text-center hidden md:block">
-            <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-3" onerror="this.style.display='none'">
-            <h1 class="text-[10px] font-black tracking-widest uppercase text-blue-300">Hub v9.9</h1>
+        <div class="p-8 border-b border-white/10 text-center">
+            <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-2" onerror="this.style.display='none'">
+            <h1 class="text-[9px] font-black tracking-widest uppercase text-blue-300 opacity-50">Hub v9.9</h1>
         </div>
-        <nav class="p-4 flex-1 flex flex-col space-y-4">
-            <div id="user-info" class="p-5 bg-white/5 rounded-3xl border border-white/10 text-center flex-shrink-0">
-                <p id="nome-logado" class="text-xs font-black uppercase italic text-blue-100 tracking-tighter">Visitante</p>
-                <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2 tracking-widest">Sair</button>
+        <nav class="p-4 flex-1 space-y-3 flex flex-col">
+            <div id="user-info" class="p-4 bg-white/5 rounded-2xl border border-white/10 text-center mb-2">
+                <p id="nome-logado" class="text-[10px] font-black uppercase italic text-blue-100">Visitante</p>
+                <button onclick="logout()" class="text-[8px] text-red-400 font-bold uppercase underline mt-1 tracking-widest">Sair</button>
             </div>
-            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all flex-shrink-0">
-                <i class="fas fa-plus"></i> <span class="hidden md:inline">Novo Registo</span>
-            </button>
-            <button onclick="window.print()" class="w-full p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase transition-all flex-shrink-0">
-                <i class="fas fa-print text-blue-400"></i> <span class="hidden md:inline">Imprimir Lista</span>
-            </button>
-            <button onclick="abrirModalCliente()" class="auth-element w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-slate-300 text-[10px] font-bold transition flex-shrink-0">
-                <i class="fas fa-users text-blue-400"></i> <span class="hidden md:inline">Clientes</span>
-            </button>
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center gap-2 text-[10px] font-black uppercase shadow-lg hover:bg-blue-700 transition-all"><i class="fas fa-plus"></i> <span>Novo Registo</span></button>
+            <button onclick="window.print()" class="w-full p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center gap-2 text-[10px] font-black uppercase transition-all"><i class="fas fa-print text-blue-400"></i> <span>Imprimir</span></button>
+            <button onclick="abrirModalCliente()" class="auth-element w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center gap-2 text-slate-300 text-[10px] font-bold transition"><i class="fas fa-users text-blue-400"></i> <span>Clientes</span></button>
         </nav>
     </aside>
 
     <main class="main-container">
-        <header class="h-16 bg-white border-b border-slate-200 px-6 md:px-10 flex justify-between items-center no-print flex-shrink-0">
-            <h2 class="text-[10px] md:text-xs font-black text-slate-800 uppercase italic tracking-widest">R.030.01 - Planeamento Geral</h2>
+        <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print">
+            <h2 class="text-xs font-black text-slate-800 uppercase italic tracking-widest">R.030.01 - Planeamento Geral</h2>
             <div class="flex items-center space-x-2 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Sync Master</div>
         </header>
 
         <div class="main-content">
-            <div class="table-wrapper">
+            <div class="table-responsive">
                 <table class="gamil-table">
                     <thead class="gamil-thead">
-                        <tr>
-                            <th style="width: 55px">Pos</th>
-                            <th style="width: 15px"></th>
-                            <th style="width: 140px">Ref / Pedido</th>
-                            <th style="width: 380px">Cliente Gamil</th>
-                            <th class="text-center" style="width: 110px">Entrada</th>
-                            <th class="text-center" style="width: 90px">Peso</th>
-                            <th class="text-center" style="width: 120px">Serviços</th>
-                            <th class="text-center encarregado-view admin-view" style="width: 120px">Montagem</th>
-                            <th class="text-center encarregado-view admin-view sofia-view" style="width: 120px">Entrega</th>
-                            <th class="text-center" style="width: 180px">Progresso / Log</th>
-                            <th class="admin-view" style="width: 250px">Observações</th>
-                            <th class="text-right pr-6 no-print" style="width: 120px">Ações</th>
-                        </tr>
+                        <tr><th style="width: 55px">Pos</th><th style="width: 15px"></th><th style="width: 140px">Ref / Pedido</th><th style="width: 380px">Cliente Gamil</th><th class="text-center" style="width: 110px">Entrada</th><th class="text-center" style="width: 90px">Peso</th><th class="text-center" style="width: 120px">Serviços</th><th class="text-center encarregado-view admin-view" style="width: 120px">Montagem</th><th class="text-center encarregado-view admin-view sofia-view" style="width: 120px">Entrega</th><th class="text-center" style="width: 180px">Progresso / Log</th><th class="admin-view" style="width: 250px">Observações</th><th class="text-right pr-6 no-print" style="width: 120px">Ações</th></tr>
                     </thead>
                     <tbody id="container-pedidos"></tbody>
                 </table>
@@ -149,42 +129,43 @@
         </div>
     </main>
 
-    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col h-[90vh] md:h-[85vh]">
-            <div class="p-6 bg-[#1a2a3a] text-white flex justify-between items-center font-black uppercase text-xs"><span>Ficha de Pedido</span><button onclick="fecharModal()" class="text-2xl">&times;</button></div>
-            <form id="form-pedido" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto">
+    <div id="modal-pedido" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4 no-print">
+        <div class="bg-white rounded-[2rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col h-[95vh] md:h-[85vh]">
+            <div class="p-5 bg-[#1a2a3a] text-white flex justify-between items-center font-black uppercase text-[10px]"><span>Ficha de Pedido</span><button onclick="fecharModal()" class="text-xl">&times;</button></div>
+            <form id="form-pedido" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto">
                 <input type="hidden" id="p-id">
                 <div class="md:col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="modal-input bg-white"></select></div>
                 <div><label class="label-gamil">Pedido #</label><input id="p-pedido" required type="text" class="modal-input"></div>
                 <div><label class="label-gamil">Urgência</label><select id="p-prio" class="modal-input"><option value="baixa">BAIXA</option><option value="media">MÉDIA</option><option value="alta">ALTA</option></select></div>
-                <div><label class="label-gamil">Ranking</label><input id="p-pos" type="number" class="modal-input"></div>
-                <div><label class="label-gamil">Peso Kg</label><input id="p-peso" required type="number" step="0.01" class="modal-input"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="label-gamil">Ranking</label><input id="p-pos" type="number" class="modal-input"></div>
+                    <div><label class="label-gamil">Peso Kg</label><input id="p-peso" required type="number" step="0.01" class="modal-input"></div>
+                </div>
                 <div><label class="label-gamil">Data Entrada</label><input id="p-entrada" type="date" class="modal-input"></div>
                 <div class="grid grid-cols-2 gap-2"><div><label class="label-gamil">Pesar?</label><select id="p-pesar" class="modal-input"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div><div><label class="label-gamil">Furos?</label><select id="p-furos" class="modal-input"><option value="NÃO">NÃO</option><option value="SIM">SIM</option></select></div></div>
-                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-4 mt-2" id="fields-admin-only">
-                    <div><label class="label-gamil text-blue-600 font-bold">Montagem</label><input id="p-montagem" type="date" class="modal-input"></div>
-                    <div><label class="label-gamil text-orange-600 font-bold">Entrega</label><input id="p-saida" type="date" class="modal-input"></div>
-                    <div class="md:col-span-2"><label class="label-gamil text-blue-600 font-bold">Notas Eduardo</label><textarea id="p-obs-edu" class="modal-input h-20"></textarea></div>
+                <div class="md:col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2" id="fields-admin-only">
+                    <div><label class="label-gamil text-blue-600">Montagem</label><input id="p-montagem" type="date" class="modal-input"></div>
+                    <div><label class="label-gamil text-orange-600">Entrega</label><input id="p-saida" type="date" class="modal-input"></div>
+                    <div class="col-span-2"><textarea id="p-obs-edu" class="modal-input h-20" placeholder="NOTAS EDUARDO..."></textarea></div>
                 </div>
-                <button type="submit" class="md:col-span-2 btn-premium-gamil mt-4">Guardar Alterações</button>
+                <button type="submit" class="md:col-span-2 btn-premium-gamil mt-2">Gravar Pedido</button>
             </form>
         </div>
     </div>
 
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-[3rem] w-full max-w-md shadow-2xl flex flex-col h-[85vh] overflow-hidden">
-            <div class="p-8 bg-slate-50 border-b flex justify-between items-center"><h3 class="font-black uppercase text-sm italic">Base de Clientes</h3><button onclick="fecharModal()" class="text-2xl">&times;</button></div>
-            <div class="p-8 border-b bg-white auth-element"><form id="form-cliente" class="space-y-4"><input id="c-cod" required type="text" class="modal-input" placeholder="CÓDIGO NOVO"><input id="c-nome" required type="text" class="modal-input" placeholder="NOME EMPRESA"><button type="submit" class="btn-premium-gamil">Guardar Cliente</button></form></div>
-            <div id="lista-clientes-db" class="flex-1 overflow-y-auto p-8 text-[10px] font-bold text-slate-400 uppercase italic"></div>
-        </div>
-    </div>
-
-    <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-10 shadow-2xl text-center"><h3 class="text-xs font-black uppercase border-b pb-4 mb-6">Histórico</h3><div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto text-left"></div><button onclick="fecharModal()" class="w-full mt-8 bg-slate-100 py-4 rounded-xl text-[10px] font-black">Fechar</button></div>
-    </div>
-
     <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-[3rem] w-full max-w-sm p-10 shadow-2xl text-center"><h3 id="prog-nome" class="text-sm font-black uppercase mb-8 border-b pb-4 italic tracking-tight"></h3><input type="hidden" id="prog-id"><div class="space-y-5"><div><label class="label-gamil">Conclusão: <span id="prog-perc-val" class="text-blue-600 font-black text-2xl">0</span>%</label><input type="range" id="prog-range" min="0" max="100" step="5" class="w-full h-2 bg-slate-100 rounded-lg accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div><textarea id="prog-obs" class="modal-input h-28" placeholder="Reporte..."></textarea><button onclick="salvarProgresso()" class="btn-premium-gamil">Confirmar Reporte</button></div></div>
+        <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-8 shadow-2xl text-center">
+            <h3 id="prog-nome" class="text-[11px] font-black uppercase mb-6 border-b pb-4 italic">Atualizar Estado</h3>
+            <input type="hidden" id="prog-id">
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 mb-2 uppercase">Conclusão: <span id="prog-perc-val" class="text-blue-600 text-xl">0</span>%</label>
+                    <input type="range" id="prog-range" min="0" max="100" step="5" class="w-full h-3 bg-slate-100 rounded-lg accent-blue-600" oninput="document.getElementById('prog-perc-val').innerText = this.value">
+                </div>
+                <textarea id="prog-obs" class="modal-input h-24" placeholder="Alguma observação importante?"></textarea>
+                <button onclick="salvarProgresso()" class="btn-premium-gamil">Confirmar Reporte</button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -198,7 +179,7 @@
         const colClientesFirebase = collection(db, "clientes_gamil");
 
         let clientesFirebase = [];
-        const formatarDataBR = (str) => { if (!str || str === '--' || str === '') return '--'; const pts = str.split('-'); return pts.length === 3 ? `${pts[2]}-${pts[1]}-${pts[0]}` : str; };
+        const formatarDataBR = (str) => { if (!str || str === '--') return '--'; const pts = str.split('-'); return pts.length === 3 ? `${pts[2]}-${pts[1]}-${pts[0]}` : str; };
 
         window.tentarLogin = () => {
             const user = document.getElementById('login-user').value;
@@ -229,135 +210,45 @@
             document.getElementById('fields-admin-only').style.display = (isAdmin || isSofia || isEnc) ? 'grid' : 'none';
         };
 
-        window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText === '--' ? '' : el.innerText.replace('º', ''); el.innerHTML = `<div class="inline-edit-container no-print"><input type="number" class="inline-input w-12" value="${val}"><button class="btn-confirm-inline" onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check text-[10px]"></i></button></div>`; el.querySelector('input').focus(); };
+        // Funções Globais de Edição e UI
+        window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText === '--' ? '' : el.innerText.replace('º', ''); el.innerHTML = `<div class="inline-edit-container no-print"><input type="number" class="inline-input w-12" value="${val}"><button class="btn-confirm-inline" onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: val ? parseInt(val) : '' }); };
-        
-        window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container no-print" style="width:165px"><input type="date" class="inline-input w-28" value="${raw}"><button class="btn-confirm-inline" onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check text-[10px]"></i></button></div>`; el.querySelector('input').focus(); };
+        window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container no-print" style="width:165px"><input type="date" class="inline-input w-28" value="${raw}"><button class="btn-confirm-inline" onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarDataInline = async (id, campo, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val }); };
-        
         window.toggleServico = async (id, campo, val) => { if (localStorage.getItem('gamil_admin') !== 'true') return; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val === 'SIM' ? 'NÃO' : 'SIM' }); };
-
-        onSnapshot(query(colClientesFirebase, orderBy("nome")), snap => { const list = []; snap.forEach(d => list.push(d.data())); window.clientesFirebase = list; atualizarInterfaceClientes(); });
-        
-        function atualizarInterfaceClientes() {
-            const select = document.getElementById('p-cliente'); if(!select) return;
-            const estaticos = (typeof CLIENTES_ESTATICOS !== 'undefined') ? CLIENTES_ESTATICOS : [];
-            const completa = [...estaticos, ...(window.clientesFirebase || [])].sort((a,b) => a.nome.localeCompare(b.nome));
-            select.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>' + completa.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
-            const listaDB = document.getElementById('lista-clientes-db'); if(listaDB) listaDB.innerHTML = completa.map(c => `<div class="p-2 border-b border-slate-50 uppercase text-[10px] font-bold text-slate-500">● ${c.codigo} | ${c.nome}</div>`).join('');
-        }
 
         onSnapshot(colPedidos, snap => {
             const container = document.getElementById('container-pedidos'); container.innerHTML = "";
             const isAdmin = localStorage.getItem('gamil_admin') === 'true';
             const isSofia = localStorage.getItem('gamil_sofia') === 'true';
             let lista = []; snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
-            const pesoPrio = { 'alta': 1, 'media': 2, 'baixa': 3 };
-            
-            lista.sort((a, b) => { 
-                const rA = a.ranking || 999999; const rB = b.ranking || 999999; 
-                if (rA !== rB) return rA - rB; 
-                if (pesoPrio[a.prio] !== pesoPrio[b.prio]) return pesoPrio[a.prio] - pesoPrio[b.prio]; 
-                return (a.montagem || '9999-99-99').localeCompare(b.montagem || '9999-99-99'); 
-            });
-
+            lista.sort((a, b) => (a.ranking || 999) - (b.ranking || 999));
             lista.forEach(p => {
                 const id = p.id; const perc = p.progresso || 0; 
-                const lastLog = p.historico && p.historico.length > 0 ? p.historico[p.historico.length-1] : 'Sem reporte';
                 const color = p.prio === 'alta' ? 'bg-red-500' : p.prio === 'media' ? 'bg-orange-400' : 'bg-green-500';
                 const tr = document.createElement('tr'); tr.className = "pedido-row";
-                
-                tr.innerHTML = `
-                    <td class="pos-text ${isAdmin ? 'editable-cell' : ''}" onclick="editPosInline('${id}', this)">${p.ranking ? p.ranking + 'º' : '--'}</td>
-                    <td style="width: 15px"><div class="status-strip ${color}"></div></td>
-                    <td class="ref-text">#${p.pedido}</td>
-                    <td class="client-text">${p.cliente}</td>
-                    <td class="text-center italic text-slate-400 other-row-text">${formatarDataBR(p.entrada)}</td>
-                    <td class="text-center other-row-text">${p.peso}kg</td>
-                    <td class="text-center font-black other-row-text">
-                        <span onclick="toggleServico('${id}', 'pesar', '${p.pesar}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">PES</span> | 
-                        <span onclick="toggleServico('${id}', 'furos', '${p.furos}')" class="${isAdmin ? 'editable-cell p-1' : ''} ${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">FUR</span>
-                    </td>
-                    <td class="admin-view encarregado-view text-center font-black text-blue-900/80 other-row-text ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.montagem || ''}" onclick="editDataInline('${id}', 'montagem', this)">${formatarDataBR(p.montagem)}</td>
-                    <td class="admin-view encarregado-view sofia-view text-center font-black text-orange-600 other-row-text ${isAdmin ? 'editable-cell' : ''}" data-raw="${p.saida || ''}" onclick="editDataInline('${id}', 'saida', this)">${formatarDataBR(p.saida)}</td>
-                    <td class="cursor-pointer" onclick='verLogs(${JSON.stringify(p.historico)})'>
-                        <div class="flex items-center space-x-2">
-                            <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden shadow-inner">
-                                <div class="h-full bg-blue-600 transition-all duration-700" style="width: ${perc}%"></div>
-                            </div>
-                            <span class="text-[10px] font-black text-slate-700">${perc}%</span>
-                        </div>
-                        <div class="text-[7px] font-bold text-slate-400 truncate mt-1 italic no-print other-row-text">● ${lastLog}</div>
-                    </td>
-                    <td class="admin-view italic uppercase truncate border-l border-slate-100 pl-3 other-row-text">${p.obs_edu || ''}</td>
-                    <td class="text-right pr-6 no-print">
-                        <div class="flex justify-end space-x-2">
-                            <button onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})" class="text-green-500 hover:scale-125 transition"><i class="fas fa-check-circle text-xl"></i></button>
-                            ${(isAdmin || isSofia) ? `<button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400 hover:scale-125 transition"><i class="fas fa-pencil-alt text-xl"></i></button>` : ''}
-                            ${isAdmin ? `<button onclick="apagarPedido('${id}')" class="text-slate-300 hover:text-red-500 transition"><i class="fas fa-trash-alt text-xl"></i></button>` : ''}
-                        </div>
-                    </td>`;
+                tr.innerHTML = `<td class="pos-text ${isAdmin ? 'editable-cell' : ''}" onclick="editPosInline('${id}', this)">${p.ranking ? p.ranking + 'º' : '--'}</td><td><div class="status-strip ${color}"></div></td><td class="ref-text">#${p.pedido}</td><td class="client-text">${p.cliente}</td><td class="text-center italic text-slate-400 other-row-text">${formatarDataBR(p.entrada)}</td><td class="text-center other-row-text">${p.peso}kg</td><td class="text-center font-black other-row-text"><span onclick="toggleServico('${id}', 'pesar', '${p.pesar}')" class="${isAdmin ? 'editable-cell' : ''} ${p.pesar === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">PES</span> | <span onclick="toggleServico('${id}', 'furos', '${p.furos}')" class="${isAdmin ? 'editable-cell' : ''} ${p.furos === 'SIM' ? 'text-orange-500' : 'text-slate-300'}">FUR</span></td><td class="admin-view encarregado-view text-center font-black text-blue-900/80 other-row-text ${isAdmin ? 'editable-cell' : ''}" onclick="editDataInline('${id}', 'montagem', this)">${formatarDataBR(p.montagem)}</td><td class="admin-view encarregado-view sofia-view text-center font-black text-orange-600 other-row-text ${isAdmin ? 'editable-cell' : ''}" onclick="editDataInline('${id}', 'saida', this)">${formatarDataBR(p.saida)}</td><td onclick="abrirProgresso('${id}', '${p.cliente}', ${perc})"><div class="flex items-center gap-2"><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-600" style="width: ${perc}%"></div></div><span class="text-[9px] font-black">${perc}%</span></div></td><td class="admin-view italic truncate pl-3 other-row-text">${p.obs_edu || ''}</td><td class="text-right pr-6 no-print"><button onclick="preparaEdicao('${id}', '${encodeURIComponent(JSON.stringify(p))}')" class="text-orange-400"><i class="fas fa-pencil-alt"></i></button></td>`;
                 container.appendChild(tr);
             });
         });
 
-        document.getElementById('form-pedido').onsubmit = async (e) => { 
-            e.preventDefault(); 
-            const id = document.getElementById('p-id').value; 
-            const data = { 
-                cliente: document.getElementById('p-cliente').value, 
-                pedido: document.getElementById('p-pedido').value, 
-                prio: document.getElementById('p-prio').value, 
-                ranking: parseInt(document.getElementById('p-pos').value) || '', 
-                peso: document.getElementById('p-peso').value, 
-                entrada: document.getElementById('p-entrada').value, 
-                pesar: document.getElementById('p-pesar').value, 
-                furos: document.getElementById('p-furos').value, 
-                montagem: document.getElementById('p-montagem').value, 
-                saida: document.getElementById('p-saida').value, 
-                obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), 
-                timestamp: new Date() 
-            }; 
-            if (id) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), data); 
-            else await addDoc(colPedidos, { ...data, progresso: 0, historico: [] }); 
-            fecharModal(); 
-        };
-
-        window.salvarProgresso = async () => { 
-            const id = document.getElementById('prog-id').value; 
-            const perc = parseInt(document.getElementById('prog-range').value); 
-            const obs = document.getElementById('prog-obs').value.toUpperCase(); 
-            const log = `${localStorage.getItem('gamil_user')}: ${perc}% ${obs ? '-> '+obs : ''} [${new Date().toLocaleString('pt-PT')}]`; 
-            await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { progresso: perc, historico: arrayUnion(log) }); 
-            fecharModal(); 
-        };
-
-        window.preparaEdicao = (id, data) => { 
-            const p = JSON.parse(decodeURIComponent(data)); 
-            document.getElementById('p-id').value = id; 
-            document.getElementById('p-cliente').value = p.cliente; 
-            document.getElementById('p-pedido').value = p.pedido; 
-            document.getElementById('p-prio').value = p.prio; 
-            document.getElementById('p-pos').value = p.ranking || ''; 
-            document.getElementById('p-peso').value = p.peso; 
-            document.getElementById('p-entrada').value = p.entrada; 
-            document.getElementById('p-pesar').value = p.pesar; 
-            document.getElementById('p-furos').value = p.furos; 
-            document.getElementById('p-montagem').value = p.montagem; 
-            document.getElementById('p-saida').value = p.saida; 
-            document.getElementById('p-obs-edu').value = p.obs_edu || ''; 
-            document.getElementById('modal-pedido').classList.remove('hidden'); 
-        };
-
+        // Auxiliares de UI
+        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
+        window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('modal-pedido').classList.remove('hidden'); };
+        window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p; document.getElementById('modal-progresso').classList.remove('hidden'); };
         window.logout = () => { localStorage.clear(); window.location.reload(); };
-        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login), div[id^="modal-"]:not(#modal-login)').forEach(m => m.classList.add('hidden'));
-        window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('p-entrada').value = new Date().toISOString().split('T')[0]; document.getElementById('modal-pedido').classList.remove('hidden'); };
-        window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
-        window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('prog-obs').value = ""; document.getElementById('modal-progresso').classList.remove('hidden'); };
-        window.apagarPedido = async id => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
-        window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem registos.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
-        
-        window.onload = () => { checkPermissions(); };
+        window.onload = checkPermissions;
+
+        // Função para atualizar select de clientes (Firebase + Estático)
+        function atualizarInterfaceClientes() {
+            const select = document.getElementById('p-cliente'); if(!select) return;
+            onSnapshot(query(colClientesFirebase, orderBy("nome")), snap => {
+                let list = []; snap.forEach(d => list.push(d.data()));
+                const estaticos = (typeof CLIENTES_ESTATICOS !== 'undefined') ? CLIENTES_ESTATICOS : [];
+                const completa = [...estaticos, ...list].sort((a,b) => a.nome.localeCompare(b.nome));
+                select.innerHTML = '<option value="">-- CLIENTE --</option>' + completa.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
+            });
+        }
     </script>
 </body>
 </html>
