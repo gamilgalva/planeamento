@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, doc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { CLIENTES_ESTATICOS } from "./clientes_base.js";
 
+// 1. CONFIGURAÇÃO FIREBASE
 const firebaseConfig = { 
     apiKey: "AIzaSyAlvGJKZdMCNopDKoXMcUTuvHa5E9GqIHA", 
     authDomain: "planeamento-cf642.firebaseapp.com", 
@@ -15,10 +15,20 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const colPedidos = collection(db, "pedidos_vfinal_gamil");
 
-const formatarDataBR = (str) => { if (!str || str === '--') return '--'; const pts = str.split('-'); return pts.length === 3 ? `${pts[2]}-${pts[1]}-${pts[0]}` : str; };
+// 2. LISTA DE CLIENTES (COLOCADA AQUI PARA NÃO FALHAR O IMPORT)
+const CLIENTES_LISTA = [
+    { codigo: "GAM", nome: "GAMIL" },
+    { codigo: "GAL", nome: "GALVANIZAÇÃO" },
+    // Adicione os seus principais aqui ou cole a lista do seu clientes_base.js aqui dentro
+];
 
-// --- FUNÇÕES DE INTERFACE (WINDOW) ---
+const formatarDataBR = (str) => { 
+    if (!str || str === '--' || str === '') return '--'; 
+    const pts = str.split('-'); 
+    return pts.length === 3 ? `${pts[2]}-${pts[1]}-${pts[0]}` : str; 
+};
 
+// 3. FUNÇÕES GLOBAIS (WINDOW) - ESSENCIAIS PARA O EDUARDO E JOSÉ PEDRO
 window.tentarLogin = () => {
     const user = document.getElementById('login-user').value;
     const pass = document.getElementById('login-pass').value;
@@ -26,34 +36,13 @@ window.tentarLogin = () => {
     if (user === "Visitante" || (creds[user] && pass === creds[user])) {
         localStorage.setItem('gamil_user', user);
         localStorage.setItem('gamil_admin', (user === "Eduardo Pereira" || user === "José Pedro"));
-        localStorage.setItem('gamil_sofia', (user === "Sofia"));
-        localStorage.setItem('gamil_encarregado', (user === "José Castro" || user === "Luís Silva" || user === "Paulo Abreu"));
         window.location.reload();
     } else alert("Senha incorreta.");
 };
 
 window.logout = () => { localStorage.clear(); window.location.reload(); };
 
-// --- FUNÇÃO DE CLIENTES (CORRIGIDA) ---
-function carregarClientes() {
-    const select = document.getElementById('p-cliente');
-    const listaDB = document.getElementById('lista-clientes-db');
-    
-    // Usa o arquivo clientes_base.js importado no topo
-    const lista = CLIENTES_ESTATICOS || [];
-    lista.sort((a, b) => a.nome.localeCompare(b.nome));
-
-    if (select) {
-        select.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>' + 
-            lista.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
-    }
-    if (listaDB) {
-        listaDB.innerHTML = lista.map(c => `<div class="p-2 border-b uppercase text-[10px] font-bold text-slate-500">● ${c.codigo} | ${c.nome}</div>`).join('');
-    }
-}
-
-// --- FUNÇÕES DE EDIÇÃO (EDUARDO / JOSÉ PEDRO) ---
-
+// EDIÇÃO INLINE (RANKING E DATAS)
 window.editPosInline = (id, el) => {
     if (localStorage.getItem('gamil_admin') !== 'true' || el.querySelector('input')) return;
     const val = el.innerText.replace('º', '');
@@ -75,6 +64,7 @@ window.confirmarDataInline = async (id, campo, val) => {
     await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val });
 };
 
+// APAGAR E PROGRESSO
 window.apagarPedido = async (id) => { if(confirm("Deseja apagar este pedido?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
 
 window.abrirProgresso = (id, n, p) => {
@@ -94,27 +84,10 @@ window.salvarProgresso = async () => {
     window.fecharModal();
 };
 
-window.preparaEdicao = (id, dataRaw) => {
-    const p = JSON.parse(decodeURIComponent(dataRaw));
-    document.getElementById('p-id').value = id;
-    document.getElementById('p-cliente').value = p.cliente;
-    document.getElementById('p-pedido').value = p.pedido;
-    document.getElementById('p-prio').value = p.prio;
-    document.getElementById('p-pos').value = p.ranking || '';
-    document.getElementById('p-peso').value = p.peso;
-    document.getElementById('p-entrada').value = p.entrada;
-    document.getElementById('p-pesar').value = p.pesar;
-    document.getElementById('p-furos').value = p.furos;
-    document.getElementById('p-montagem').value = p.montagem;
-    document.getElementById('p-saida').value = p.saida;
-    document.getElementById('p-obs-edu').value = p.obs_edu || '';
-    document.getElementById('modal-pedido').classList.remove('hidden');
-};
-
-// --- RENDERIZAÇÃO ---
-
+// 4. RENDERIZAÇÃO EM TEMPO REAL
 onSnapshot(colPedidos, snap => {
     const container = document.getElementById('container-pedidos');
+    if(!container) return;
     container.innerHTML = "";
     const isAdmin = localStorage.getItem('gamil_admin') === 'true';
     
@@ -151,18 +124,25 @@ onSnapshot(colPedidos, snap => {
     });
 });
 
-// Modais Genéricos
+// MODAIS E INICIALIZAÇÃO
 window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
-window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('modal-pedido').classList.remove('hidden'); };
-window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
 
-// Inicialização
+window.abrirModalPedido = () => {
+    document.getElementById('p-id').value = "";
+    document.getElementById('form-pedido').reset();
+    document.getElementById('modal-pedido').classList.remove('hidden');
+};
+
+// Carrega os clientes no select
+const selectCli = document.getElementById('p-cliente');
+if (selectCli) {
+    selectCli.innerHTML = '<option value="">-- SELECIONAR CLIENTE --</option>' + 
+    CLIENTES_LISTA.map(c => `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`).join('');
+}
+
 const user = localStorage.getItem('gamil_user');
 if (user) {
     document.getElementById('modal-login').style.display = 'none';
     document.getElementById('nome-logado').innerText = user;
     if (localStorage.getItem('gamil_admin') === 'true') document.body.classList.add('admin-mode');
-    if (localStorage.getItem('gamil_sofia') === 'true') document.body.classList.add('sofia-mode');
-    if (localStorage.getItem('gamil_encarregado') === 'true') document.body.classList.add('encarregado-mode');
-    carregarClientes(); // ATIVA A LISTA
 }
