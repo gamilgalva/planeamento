@@ -24,14 +24,14 @@
         .gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
         .pedido-row td { @apply py-5 px-4 first:rounded-l-2xl last:rounded-r-2xl border-y border-slate-100 bg-white shadow-sm; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* CONTROLO DE FONTES */
+        /* FONTES MATRIX */
         .pos-text { font-size: 10px !important; @apply font-black text-slate-400 text-center; width: 45px; }
         .ref-text { font-size: 10px !important; color: #2563eb !important; font-weight: 800 !important; @apply uppercase italic; }
         .client-text { font-size: 10px !important; font-weight: 800 !important; @apply uppercase text-slate-800 tracking-tighter; }
         .other-row-text { font-size: 10px !important; @apply font-bold text-slate-600; }
         .status-strip { width: 5px; height: 35px; border-radius: 20px; }
 
-        /* BOTÕES DE ABA - CORREÇÃO VISUAL DEFINITIVA */
+        /* BOTÕES DE ABA - DESIGN PREMIUM */
         .btn-aba { 
             width: 100% !important;
             @apply p-4 rounded-2xl flex items-center gap-4 text-white text-[10px] font-black uppercase transition-all mb-2;
@@ -44,7 +44,6 @@
         .btn-aba i { font-size: 12px; width: 20px; text-align: center; }
         .btn-aba.active i { color: white !important; }
         
-        /* CORES DOS ÍCONES QUANDO NÃO ATIVOS */
         .icon-prod { color: #60a5fa; }
         .icon-reco { color: #fb923c; }
         .icon-hist { color: #94a3b8; }
@@ -71,9 +70,7 @@
             .sidebar nav { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; }
             .sidebar nav > button { width: calc(50% - 10px); margin-bottom: 0 !important; }
             .sidebar nav .btn-aba { width: calc(33.33% - 10px) !important; flex-direction: column; gap: 4px; padding: 10px; font-size: 8px; margin-bottom: 0 !important; }
-            .sidebar nav .btn-aba i { margin: 0; }
             #user-info { width: 100%; }
-            .main-content { padding: 15px; }
             .gamil-table { min-width: 1200px; }
         }
     </style>
@@ -133,7 +130,7 @@
     <main class="main-container">
         <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print shrink-0">
             <h2 id="view-title" class="text-xs font-black text-slate-800 uppercase italic tracking-widest truncate">R.030.01 - Planeamento Geral</h2>
-            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Master Final</div>
+            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Master v11</div>
         </header>
         <div class="main-content">
             <table class="gamil-table">
@@ -152,7 +149,6 @@
                 <input type="hidden" id="p-id">
                 <div class="col-span-2"><label class="label-gamil">Cliente</label><select id="p-cliente" required class="modal-input bg-white"></select></div>
                 <div><label class="label-gamil">Pedido #</label><input id="p-pedido" required type="text" class="modal-input"></div>
-                <div><label class="label-gamil">Urgência</label><select id="p-prio" class="modal-input"><option value="baixa">BAIXA</option><option value="media">MÉDIA</option><option value="alta">ALTA</option></select></div>
                 <div><label class="label-gamil">Ranking</label><input id="p-pos" type="number" class="modal-input"></div>
                 <div><label class="label-gamil">Peso Kg</label><input id="p-peso" required type="number" step="0.01" class="modal-input"></div>
                 <div id="admin-form-fields" class="col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2" style="display: none;">
@@ -160,9 +156,25 @@
                     <div><label class="label-gamil text-orange-600 font-bold">Entrega</label><input id="p-saida" type="date" class="modal-input"></div>
                     <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Notas Eduardo</label><textarea id="p-obs-edu" class="modal-input h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar</button>
+                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar Alterações</button>
             </form>
         </div>
+    </div>
+
+    <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-[3rem] w-full max-w-sm p-10 shadow-2xl text-center">
+            <h3 id="prog-nome" class="text-sm font-black uppercase mb-8 border-b pb-4 italic">Reporte</h3>
+            <input type="hidden" id="prog-id">
+            <div class="space-y-5">
+                <div><label class="label-gamil">Conclusão: <span id="prog-perc-val" class="text-blue-600 font-black text-2xl">0</span>%</label><input type="range" id="prog-range" min="0" max="100" step="5" class="w-full h-2 bg-slate-100 rounded-lg accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
+                <textarea id="prog-obs" class="modal-input h-28" placeholder="Reporte..."></textarea>
+                <button onclick="salvarProgresso()" class="btn-premium-gamil">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-10 shadow-2xl text-center"><h3 class="text-xs font-black uppercase border-b pb-4 mb-6">Histórico</h3><div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto text-left"></div><button onclick="fecharModal()" class="w-full mt-8 bg-slate-100 py-4 rounded-xl text-[10px] font-black">Fechar</button></div>
     </div>
 
     <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
@@ -185,6 +197,26 @@
         let currentView = 'producao';
         const formatarDataBR = (str) => { if (!str || str === '--') return '--'; const pts = str.split('-'); return pts.length === 3 ? `${pts[2]}-${pts[1]}-${pts[0]}` : str; };
 
+        // --- CARREGAMENTO REAL-TIME DE CLIENTES (CORRIGIDO) ---
+        onSnapshot(query(colClientes, orderBy("nome")), snap => {
+            const select = document.getElementById('p-cliente');
+            const listaDB = document.getElementById('lista-clientes-db');
+            if(!select || !listaDB) return;
+            
+            let html = '<option value="">-- SELECIONAR CLIENTE --</option>';
+            let htmlDB = '';
+            
+            snap.forEach(d => {
+                const data = d.data();
+                const label = `${data.codigo} | ${data.nome}`;
+                html += `<option value="${label}">${label}</option>`;
+                htmlDB += `<div class="p-2 border-b border-slate-50 uppercase text-[10px] font-bold text-slate-500">● ${label}</div>`;
+            });
+            
+            select.innerHTML = html;
+            listaDB.innerHTML = htmlDB;
+        });
+
         window.changeView = (v) => {
             currentView = v;
             document.querySelectorAll('.btn-aba').forEach(l => l.classList.remove('active'));
@@ -200,7 +232,8 @@
                 localStorage.setItem('gamil_user', u);
                 localStorage.setItem('gamil_admin', (u.includes("Eduardo") || u.includes("Pedro")));
                 localStorage.setItem('gamil_sofia', u === "Sofia");
-                checkPermissions(); carregarClientes(); carregarTabela();
+                localStorage.setItem('gamil_encarregado', (u === "José Castro" || u === "Luís Silva" || u === "Paulo Abreu"));
+                checkPermissions(); carregarTabela();
             } else alert("Senha incorreta.");
         };
 
@@ -212,22 +245,13 @@
             document.getElementById('admin-form-fields').style.display = adm ? 'grid' : 'none';
         };
 
+        // EDIÇÃO INLINE
         window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: parseInt(val) || '' }); };
         window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarDataInline = async (id, campo, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val }); };
         window.toggleServico = async (id, campo, val) => { if (localStorage.getItem('gamil_admin') !== 'true') return; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val === 'SIM' ? 'NÃO' : 'SIM' }); };
         window.updateStatus = async (id, status) => { if(confirm("Confirmar alteração de fase?")) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { status: status }); };
-
-        function carregarClientes() {
-            onSnapshot(query(colClientes, orderBy("nome")), snap => {
-                const select = document.getElementById('p-cliente'); if(!select) return;
-                let html = '<option value="">-- SELECIONAR CLIENTE --</option>';
-                snap.forEach(d => html += `<option value="${d.data().codigo} | ${d.data().nome}">${d.data().codigo} | ${d.data().nome}</option>`);
-                select.innerHTML = html;
-                const listaDB = document.getElementById('lista-clientes-db'); if(listaDB) listaDB.innerHTML = snap.docs.map(d => `<div class="p-2 border-b">● ${d.data().codigo} | ${d.data().nome}</div>`).join('');
-            });
-        }
 
         function carregarTabela() {
             onSnapshot(colPedidos, snap => {
@@ -302,29 +326,19 @@
 
         document.getElementById('form-pedido').onsubmit = async e => {
             e.preventDefault(); const id = document.getElementById('p-id').value;
-            const data = { cliente: document.getElementById('p-cliente').value, pedido: document.getElementById('p-pedido').value, prio: document.getElementById('p-prio').value, ranking: parseInt(document.getElementById('p-pos').value) || '', peso: document.getElementById('p-peso').value, entrada: document.getElementById('p-entrada').value || '', pesar: document.getElementById('p-pesar').value, furos: document.getElementById('p-furos').value, montagem: document.getElementById('p-montagem').value, saida: document.getElementById('p-saida').value, obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), timestamp: new Date() };
+            const data = { cliente: document.getElementById('p-cliente').value, pedido: document.getElementById('p-pedido').value, prio: document.getElementById('p-prio').value, ranking: parseInt(document.getElementById('p-pos').value) || '', peso: document.getElementById('p-peso').value, pesar: document.getElementById('p-pesar').value, furos: document.getElementById('p-furos').value, montagem: document.getElementById('p-montagem').value, saida: document.getElementById('p-saida').value, obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), timestamp: new Date() };
             if (id) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), data); else await addDoc(colPedidos, { ...data, progresso: 0, historico: [], status: 'producao' });
             fecharModal();
         };
 
-        window.verLogs = logs => { 
-            const content = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem registos.</p>';
-            document.getElementById('logs-content').innerHTML = content;
-            document.getElementById('modal-logs').classList.remove('hidden'); 
-        };
-        
+        window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem registos.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
         window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('modal-progresso').classList.remove('hidden'); };
         window.logout = () => { localStorage.clear(); window.location.reload(); };
-        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
+        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login), div[id^="modal-"]:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { document.getElementById('p-id').value = ""; document.getElementById('form-pedido').reset(); document.getElementById('modal-pedido').classList.remove('hidden'); checkPermissions(); };
         window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
         window.apagarPedido = async id => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
-        
-        window.onload = () => { 
-            checkPermissions(); 
-            carregarClientes();
-            carregarTabela();
-        };
+        window.onload = () => { checkPermissions(); carregarTabela(); };
     </script>
 </body>
 </html>
