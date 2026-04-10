@@ -60,11 +60,11 @@
         body.admin-mode th.admin-view, body.admin-mode th.encarregado-view, body.encarregado-mode th.encarregado-view, body.sofia-mode th.sofia-view { display: table-cell !important; }
         body.admin-mode .auth-element, body.sofia-mode .auth-element { display: block !important; }
 
-        /* INPUTS COM BORDA VISÍVEL PRETA (REFORÇADO) */
+        /* INPUTS COM BORDA VISÍVEL PRETA (REFORÇADO Hamilton) */
         .modal-input { 
             @apply w-full rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100;
             background-color: white !important;
-            border: 1px solid #cbd5e1 !important;
+            border: 2px solid black !important;
         }
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
 
@@ -75,14 +75,7 @@
             body { background: white !important; overflow: visible !important; display: block !important; height: auto !important; }
             .main-content { padding: 0 !important; overflow: visible !important; }
             .gamil-table { min-width: 100% !important; border-spacing: 0 5px !important; table-layout: auto !important; }
-            .pedido-row td { 
-                border: 1px solid #eee !important; 
-                font-size: 8px !important; 
-                color: black !important; 
-                padding: 4px !important; 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-            }
+            .pedido-row td { border: 1px solid #eee !important; font-size: 8px !important; color: black !important; padding: 4px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .h-full { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .status-strip { display: block !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
@@ -152,7 +145,7 @@
     <main class="main-container">
         <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print shrink-0">
             <h2 id="view-title" class="text-xs font-black text-slate-800 uppercase italic tracking-widest truncate">R.030.01 - Planeamento Geral</h2>
-            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Sync Master</div>
+            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Matrix Master Final</div>
         </header>
         <div class="main-content">
             <table class="gamil-table">
@@ -171,7 +164,7 @@
                 <input type="hidden" id="p-id">
                 <div class="col-span-2"><label class="block text-[10px] font-black text-slate-500 uppercase ml-2">Cliente</label><select id="p-cliente" required class="modal-input"></select></div>
                 <div><label class="block text-[10px] font-black text-slate-500 uppercase ml-2">Pedido #</label><input id="p-pedido" required type="text" class="modal-input"></div>
-                <div><label class="block text-[10px] font-black text-slate-500 uppercase ml-2">Data Entrada</label><input id="p-entrada" required type="date" class="modal-input"></div>
+                <div><label class="block text-[10px] font-black text-slate-500 uppercase ml-2">Urgência (Cor)</label><select id="p-prio" class="modal-input"><option value="baixa">BAIXA (VERDE)</option><option value="media">MÉDIA (LARANJA)</option><option value="alta">ALTA (VERMELHO)</option></select></div>
                 <div><label class="block text-[10px] font-black text-slate-500 uppercase ml-2">Ranking</label><input id="p-pos" type="number" class="modal-input"></div>
                 <div><label class="block text-[10px] font-black text-slate-500 uppercase ml-2">Peso Kg</label><input id="p-peso" required type="number" step="0.01" class="modal-input"></div>
                 <div id="admin-form-fields" class="col-span-2 grid grid-cols-2 gap-4 border-t pt-4 mt-2" style="display: none;">
@@ -179,14 +172,14 @@
                     <div><label class="block text-[10px] font-black text-orange-600 uppercase ml-2">Entrega</label><input id="p-saida" type="date" class="modal-input"></div>
                     <div class="col-span-2"><label class="block text-[10px] font-black text-blue-600 uppercase ml-2">Notas Eduardo</label><textarea id="p-obs-edu" class="modal-input h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar Alterações</button>
+                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar</button>
             </form>
         </div>
     </div>
 
     <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-[3rem] w-full max-w-sm p-10 shadow-2xl text-center">
-            <h3 id="prog-nome" class="text-sm font-black uppercase mb-8 border-b pb-4 italic">Reporte</h3>
+            <h3 id="prog-nome" class="text-sm font-black uppercase mb-8 border-b pb-4 italic">Reporte de Progresso</h3>
             <input type="hidden" id="prog-id">
             <div class="space-y-5">
                 <div><label class="block text-[10px] font-black text-slate-500">Conclusão: <span id="prog-perc-val" class="text-blue-600 font-black text-2xl">0</span>%</label><input type="range" id="prog-range" min="0" max="100" step="5" class="w-full h-2 bg-slate-100 rounded-lg accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
@@ -198,14 +191,6 @@
 
     <div id="modal-logs" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[60] flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-[2.5rem] w-full max-w-md p-10 shadow-2xl text-center"><h3 class="text-xs font-black uppercase border-b pb-4 mb-6">Histórico</h3><div id="logs-content" class="space-y-3 max-h-96 overflow-y-auto text-left"></div><button onclick="fecharModal()" class="w-full mt-8 bg-slate-100 py-4 rounded-xl text-[10px] font-black">Fechar</button></div>
-    </div>
-
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
-        <div class="bg-white rounded-[3rem] w-full max-w-md shadow-2xl flex flex-col h-[85vh] overflow-hidden">
-            <div class="p-8 bg-slate-50 border-b flex justify-between items-center"><h3 class="font-black uppercase text-sm italic">Base de Clientes</h3><button onclick="fecharModal()">&times;</button></div>
-            <div class="p-8 border-b bg-white auth-element"><form id="form-cliente" class="space-y-4"><input id="c-cod" required type="text" class="modal-input" placeholder="CÓDIGO NOVO"><input id="c-nome" required type="text" class="modal-input" placeholder="NOME EMPRESA"><button type="submit" class="btn-premium-gamil">Guardar Cliente</button></form></div>
-            <div id="lista-clientes-db" class="flex-1 overflow-y-auto p-8 text-[10px] font-bold text-slate-400 uppercase italic"></div>
-        </div>
     </div>
 
     <script type="module">
@@ -223,23 +208,13 @@
         // CARREGAMENTO MASTER DE CLIENTES
         onSnapshot(query(colClientes, orderBy("nome")), snap => {
             const select = document.getElementById('p-cliente');
-            const listaDB = document.getElementById('lista-clientes-db');
-            if(!select || !listaDB) return;
+            if(!select) return;
             let options = '<option value="">-- SELECIONAR CLIENTE --</option>';
-            let listHtml = '';
             if (typeof CLIENTES_ESTATICOS !== 'undefined') {
-                CLIENTES_ESTATICOS.forEach(c => {
-                    const label = `${c.codigo} | ${c.nome}`;
-                    options += `<option value="${label}">${label}</option>`;
-                    listHtml += `<div class="p-2 border-b border-slate-50 uppercase text-[10px] font-bold text-slate-500">● ${label}</div>`;
-                });
+                CLIENTES_ESTATICOS.forEach(c => { options += `<option value="${c.codigo} | ${c.nome}">${c.codigo} | ${c.nome}</option>`; });
             }
-            snap.forEach(d => {
-                const label = `${d.data().codigo} | ${d.data().nome}`;
-                options += `<option value="${label}">${label}</option>`;
-                listHtml += `<div class="p-2 border-b border-slate-50 uppercase text-[10px] font-bold text-slate-500">● ${label}</div>`;
-            });
-            select.innerHTML = options; listaDB.innerHTML = listHtml;
+            snap.forEach(d => { const data = d.data(); options += `<option value="${data.codigo} | ${data.nome}">${data.codigo} | ${data.nome}</option>`; });
+            select.innerHTML = options;
         });
 
         window.changeView = (v) => {
@@ -257,7 +232,6 @@
                 localStorage.setItem('gamil_user', u);
                 localStorage.setItem('gamil_admin', (u.includes("Eduardo") || u.includes("Pedro")));
                 localStorage.setItem('gamil_sofia', u === "Sofia");
-                localStorage.setItem('gamil_encarregado', (u === "José Castro" || u === "Luís Silva" || u === "Paulo Abreu"));
                 checkPermissions(); carregarTabela();
             } else alert("Senha incorreta.");
         };
@@ -270,7 +244,6 @@
             document.getElementById('admin-form-fields').style.display = adm ? 'grid' : 'none';
         };
 
-        // EDIÇÃO INLINE E PES/FUR
         window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1 border-2 border-black" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: parseInt(val) || '' }); };
         window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1 border-2 border-black" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
@@ -283,7 +256,14 @@
                 const container = document.getElementById('container-pedidos'); container.innerHTML = "";
                 const adm = localStorage.getItem('gamil_admin') === 'true', sof = localStorage.getItem('gamil_sofia') === 'true';
                 let lista = []; snap.forEach(d => lista.push({ id: d.id, ...d.data() }));
-                lista.sort((a, b) => (a.ranking || 9999) - (b.ranking || 9999));
+                
+                // ORDENAÇÃO MASTER: RANKING -> PRIORIDADE -> DATA
+                const pesoPrio = { 'alta': 1, 'media': 2, 'baixa': 3 };
+                lista.sort((a, b) => {
+                    if ((a.ranking || 9999) !== (b.ranking || 9999)) return (a.ranking || 9999) - (b.ranking || 9999);
+                    if (pesoPrio[a.prio] !== pesoPrio[b.prio]) return pesoPrio[a.prio] - pesoPrio[b.prio];
+                    return (a.montagem || '9999-99-99').localeCompare(b.montagem || '9999-99-99');
+                });
                 
                 lista.forEach(p => {
                     const status = p.status || 'producao';
@@ -344,7 +324,7 @@
         window.preparaEdicao = (id, data) => {
             const p = JSON.parse(decodeURIComponent(data));
             document.getElementById('p-id').value = id; document.getElementById('p-cliente').value = p.cliente;
-            document.getElementById('p-pedido').value = p.pedido; document.getElementById('p-entrada').value = p.entrada || '';
+            document.getElementById('p-pedido').value = p.pedido; document.getElementById('p-prio').value = p.prio || 'baixa';
             document.getElementById('p-pos').value = p.ranking || ''; document.getElementById('p-peso').value = p.peso;
             document.getElementById('p-montagem').value = p.montagem || ''; document.getElementById('p-saida').value = p.saida || '';
             document.getElementById('p-obs-edu').value = p.obs_edu || ''; document.getElementById('modal-pedido').classList.remove('hidden');
@@ -352,23 +332,21 @@
 
         document.getElementById('form-pedido').onsubmit = async e => {
             e.preventDefault(); const id = document.getElementById('p-id').value;
-            const data = { cliente: document.getElementById('p-cliente').value, pedido: document.getElementById('p-pedido').value, ranking: parseInt(document.getElementById('p-pos').value) || '', peso: document.getElementById('p-peso').value, entrada: document.getElementById('p-entrada').value, montagem: document.getElementById('p-montagem').value, saida: document.getElementById('p-saida').value, obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), timestamp: new Date() };
+            const data = { cliente: document.getElementById('p-cliente').value, pedido: document.getElementById('p-pedido').value, prio: document.getElementById('p-prio').value, ranking: parseInt(document.getElementById('p-pos').value) || '', peso: document.getElementById('p-peso').value, montagem: document.getElementById('p-montagem').value, saida: document.getElementById('p-saida').value, obs_edu: document.getElementById('p-obs-edu').value.toUpperCase(), timestamp: new Date() };
             if (id) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), data); else await addDoc(colPedidos, { ...data, progresso: 0, historico: [], status: 'producao' });
             fecharModal();
         };
 
         window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed text-slate-800">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem registos.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
-        window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('modal-progresso').classList.remove('hidden'); };
+        window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('modal-progresso').classList.remove('hidden'); };
         window.logout = () => { localStorage.clear(); window.location.reload(); };
         window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login), div[id^="modal-"]:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { 
             document.getElementById('p-id').value = ""; 
             document.getElementById('form-pedido').reset(); 
-            document.getElementById('p-entrada').value = new Date().toISOString().split('T')[0]; 
             document.getElementById('modal-pedido').classList.remove('hidden'); 
             checkPermissions(); 
         };
-        window.abrirModalCliente = () => document.getElementById('modal-cliente').classList.remove('hidden');
         window.apagarPedido = async id => { if(confirm("Apagar permanentemente?")) await deleteDoc(doc(db, "pedidos_vfinal_gamil", id)); };
         window.onload = () => { checkPermissions(); carregarTabela(); };
     </script>
