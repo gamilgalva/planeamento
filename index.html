@@ -64,13 +64,26 @@
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
 
         /* AJUSTE PARA IMPRESSÃO */
+        /* AJUSTE PARA IMPRESSÃO - COM COR NA BARRA */
         @media print {
             @page { size: landscape; margin: 10mm; }
-            .no-print, aside, header, .actions-cell, button { display: none !important; }
+            .no-print, aside, header, .actions-cell, button, .text-right { display: none !important; }
             body { background: white !important; overflow: visible !important; display: block !important; height: auto !important; }
             .main-content { padding: 0 !important; overflow: visible !important; }
             .gamil-table { min-width: 100% !important; border-spacing: 0 5px !important; table-layout: auto !important; }
-            .pedido-row td { border: 1px solid #eee !important; font-size: 8px !important; color: black !important; padding: 4px !important; }
+            .pedido-row td { 
+                border: 1px solid #eee !important; 
+                font-size: 8px !important; 
+                color: black !important; 
+                padding: 4px !important; 
+                -webkit-print-color-adjust: exact; /* Força a cor no Chrome/Edge/Safari */
+                print-color-adjust: exact;         /* Força a cor no Firefox */
+            }
+            /* Garante que a barra de progresso apareça colorida */
+            .h-full { 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
             .status-strip { display: block !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
