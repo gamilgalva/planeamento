@@ -15,7 +15,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: row; overflow: hidden; margin: 0; }
         
         /* SIDEBAR - DESIGN PREMIUM */
-        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); }
+        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); transition: all 0.3s ease; }
         .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #f1f5f9; height: 100vh; }
         .main-content { flex: 1; overflow: auto; padding: 25px 40px; }
 
@@ -61,7 +61,7 @@
         body.admin-mode .auth-element, body.sofia-mode .auth-element { display: block !important; }
 
         /* INPUTS COM BORDA VISÍVEL */
-        .modal-input { @apply w-full bg-white border border-slate-300 rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100; }
+        .modal-input { @apply w-full bg-white border border-slate-300 rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100 focus:border-blue-500 shadow-sm; }
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
 
         /* AJUSTE PARA IMPRESSÃO - CORES E ESTRUTURA */
@@ -148,7 +148,7 @@
     <main class="main-container">
         <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print shrink-0">
             <h2 id="view-title" class="text-xs font-black text-slate-800 uppercase italic tracking-widest truncate">R.030.01 - Planeamento Geral</h2>
-            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Matrix Master Final</div>
+            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Master Final</div>
         </header>
         <div class="main-content">
             <table class="gamil-table">
@@ -265,7 +265,6 @@
             document.getElementById('admin-form-fields').style.display = adm ? 'grid' : 'none';
         };
 
-        // EDIÇÃO INLINE E PES/FUR
         window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1 border" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: parseInt(val) || '' }); };
         window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1 border" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
@@ -349,7 +348,7 @@
         };
 
         window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed text-slate-800">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem registos.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
-        window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('modal-progresso').classList.remove('hidden'); };
+        window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('modal-progresso').classList.remove('hidden'); };
         window.logout = () => { localStorage.clear(); window.location.reload(); };
         window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { 
