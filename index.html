@@ -19,7 +19,7 @@
         .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #f1f5f9; height: 100vh; }
         .main-content { flex: 1; overflow: auto; padding: 25px 40px; }
 
-        /* TABELA - ESTRUTURA MATRIX (LARGURA AUMENTADA) */
+        /* TABELA - ESTRUTURA MATRIX */
         .gamil-table { min-width: 1750px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; table-layout: fixed; }
         .gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
         .pedido-row td { @apply py-5 px-4 first:rounded-l-2xl last:rounded-r-2xl border-y border-slate-100 bg-white shadow-sm; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -31,13 +31,17 @@
         .other-row-text { font-size: 10px !important; @apply font-bold text-slate-600; }
         .status-strip { width: 5px; height: 35px; border-radius: 20px; }
 
-        /* ESTILO DAS ABAS - IGUAL AOS BOTÕES PREMIUM */
+        /* ESTILO DAS ABAS - CORREÇÃO PARA ASPECTO DE BOTÃO IGUAL A CLIENTES */
         .btn-aba { 
-            @apply w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-slate-300 text-[10px] font-black uppercase transition-all border border-transparent mb-2;
+            width: 100% !important;
+            @apply p-4 rounded-xl flex items-center space-x-3 text-white text-[10px] font-black uppercase transition-all mb-2;
+            background-color: rgba(255, 255, 255, 0.05); /* Fundo igual ao Clientes */
+            border: 1px solid transparent;
             display: flex !important;
         }
-        .btn-aba.active { @apply bg-blue-600 text-white shadow-lg border-white/10; }
-        .btn-aba i { @apply text-blue-400 w-5 text-center text-sm; }
+        .btn-aba:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .btn-aba.active { @apply bg-blue-600 shadow-lg; border-color: rgba(255, 255, 255, 0.1); }
+        .btn-aba i { @apply text-blue-400 text-sm w-5 text-center; }
         .btn-aba.active i { @apply text-white; }
         
         /* EDIÇÃO INLINE */
@@ -60,8 +64,10 @@
             body { flex-direction: column; }
             .sidebar { width: 100%; height: auto; position: relative; }
             .sidebar nav { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; }
-            .sidebar nav > button { width: calc(50% - 10px); padding: 10px; font-size: 9px; }
-            .sidebar nav .btn-aba { width: calc(50% - 10px) !important; padding: 10px; }
+            .sidebar nav > button { width: calc(50% - 10px); padding: 10px; font-size: 9px; margin-bottom: 0 !important; }
+            /* No Mobile voltamos ao layout grade para as abas */
+            .sidebar nav .btn-aba { width: calc(33.33% - 10px) !important; padding: 10px; font-size: 8px; margin-bottom: 0 !important; flex-direction: column; space-x-0; }
+            .sidebar nav .btn-aba i { margin-bottom: 4px; margin-right: 0; }
             #user-info { width: 100%; margin-bottom: 0; }
             .main-content { padding: 15px; }
             .gamil-table { min-width: 1200px; }
@@ -102,9 +108,9 @@
                 <button onclick="logout()" class="text-[9px] text-red-400 font-bold uppercase underline mt-2 tracking-widest">Sair</button>
             </div>
             
-            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all"><i class="fas fa-plus"></i> <span>Novo Registo</span></button>
-            <button onclick="window.print()" class="w-full p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase transition-all"><i class="fas fa-print text-blue-400"></i> <span>Imprimir</span></button>
-            <button onclick="abrirModalCliente()" class="auth-element w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-slate-300 text-[10px] font-bold transition"><i class="fas fa-users text-blue-400"></i> <span>Clientes</span></button>
+            <button onclick="abrirModalPedido()" class="auth-element w-full p-4 bg-blue-600 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase shadow-lg hover:bg-blue-700 transition-all mb-2"><i class="fas fa-plus"></i> <span>Novo Registo</span></button>
+            <button onclick="window.print()" class="w-full p-4 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center space-x-2 text-xs font-black uppercase transition-all mb-2"><i class="fas fa-print text-blue-400"></i> <span>Imprimir</span></button>
+            <button onclick="abrirModalCliente()" class="auth-element w-full p-4 bg-white/5 hover:bg-white/10 rounded-xl flex items-center space-x-3 text-slate-300 text-[10px] font-bold transition mb-4"><i class="fas fa-users text-blue-400"></i> <span>Clientes</span></button>
 
             <div class="pt-4 border-t border-white/10 flex flex-col">
                 <button onclick="changeView('producao')" id="btn-producao" class="btn-aba active">
@@ -123,7 +129,7 @@
     <main class="main-container">
         <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print shrink-0">
             <h2 id="view-title" class="text-xs font-black text-slate-800 uppercase italic tracking-widest truncate">R.030.01 - Planeamento Geral</h2>
-            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Master Final</div>
+            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Matrix v11.2</div>
         </header>
         <div class="main-content">
             <table class="gamil-table">
@@ -150,7 +156,7 @@
                     <div><label class="label-gamil text-orange-600 font-bold">Entrega</label><input id="p-saida" type="date" class="modal-input"></div>
                     <div class="col-span-2"><label class="label-gamil text-blue-600 font-bold">Notas Eduardo</label><textarea id="p-obs-edu" class="modal-input h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar</button>
+                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar Alterações</button>
             </form>
         </div>
     </div>
@@ -219,6 +225,7 @@
             document.getElementById('admin-form-fields').style.display = adm ? 'grid' : 'none';
         };
 
+        // --- EDIÇÃO INLINE RESTAURADA ---
         window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: parseInt(val) || '' }); };
         window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
@@ -272,9 +279,9 @@
                                 </div>
                                 <div class="flex items-center space-x-2 shrink-0">
                                     <span class="text-[10px] font-black text-slate-700">${perc}%</span>
-                                    <button onclick="abrirProgresso('${id}','${p.cliente}',${perc})" class="text-blue-500 hover:scale-125 transition no-print"><i class="fas fa-plus-circle text-xl"></i></button>
-                                    ${currentView==='producao' && perc===100 && adm ? `<button onclick="updateStatus('${id}','recolha')" class="text-green-500 hover:scale-125 transition no-print"><i class="fas fa-arrow-circle-right text-xl"></i></button>` : ''}
-                                    ${currentView==='recolha' && (adm||sof) ? `<button onclick="updateStatus('${id}','historico')" class="text-green-600 hover:scale-125 transition no-print"><i class="fas fa-check-double text-xl"></i></button>` : ''}
+                                    <button onclick="abrirProgresso('${id}','${p.cliente}',${perc})" class="text-blue-500 hover:scale-125 transition no-print"><i class="fas fa-plus-circle text-lg"></i></button>
+                                    ${currentView==='producao' && perc===100 && adm ? `<button onclick="updateStatus('${id}','recolha')" class="text-green-500 hover:scale-125 transition no-print"><i class="fas fa-arrow-circle-right text-lg"></i></button>` : ''}
+                                    ${currentView==='recolha' && (adm||sof) ? `<button onclick="updateStatus('${id}','historico')" class="text-green-600 hover:scale-125 transition no-print"><i class="fas fa-check-double text-lg"></i></button>` : ''}
                                 </div>
                             </div>
                         </td>
