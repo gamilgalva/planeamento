@@ -14,31 +14,43 @@
         
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: row; overflow: hidden; margin: 0; }
         
-        /* SIDEBAR */
+        /* SIDEBAR - DESIGN ORIGINAL */
         .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); }
         .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #f1f5f9; }
         .main-content { flex: 1; overflow-x: auto; overflow-y: auto; padding: 25px 40px; }
 
-        /* TABELA */
+        /* TABELA - DESIGN ORIGINAL */
         .gamil-table { min-width: 1550px; border-separate: border-spacing-y(12px); width: 100%; border-collapse: separate; table-layout: fixed; }
         .gamil-thead th { @apply text-[10px] font-black uppercase text-slate-400 tracking-widest px-4 py-2 text-left; }
         .pedido-row { @apply bg-white shadow-sm hover:shadow-md transition-all duration-300; }
         .pedido-row td { @apply py-5 px-4 first:rounded-l-2xl last:rounded-r-2xl border-y border-slate-100; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* --------------------------------------------------------- */
-        /* CONTROLO DE FONTES MASTER                                 */
-        /* --------------------------------------------------------- */
+        /* CONTROLO DE FONTES MASTER (HAMILTON MATRIX) */
         .pos-text { font-size: 10px !important; @apply font-black text-slate-400 text-center; width: 45px; }
         .ref-text { font-size: 10px !important; color: #2563eb !important; font-weight: 800 !important; @apply uppercase italic; }
         .client-text { font-size: 10px !important; font-weight: 800 !important; @apply uppercase text-slate-800 tracking-tighter; }
         .other-row-text { font-size: 10px !important; @apply font-bold text-slate-600; }
-        /* --------------------------------------------------------- */
 
         .status-strip { width: 5px; height: 35px; border-radius: 20px; }
 
         /* LOGIN ORIGINAL RECONSTRUÍDO */
         #modal-login { position: fixed; inset: 0; background-color: #1a2a3a; z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .login-container { width: 100%; max-width: 350px; padding: 20px; text-align: center; }
+
+        /* AJUSTES PARA MOBILE (RESPONSIVIDADE SEM MEXER NO DESKTOP) */
+        @media (max-width: 1024px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .sidebar h1 { display: inline-block; margin-left: 10px; }
+            .sidebar img { width: 80px; display: inline-block; }
+            .sidebar .p-8 { padding: 1rem; }
+            .sidebar nav { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; }
+            .sidebar nav button { width: calc(50% - 10px); padding: 10px; font-size: 9px; }
+            #user-info { width: 100%; margin-bottom: 0; padding: 10px; }
+            .main-content { padding: 15px; }
+            .gamil-table { min-width: 1200px; } /* Mantém a leitura larga com scroll lateral no dedo */
+            .login-container { max-width: 90%; }
+        }
 
         /* VISIBILIDADE */
         .admin-view, .encarregado-view, .sofia-view, .auth-element { display: none !important; }
@@ -69,6 +81,7 @@
     </style>
 </head>
 <body class="md:flex-row flex flex-col">
+
     <div id="modal-login" class="no-print">
         <div class="login-container">
             <h1 class="text-white font-black italic uppercase tracking-tighter text-xl mb-8 opacity-20">Login Gamil</h1>
@@ -108,8 +121,8 @@
 
     <main class="main-container">
         <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print">
-            <h2 class="text-xs font-black text-slate-800 uppercase italic tracking-widest">R.030.01 - Planeamento Geral</h2>
-            <div class="flex items-center space-x-2 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Sync Master</div>
+            <h2 class="text-xs font-black text-slate-800 uppercase italic tracking-widest truncate">R.030.01 - Planeamento Geral</h2>
+            <div class="flex items-center space-x-2 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Matrix v10</div>
         </header>
         <div class="main-content">
             <table class="gamil-table">
@@ -137,7 +150,9 @@
                 <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar Alterações</button>
             </form>
         </div>
-    </div><div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
+    </div>
+
+    <div id="modal-cliente" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-[3rem] w-full max-w-md shadow-2xl flex flex-col h-[85vh] overflow-hidden">
             <div class="p-8 bg-slate-50 border-b flex justify-between items-center"><h3 class="font-black uppercase text-sm italic">Base de Clientes</h3><button onclick="fecharModal()">&times;</button></div>
             <div class="p-8 border-b bg-white auth-element"><form id="form-cliente" class="space-y-4"><input id="c-cod" required type="text" class="modal-input" placeholder="CÓDIGO NOVO"><input id="c-nome" required type="text" class="modal-input" placeholder="NOME EMPRESA"><button type="submit" class="btn-premium-gamil">Guardar Cliente</button></form></div>
