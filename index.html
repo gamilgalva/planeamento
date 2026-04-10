@@ -15,7 +15,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: row; overflow: hidden; margin: 0; }
         
         /* SIDEBAR - DESIGN PREMIUM */
-        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); }
+        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); transition: all 0.3s ease; }
         .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #f1f5f9; height: 100vh; }
         .main-content { flex: 1; overflow: auto; padding: 25px 40px; }
 
@@ -60,11 +60,15 @@
         body.admin-mode th.admin-view, body.admin-mode th.encarregado-view, body.encarregado-mode th.encarregado-view, body.sofia-mode th.sofia-view { display: table-cell !important; }
         body.admin-mode .auth-element, body.sofia-mode .auth-element { display: block !important; }
 
-        /* INPUTS COM BORDA VISÍVEL PRETA (SUGESTÃO HAMILTON) */
-        .modal-input { @apply w-full bg-blue-50 border border-black rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100; }
+        /* INPUTS COM BORDA VISÍVEL PRETA (REFORÇADO) */
+        .modal-input { 
+            @apply w-full rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100;
+            background-color: white !important;
+            border: 2px solid black !important;
+        }
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
 
-        /* AJUSTE PARA IMPRESSÃO - CORES E ESTRUTURA */
+        /* AJUSTE PARA IMPRESSÃO */
         @media print {
             @page { size: landscape; margin: 10mm; }
             .no-print, aside, header, .actions-cell, button, .text-right { display: none !important; }
@@ -100,7 +104,7 @@
             <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-8" onerror="this.style.display='none'">
             <div class="flex flex-col space-y-3">
                 <div class="flex space-x-2">
-                    <select id="login-user" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none border border-black">
+                    <select id="login-user" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none border-2 border-black">
                         <option value="Visitante">Consulta</option>
                         <option value="Sofia">Sofia Meira</option>
                         <option value="Eduardo Pereira">Eduardo Pereira</option>
@@ -109,7 +113,7 @@
                         <option value="Luís Silva">Luís Silva</option>
                         <option value="Paulo Abreu">Paulo Abreu</option>
                     </select>
-                    <input type="password" id="login-pass" placeholder="PASSWORD" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none text-center border border-black text-slate-800">
+                    <input type="password" id="login-pass" placeholder="PASSWORD" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none text-center border-2 border-black text-slate-800">
                 </div>
                 <button onclick="tentarLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-xl transition-all">Entrar</button>
             </div>
@@ -148,7 +152,7 @@
     <main class="main-container">
         <header class="h-16 bg-white border-b border-slate-200 px-10 flex justify-between items-center no-print shrink-0">
             <h2 id="view-title" class="text-xs font-black text-slate-800 uppercase italic tracking-widest truncate">R.030.01 - Planeamento Geral</h2>
-            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Master Final</div>
+            <div class="bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 italic font-black text-[9px] text-blue-600 uppercase">Live Sync Master</div>
         </header>
         <div class="main-content">
             <table class="gamil-table">
@@ -175,14 +179,14 @@
                     <div><label class="block text-[10px] font-black text-orange-600 uppercase ml-2">Entrega</label><input id="p-saida" type="date" class="modal-input"></div>
                     <div class="col-span-2"><label class="block text-[10px] font-black text-blue-600 uppercase ml-2">Notas Eduardo</label><textarea id="p-obs-edu" class="modal-input h-20"></textarea></div>
                 </div>
-                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar</button>
+                <button type="submit" class="col-span-2 btn-premium-gamil mt-4">Guardar Alterações</button>
             </form>
         </div>
     </div>
 
     <div id="modal-progresso" class="hidden fixed inset-0 bg-blue-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-[3rem] w-full max-w-sm p-10 shadow-2xl text-center">
-            <h3 id="prog-nome" class="text-sm font-black uppercase mb-8 border-b pb-4 italic">Reporte de Progresso</h3>
+            <h3 id="prog-nome" class="text-sm font-black uppercase mb-8 border-b pb-4 italic">Reporte</h3>
             <input type="hidden" id="prog-id">
             <div class="space-y-5">
                 <div><label class="block text-[10px] font-black text-slate-500">Conclusão: <span id="prog-perc-val" class="text-blue-600 font-black text-2xl">0</span>%</label><input type="range" id="prog-range" min="0" max="100" step="5" class="w-full h-2 bg-slate-100 rounded-lg accent-blue-600 mt-4" oninput="document.getElementById('prog-perc-val').innerText = this.value"></div>
@@ -267,12 +271,12 @@
         };
 
         // EDIÇÃO INLINE E PES/FUR
-        window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1 border border-black" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
+        window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1 border-2 border-black" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: parseInt(val) || '' }); };
-        window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1 border border-black" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
+        window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1 border-2 border-black" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarDataInline = async (id, campo, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val }); };
         window.toggleServico = async (id, campo, val) => { if (localStorage.getItem('gamil_admin') !== 'true') return; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val === 'SIM' ? 'NÃO' : 'SIM' }); };
-        window.updateStatus = async (id, status) => { if(confirm("Mudar fase?")) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { status: status }); };
+        window.updateStatus = async (id, status) => { if(confirm("Confirmar alteração de fase?")) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { status: status }); };
 
         function carregarTabela() {
             onSnapshot(colPedidos, snap => {
