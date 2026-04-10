@@ -15,7 +15,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; height: 100vh; display: flex; flex-direction: row; overflow: hidden; margin: 0; }
         
         /* SIDEBAR - DESIGN PREMIUM */
-        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); transition: all 0.3s ease; }
+        .sidebar { width: 260px; background-color: #1a2a3a; color: white; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; z-index: 40; box-shadow: 4px 0 15px rgba(0,0,0,0.2); }
         .main-container { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; background: #f1f5f9; height: 100vh; }
         .main-content { flex: 1; overflow: auto; padding: 25px 40px; }
 
@@ -60,8 +60,8 @@
         body.admin-mode th.admin-view, body.admin-mode th.encarregado-view, body.encarregado-mode th.encarregado-view, body.sofia-mode th.sofia-view { display: table-cell !important; }
         body.admin-mode .auth-element, body.sofia-mode .auth-element { display: block !important; }
 
-        /* INPUTS COM BORDA VISÍVEL */
-        .modal-input { @apply w-full bg-white border border-slate-300 rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100 focus:border-blue-500 shadow-sm; }
+        /* INPUTS COM BORDA VISÍVEL PRETA (SUGESTÃO HAMILTON) */
+        .modal-input { @apply w-full bg-white border border-black rounded-2xl p-4 font-semibold text-slate-700 outline-none uppercase text-xs focus:ring-4 focus:ring-blue-100; }
         .btn-premium-gamil { @apply w-full bg-[#1a2a3a] hover:bg-black text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 tracking-widest; }
 
         /* AJUSTE PARA IMPRESSÃO - CORES E ESTRUTURA */
@@ -100,7 +100,7 @@
             <img src="logo-gamil.png" alt="Gamil" class="w-32 mx-auto mb-8" onerror="this.style.display='none'">
             <div class="flex flex-col space-y-3">
                 <div class="flex space-x-2">
-                    <select id="login-user" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none border border-slate-300">
+                    <select id="login-user" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none border border-black">
                         <option value="Visitante">Consulta</option>
                         <option value="Sofia">Sofia Meira</option>
                         <option value="Eduardo Pereira">Eduardo Pereira</option>
@@ -109,7 +109,7 @@
                         <option value="Luís Silva">Luís Silva</option>
                         <option value="Paulo Abreu">Paulo Abreu</option>
                     </select>
-                    <input type="password" id="login-pass" placeholder="PASSWORD" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none text-center border border-slate-300 text-slate-800">
+                    <input type="password" id="login-pass" placeholder="PASSWORD" class="w-1/2 p-3 rounded-md font-bold text-sm outline-none text-center border border-black text-slate-800">
                 </div>
                 <button onclick="tentarLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-xl transition-all">Entrar</button>
             </div>
@@ -253,6 +253,7 @@
                 localStorage.setItem('gamil_user', u);
                 localStorage.setItem('gamil_admin', (u.includes("Eduardo") || u.includes("Pedro")));
                 localStorage.setItem('gamil_sofia', u === "Sofia");
+                localStorage.setItem('gamil_encarregado', (u === "José Castro" || u === "Luís Silva" || u === "Paulo Abreu"));
                 checkPermissions(); carregarTabela();
             } else alert("Senha incorreta.");
         };
@@ -265,9 +266,10 @@
             document.getElementById('admin-form-fields').style.display = adm ? 'grid' : 'none';
         };
 
-        window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1 border" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
+        // EDIÇÃO INLINE E PES/FUR
+        window.editPosInline = (id, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const val = el.innerText.replace('º','').trim(); el.innerHTML = `<div class="inline-edit-container"><input type="number" class="w-12 text-xs p-1 border border-black" value="${val}"><button onclick="confirmarPosInline('${id}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarPosInline = async (id, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { ranking: parseInt(val) || '' }); };
-        window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1 border" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
+        window.editDataInline = (id, campo, el) => { if (localStorage.getItem('gamil_admin') !== 'true') return; if (el.querySelector('input')) return; const raw = el.getAttribute('data-raw') || ''; el.innerHTML = `<div class="inline-edit-container"><input type="date" class="w-28 text-xs p-1 border border-black" value="${raw}"><button onclick="confirmarDataInline('${id}', '${campo}', this)"><i class="fas fa-check"></i></button></div>`; el.querySelector('input').focus(); };
         window.confirmarDataInline = async (id, campo, btn) => { const val = btn.parentElement.querySelector('input').value; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val }); };
         window.toggleServico = async (id, campo, val) => { if (localStorage.getItem('gamil_admin') !== 'true') return; await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { [campo]: val === 'SIM' ? 'NÃO' : 'SIM' }); };
         window.updateStatus = async (id, status) => { if(confirm("Mudar fase?")) await updateDoc(doc(db, "pedidos_vfinal_gamil", id), { status: status }); };
@@ -308,6 +310,10 @@
                                 <div class="flex items-center space-x-2 shrink-0">
                                     <span class="text-[10px] font-black text-slate-700">${perc}%</span>
                                     <button onclick="abrirProgresso('${id}','${p.cliente}',${perc})" class="text-blue-500 hover:scale-125 transition no-print"><i class="fas fa-plus-circle text-lg"></i></button>
+                                    
+                                    ${adm && currentView === 'recolha' ? `<button onclick="updateStatus('${id}','producao')" title="Voltar para Produção" class="text-blue-400 hover:scale-125 transition no-print"><i class="fas fa-undo-alt text-lg"></i></button>` : ''}
+                                    ${adm && currentView === 'historico' ? `<button onclick="updateStatus('${id}','recolha')" title="Voltar para Recolha" class="text-blue-400 hover:scale-125 transition no-print"><i class="fas fa-undo-alt text-lg"></i></button>` : ''}
+
                                     ${currentView==='producao' && perc===100 && adm ? `<button onclick="updateStatus('${id}','recolha')" class="text-green-500 hover:scale-125 transition no-print"><i class="fas fa-check-circle text-lg"></i></button>` : ''}
                                     ${currentView==='recolha' && (adm||sof) ? `<button onclick="updateStatus('${id}','historico')" class="text-green-600 hover:scale-125 transition no-print"><i class="fas fa-check-double text-lg"></i></button>` : ''}
                                 </div>
@@ -350,7 +356,7 @@
         window.verLogs = logs => { document.getElementById('logs-content').innerHTML = logs && logs.length > 0 ? logs.map(l => `<div class="p-4 bg-slate-50 rounded-2xl border mb-2 text-[10px] font-bold shadow-sm leading-relaxed text-slate-800">${l}</div>`).join('') : '<p class="text-center italic py-4">Sem registos.</p>'; document.getElementById('modal-logs').classList.remove('hidden'); };
         window.abrirProgresso = (id, n, p) => { document.getElementById('prog-id').value = id; document.getElementById('prog-nome').innerText = n; document.getElementById('prog-range').value = p; document.getElementById('prog-perc-val').innerText = p + "%"; document.getElementById('modal-progresso').classList.remove('hidden'); };
         window.logout = () => { localStorage.clear(); window.location.reload(); };
-        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login)').forEach(m => m.classList.add('hidden'));
+        window.fecharModal = () => document.querySelectorAll('.fixed:not(#modal-login), div[id^="modal-"]:not(#modal-login)').forEach(m => m.classList.add('hidden'));
         window.abrirModalPedido = () => { 
             document.getElementById('p-id').value = ""; 
             document.getElementById('form-pedido').reset(); 
